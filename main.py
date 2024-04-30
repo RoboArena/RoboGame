@@ -1,6 +1,7 @@
 import pygame
 import player
 
+
 class Game:
     def __init__(self) -> None:
         pygame.init()
@@ -11,7 +12,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.player = player.Player(self, 500, 500)
         self.run()
-    
+        
     def run(self):
         running = True
         while running:
@@ -22,12 +23,10 @@ class Game:
                     running = False
 
             self.delta_time = self.clock.tick(60)/1000
-            self.window.fill((25,25,25))
+            self.window.fill((25, 25, 25))
             self.player.update()
             
             pygame.display.update()
 
-        
         pygame.quit()
-    
 game = Game()
