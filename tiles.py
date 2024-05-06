@@ -1,4 +1,7 @@
-import pygame, csv, os
+import pygame
+import csv
+import os
+
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, image, x, y, spritesheet):
@@ -11,6 +14,7 @@ class Tile(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.image, (self.rect.x, self.rect.y))
 
+
 class TileMap():
     def __init__(self, filename, spritesheet):
         self.tile_size = 50
@@ -22,7 +26,7 @@ class TileMap():
         self.load_map()
 
     def draw_map(self, surface):
-        surface.blit(self.map_surface, (0,0))
+        surface.blit(self.map_surface, (0, 0))
 
     def load_map(self):
         for tile in self.tiles:
@@ -43,21 +47,28 @@ class TileMap():
         for row in map:
             x = 0
             for tile in row:
-                if tile == '0':
-                    self.start_x, self.start_y = x * self.tile_size, y * self.tile_size
+                if tile == '-1':
+                    self.start_x, self.start_y = x * self.tile_size,
+                    y * self.tile_size
+                elif tile == '0':
+                    tiles.append(Tile('lightGrey.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
                 elif tile == '1':
-                    tiles.append(Tile('lightGrey.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                    tiles.append(Tile('black.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
                 elif tile == '2':
-                    tiles.append(Tile('blue.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                    tiles.append(Tile('darkGrey.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
                 elif tile == '3':
-                    tiles.append(Tile('black.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                    tiles.append(Tile('blue.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
                 elif tile == '4':
-                    tiles.append(Tile('darkGrey.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
+                    tiles.append(Tile('green.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
                 elif tile == '5':
-                    tiles.append(Tile('green.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
-                elif tile == '6':
-                    tiles.append(Tile('brown.png', x * self.tile_size, y * self.tile_size, self.spritesheet))
-                    
+                    tiles.append(Tile('brown.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+
                 x += 1
 
             # Move to next row
@@ -65,5 +76,3 @@ class TileMap():
             # Store the size of the tile map
         self.map_w, self.map_h = x * self.tile_size, y * self.tile_size
         return tiles
-
-
