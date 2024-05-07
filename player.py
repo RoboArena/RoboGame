@@ -8,7 +8,7 @@ class Player:
         self.r = 32
         self.dir = (90, 90)
         self.game = game
-        self.surface = game.window
+        self.surface = game.canvas
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
