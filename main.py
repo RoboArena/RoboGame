@@ -1,7 +1,8 @@
 import pygame
 import player
 from spritesheet import Spritesheet
-from tiles import *
+from tiles import TileMap
+from tiles import Tile
 
 
 class Game:
