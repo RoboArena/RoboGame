@@ -11,7 +11,7 @@ class Game:
                                                self.window_height))
         pygame.display.set_caption("RoboArena")
         self.clock = pygame.time.Clock()
-        self.player = player.Player(self, 500, 500)
+        self.player = player.Player(self, 500, 500, 32)
         self.run()
 
     def run(self):

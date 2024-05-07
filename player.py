@@ -2,20 +2,21 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, r):
         self.x = x
         self.y = y
+        self.r = r
         self.game = game
         self.surface = game.window
-        self.rect = pygame.Rect(self.x, self.y, 64, 64)
+        self.rect = pygame.Rect(self.x, self.y, self.r, self.r)
 
     def update(self):
-        self.rect = pygame.Rect(self.x, self.y, 64, 64)
+        self.rect = pygame.Rect(self.x, self.y, self.r, self.r)
         self.movement(500)
         self.draw()
 
     def draw(self):
-        pygame.draw.rect(self.surface, "red", (self.x, self.y, 64, 64))
+        pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
