@@ -54,13 +54,13 @@ class TileMap():
                     tiles.append(Tile('lightGrey.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '1':
-                    tiles.append(Tile('black.png', x * self.tile_size,
+                    tiles.append(Tile('blue.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '2':
                     tiles.append(Tile('darkGrey.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '3':
-                    tiles.append(Tile('blue.png', x * self.tile_size,
+                    tiles.append(Tile('black.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '4':
                     tiles.append(Tile('green.png', x * self.tile_size,
