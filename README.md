@@ -3,7 +3,7 @@
 
 ![](images/Menu_Jonathan.png) 
 
-![](images/Roboter_Jonathan.png)
+![](images/Roboter_Jonathan.jpg)
 
 ![](images/Tank_Matthias.png)
 
@@ -13,6 +13,6 @@
 
 ![](images/Tiled_Window.png)
 
-![](images/Tiled_Struktur)
+![](images/Tiled_Struktur.png)
 
 ![](images/Game_Design.png) 
