@@ -3,7 +3,7 @@
 
 ![](images/Menu_Jonathan.png) 
 
-![](images/Roboter_Jonathan.jpg)
+![](images/Roboter_Jonathan.jpeg)
 
 ![](images/Tank_Matthias.png)
 
