@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
-title: BigSquare
+title: RoboGame
 description: RoboArena Team-3
 name: Flake8 action
 uses: suo/flake8-github-action@v1
