@@ -15,6 +15,9 @@
 ![](images/Design_Amina.JPG)
 
 # Arena
+
+- created Arena with Level Editor "Tiled". Created the map by inserting Tiles into the Grid. 
+You then get a csv file which has numbers for each Tile and makes building the Arena easier. 
 ![](images/Tiled_Window.png)
 
 ![](images/Tiled_Struktur.png)
