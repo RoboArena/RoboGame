@@ -9,7 +9,7 @@
 
 ![](images/Cats_Matthias.png)
 
-![](images/Design_Amina.jpg)
+![](images/Design_Amina.JPG)
 
 ![](images/Tiled_Window.png)
 
