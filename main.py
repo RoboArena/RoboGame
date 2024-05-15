@@ -33,7 +33,7 @@ class Game:
             #self.window.blit(self.BG, (0, 0))
 
             # Fills the entire screen with dark grey
-            self.window.fill((25, 25, 25))
+            self.canvas.fill((25, 25, 25))
 
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
@@ -47,11 +47,11 @@ class Game:
             QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(self.window_witdh/2, self.window_height*0.65), 
                                 text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
-            self.window.blit(MENU_TEXT, MENU_RECT)
+            self.canvas.blit(MENU_TEXT, MENU_RECT)
 
             for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
                 button.changeColor(MENU_MOUSE_POS)
-                button.update(self.window)
+                button.update(self.canvas)
             
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -65,24 +65,24 @@ class Game:
                     if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                         pygame.quit()
                         sys.exit()
-
+            self.window.blit(self.canvas, (0, 0))
             pygame.display.update()
     
     def options(self):
         while True:
             OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-            self.window.fill("white")
+            self.canvas.fill("white")
 
             OPTIONS_TEXT = get_font(45).render("OPTIONS screen.", True, "Black")
             OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(self.window_witdh/2, self.window_height*0.25))
-            self.window.blit(OPTIONS_TEXT, OPTIONS_RECT)
+            self.canvas.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
             OPTIONS_BACK = Button(image=None, pos=(self.window_witdh/2, self.window_height*0.45), 
                                 text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
             OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-            OPTIONS_BACK.update(self.window)
+            OPTIONS_BACK.update(self.canvas)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -92,6 +92,7 @@ class Game:
                     if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                         self.main_menu()
 
+            self.window.blit(self.canvas, (0, 0))
             pygame.display.update()
 
     def play(self):
