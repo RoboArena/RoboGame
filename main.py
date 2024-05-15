@@ -38,13 +38,13 @@ class Game:
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
             MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
-            MENU_RECT = MENU_TEXT.get_rect(center=(500, 150))
+            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_witdh/2, self.window_height*0.15))
 
-            PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(500, 350), 
+            PLAY_BUTTON = Button(image=pygame.image.load("assets/Play Rect.png"), pos=(self.window_witdh/2, self.window_height*0.35), 
                                 text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-            OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(500, 500), 
+            OPTIONS_BUTTON = Button(image=pygame.image.load("assets/Options Rect.png"), pos=(self.window_witdh/2, self.window_height*0.5), 
                                 text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-            QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(500, 650), 
+            QUIT_BUTTON = Button(image=pygame.image.load("assets/Quit Rect.png"), pos=(self.window_witdh/2, self.window_height*0.65), 
                                 text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
 
             self.window.blit(MENU_TEXT, MENU_RECT)
@@ -75,10 +75,10 @@ class Game:
             self.window.fill("white")
 
             OPTIONS_TEXT = get_font(45).render("OPTIONS screen.", True, "Black")
-            OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(500, 260))
+            OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(self.window_witdh/2, self.window_height*0.25))
             self.window.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-            OPTIONS_BACK = Button(image=None, pos=(500, 460), 
+            OPTIONS_BACK = Button(image=None, pos=(self.window_witdh/2, self.window_height*0.45), 
                                 text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
             OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
