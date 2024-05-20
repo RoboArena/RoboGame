@@ -47,10 +47,10 @@ class Game:
                         and event.key == pygame.K_ESCAPE):
                     running = False
             if game_state == "start_menu":
-                    self.draw_start_menu()
-                    keys = pygame.key.get_pressed()
-                    if keys[pygame.K_SPACE]:
-                        game_state = "game"
+                self.draw_start_menu()
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_SPACE]:
+                    game_state = "game"
 
             if game_state == "game":
 
