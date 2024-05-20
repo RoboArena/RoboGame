@@ -14,6 +14,13 @@ class Game:
 
     def __init__(self) -> None:
         pygame.init()
+
+        # clock variables:
+        self.clock = pygame.time.Clock()
+        self.timer = 120
+        self.font = pygame.font.SysFont(None, 100)
+        self.text = self.font.render(str(self.timer), True, (0, 128, 0))
+
         self.window_witdh = 1000
         self.window_height = 1000
         self.canvas = pygame.Surface((self.window_witdh,
@@ -22,7 +29,6 @@ class Game:
                                                self.window_height))
         spritesheet = Spritesheet('Tiles50.png')
         self.map = TileMap('RoboArena.csv', spritesheet)
-        self.clock = pygame.time.Clock()
         self.player = player.Player(self, 500, 500)
         self.main_menu()
 
@@ -122,6 +128,8 @@ class Game:
 
     def play(self):
         running = True
+        timer_event = pygame.USEREVENT+1
+        pygame.time.set_timer(timer_event, 1000)
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -129,6 +137,12 @@ class Game:
                 if (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_ESCAPE):
                     running = False
+                if event.type == timer_event:
+                    self.timer -= 1
+                    self.text = self.font.render(str(self.timer),
+                                                 True, (0, 128, 0))
+                    if self.timer == 0:
+                        pygame.time.set_timer(timer_event, 0)
 
             self.delta_time = self.clock.tick(60)/1000
 
@@ -144,6 +158,11 @@ class Game:
 
             # display the canvas on the window
             self.window.blit(self.canvas, (0, 0))
+
+            # display timer
+            text_rect = self.text.get_rect(center=(850, 150))
+            self.window.blit(self.text, text_rect)
+            pygame.display.flip()
 
             pygame.display.update()
 
