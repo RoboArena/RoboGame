@@ -21,11 +21,11 @@ class Game:
         self.font = pygame.font.SysFont(None, 100)
         self.text = self.font.render(str(self.timer), True, (0, 128, 0))
 
-        self.window_witdh = 1000
+        self.window_width = 1000
         self.window_height = 1000
-        self.canvas = pygame.Surface((self.window_witdh,
+        self.canvas = pygame.Surface((self.window_width,
                                       self.window_height))
-        self.window = pygame.display.set_mode((self.window_witdh,
+        self.window = pygame.display.set_mode((self.window_width,
                                                self.window_height))
         spritesheet = Spritesheet('Tiles50.png')
         self.map = TileMap('RoboArena.csv', spritesheet)
@@ -45,25 +45,25 @@ class Game:
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
             MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
-            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_witdh/2,
+            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width/2,
                                                    self.window_height*0.15))
 
             PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
-                              pos=(self.window_witdh/2,
+                              pos=(self.window_width/2,
                                    self.window_height*0.35),
                               text_input="PLAY",
                               font=get_font(75),
                               base_color="#d7fcd4",
                               hovering_color="White")
             OPT_BTN = Button(pygame.image.load("assets/Options Rect.png"),
-                             pos=(self.window_witdh/2,
+                             pos=(self.window_width/2,
                                   self.window_height*0.5),
                              text_input="OPTIONS",
                              font=get_font(75),
                              base_color="#d7fcd4",
                              hovering_color="White")
             QUIT_BTN = Button(image=pygame.image.load("assets/Quit Rect.png"),
-                              pos=(self.window_witdh/2,
+                              pos=(self.window_width/2,
                                    self.window_height*0.65),
                               text_input="QUIT",
                               font=get_font(75),
@@ -100,12 +100,12 @@ class Game:
             OPT_TEXT = get_font(45).render("OPTIONS screen.",
                                            True,
                                            "Black")
-            OPT_RECT = OPT_TEXT.get_rect(center=(self.window_witdh/2,
+            OPT_RECT = OPT_TEXT.get_rect(center=(self.window_width/2,
                                                  self.window_height*0.25))
             self.canvas.blit(OPT_TEXT, OPT_RECT)
 
             OPT_BACK = Button(image=None,
-                              pos=(self.window_witdh/2,
+                              pos=(self.window_width/2,
                                    self.window_height*0.45),
                               text_input="BACK",
                               font=get_font(75),
