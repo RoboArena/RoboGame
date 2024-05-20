@@ -22,7 +22,22 @@ class Game:
         self.player = player.Player(self, 500, 500)
         self.run()
 
+    def draw_start_menu(self):
+        self.window.fill((0, 0, 0))
+        font = pygame.font.SysFont('sans-serif', 40)
+        title = font.render('ROBO-ARENA', True, (255, 255, 255))
+        start_button = font.render('Press SPACE to START', True,
+                                   (255, 255, 255))
+        self.window.blit(title, (self.window_witdh/2 - title.get_width()/2,
+                                 self.window_height/2 - title.get_height()/2))
+        self.window.blit(start_button, (self.window_witdh/2 -
+                                        start_button.get_width()/2,
+                                        self.window_height/2 +
+                                        start_button.get_height()/2))
+        pygame.display.update()
+
     def run(self):
+        game_state = "start_menu"
         running = True
         while running:
             for event in pygame.event.get():
@@ -31,23 +46,30 @@ class Game:
                 if (event.type == pygame.KEYDOWN
                         and event.key == pygame.K_ESCAPE):
                     running = False
+            if game_state == "start_menu":
+                    self.draw_start_menu()
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_SPACE]:
+                        game_state = "game"
 
-            self.delta_time = self.clock.tick(60)/1000
+            if game_state == "game":
 
-            # Fills the entire screen with dark grey
-            self.canvas.fill((25, 25, 25))
+                self.delta_time = self.clock.tick(60)/1000
 
-            # draw the tilemap
-            self.map.draw_map(self.canvas)
+                # Fills the entire screen with dark grey
+                self.canvas.fill((25, 25, 25))
 
-            # draw the player
-            self.player.update()
-            self.player.draw()
+                # draw the tilemap
+                self.map.draw_map(self.canvas)
 
-            # display the canvas on the window
-            self.window.blit(self.canvas, (0, 0))
+                # draw the player
+                self.player.update()
+                self.player.draw()
 
-            pygame.display.update()
+                # display the canvas on the window
+                self.window.blit(self.canvas, (0, 0))
+
+                pygame.display.update()
 
         pygame.quit()
 
