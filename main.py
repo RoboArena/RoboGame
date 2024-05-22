@@ -18,8 +18,6 @@ class Game:
         # clock variables:
         self.clock = pygame.time.Clock()
         self.timer = 120
-        self.font = pygame.font.SysFont(None, 100)
-        self.text = self.font.render(str(self.timer), True, (0, 128, 0))
 
         self.window_width = 1000
         self.window_height = 1000
@@ -29,7 +27,7 @@ class Game:
                                                self.window_height))
         spritesheet = Spritesheet('Tiles50.png')
         self.map = TileMap('RoboArena.csv', spritesheet)
-        self.player = player.Player(self, 500, 500)
+        self.player = player.Player(self, 500, 500, 10, 1, 1, 1, 1, 1, 1, 0)
         self.main_menu()
 
     def main_menu(self):
@@ -128,8 +126,13 @@ class Game:
 
     def play(self):
         running = True
+
+        # timer display variables
         timer_event = pygame.USEREVENT+1
+        timer_font = pygame.font.SysFont(None, 100)
+        timer_text = timer_font.render(str(self.timer), True, (0, 128, 0))
         pygame.time.set_timer(timer_event, 1000)
+
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -139,8 +142,8 @@ class Game:
                     running = False
                 if event.type == timer_event:
                     self.timer -= 1
-                    self.text = self.font.render(str(self.timer),
-                                                 True, (0, 128, 0))
+                    timer_text = timer_font.render(str(self.timer),
+                                                   True, (0, 128, 0))
                     if self.timer == 0:
                         pygame.time.set_timer(timer_event, 0)
 
@@ -160,8 +163,38 @@ class Game:
             self.window.blit(self.canvas, (0, 0))
 
             # display timer
-            text_rect = self.text.get_rect(center=(850, 150))
-            self.window.blit(self.text, text_rect)
+            timer_text_rect = timer_text.get_rect(topright=(945, 80))
+            self.window.blit(timer_text, timer_text_rect)
+
+            # display robot points
+            points_font = pygame.font.SysFont(None, 50)
+            points_text = points_font.render("Points: " +
+                                             str(self.player.points),
+                                             True, (0, 128, 0))
+            points_text_rect = points_text.get_rect(topleft=(55, 80))
+            self.window.blit(points_text, points_text_rect)
+
+            # display robot properties
+            properties_font = pygame.font.SysFont(None, 35)
+
+            speed_text = properties_font.render("Speed: " +
+                                                str(self.player.speed),
+                                                True, (0, 128, 0))
+            speed_text_rect = speed_text.get_rect(topleft=(55, 780))
+            self.window.blit(speed_text, speed_text_rect)
+
+            healing_text = properties_font.render("Healing: " +
+                                                  str(self.player.healing),
+                                                  True, (0, 128, 0))
+            healing_text_rect = healing_text.get_rect(topleft=(55, 815))
+            self.window.blit(healing_text, healing_text_rect)
+
+            force_text = properties_font.render("Shooting Force: " +
+                                                str(self.player.force),
+                                                True, (0, 128, 0))
+            force_text_rect = force_text.get_rect(topleft=(55, 850))
+            self.window.blit(force_text, force_text_rect)
+
             pygame.display.flip()
 
             pygame.display.update()
