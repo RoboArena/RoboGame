@@ -1,7 +1,4 @@
 import pygame
-from spritesheet import Spritesheet
-from tiles import TileMap
-
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
