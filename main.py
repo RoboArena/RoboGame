@@ -51,8 +51,7 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, self.window_width // 2,
-                                    self.window_height // 2)
+        self.player = player.Player(self, 500, 500, 10, 1, 1, 1, 1, 1, 1, 0)
         self.main_menu()
 
     def main_menu(self):
@@ -178,8 +177,61 @@ class Game:
             self.window.blit(self.canvas, (0, 0))
 
             # display timer
-            text_rect = self.text.get_rect(center=(1125, 50))
+            text_rect = self.text.get_rect(topright=(1200, 25))
             self.window.blit(self.text, text_rect)
+
+            # display robot points
+            points_font = pygame.font.SysFont(None, 50)
+            points_text = points_font.render("Points: " +
+                                             str(self.player.points),
+                                             True, (0, 128, 0))
+            points_text_rect = points_text.get_rect(topleft=(330, 25))
+            self.window.blit(points_text, points_text_rect)
+
+            # display robot properties
+            properties_font = pygame.font.SysFont(None, 35)
+
+            speed_text = properties_font.render("Speed: " +
+                                                str(self.player.speed),
+                                                True, (0, 128, 0))
+            speed_text_rect = speed_text.get_rect(topleft=(330, 750))
+            self.window.blit(speed_text, speed_text_rect)
+
+            healing_text = properties_font.render("Healing: " +
+                                                  str(self.player.healing),
+                                                  True, (0, 128, 0))
+            healing_text_rect = healing_text.get_rect(topleft=(330, 785))
+            self.window.blit(healing_text, healing_text_rect)
+
+            force_text = properties_font.render("Shooting Force: " +
+                                                str(self.player.force),
+                                                True, (0, 128, 0))
+            force_text_rect = force_text.get_rect(topleft=(330, 820))
+            self.window.blit(force_text, force_text_rect)
+
+            # display robot collections
+            collect_font = pygame.font.SysFont(None, 35)
+            wood_text = collect_font.render(
+                "Wood: " + str(self.player.wood),
+                True, (0, 128, 0)
+            )
+            wood_text_rect = wood_text.get_rect(topright=(1200, 750))
+            self.window.blit(wood_text, wood_text_rect)
+
+            stone_text = collect_font.render(
+                "Stone: " + str(self.player.stone),
+                True, (0, 128, 0)
+            )
+            stone_text_rect = stone_text.get_rect(topright=(1200, 785))
+            self.window.blit(stone_text, stone_text_rect)
+
+            battery_text = collect_font.render(
+                "Batteries: " + str(self.player.battery),
+                True, (0, 128, 0)
+            )
+            battery_text_rect = battery_text.get_rect(topright=(1200, 820))
+            self.window.blit(battery_text, battery_text_rect)
+
             pygame.display.flip()
 
             pygame.display.update()
