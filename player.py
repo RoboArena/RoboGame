@@ -1,5 +1,6 @@
 import pygame
 
+
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
                  battery, speed, healing, force, points):
