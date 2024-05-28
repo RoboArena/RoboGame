@@ -18,6 +18,7 @@ class Player:
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
+        self.image = pygame.image.load('robot.png').convert_alpha()
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -26,7 +27,11 @@ class Player:
         self.draw()
 
     def draw(self):
-        pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
+        # (1) The player is a blue circle
+        # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
+        # (2) The player is a robot
+        self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
+                                       self.y - self.image.get_height() // 2))
         endOfLine = (self.x - self.dir[0], self.y - self.dir[1])
         pygame.draw.line(self.surface, "black", (self.x, self.y), endOfLine)
 
