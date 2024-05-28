@@ -48,8 +48,8 @@ class TileMap():
             x = 0
             for tile in row:
                 if tile == '-1':
-                    self.start_x, self.start_y = x * self.tile_size,
-                    y * self.tile_size
+                    self.start_x = x * self.tile_size,
+                    self.start_y = y * self.tile_size
                 elif tile == '0':
                     tiles.append(Tile('lightGrey.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
