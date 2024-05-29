@@ -1,28 +1,63 @@
 # RoboGame
 
-# Sketches
-## Jonathan
-![](images/Design_Jonathan.png)
+# Coding
+- We can store and load Tilemaps using "Tiled" which created .csv files (part of our Sprint_2 github.io page)
 
-![](images/Menu_Jonathan.png) 
 
-![](images/Roboter_Jonathan.jpeg)
-## Matthias
-![](images/Tank_Matthias.png)
+![](images/Tiled_1.JPG)
 
-![](images/Cats_Matthias.png)
-## Amina
-![](images/Design_Amina.JPG)
+# Graphics Design
 
-# Arena
+Jonathan added the function that the Game Window automatically adjusts to the screen size. 
+The Game Window is now placed in the middle of the screen.
 
-- created Arena with Level Editor "Tiled". Created the map by inserting Tiles into the Grid. 
-You then get a csv file which has numbers for each Tile and makes building the Arena easier. 
-![](images/Tiled_Window.png)
+Jonathan added a free Tileset with 16x16 Tiles and designed the Arena with a different size.
+(Tileset from itch.io: https://wareya.itch.io/versatile-255-tile-pixel-art-pack)
 
-![](images/Tiled_Struktur.png)
+![](images/New_Tilemap_Jonathan.JPG) 
 
-## Arena with Player
-Currently we have a labyrinth with different tiles, that Jonathan and Matze created together, over which a player (blue circle) can move. Starting in the middle of the blue circle there is also a black line that ends at the position of the mouse. This can later help if we want to "shoot" in the direction of the mouse.
-The movement of the player was also implemented by Jonathan and Matze, while the rest was made by Amina.
-![](images/Game_Design.png) 
+Jonathan added a Robot Design drawn using Gimp.
+
+![](images/robot_Jonathan.JPG) 
+
+Matthias added a start screen and a menu screen and got started at trying to figure out collisions.
+
+![](images/Main_Menu_Matthias.png)
+
+![](images/Options_Matthias.png)
+
+Amina added a timer as well as the player's points, properties and collections.
+
+![](images/Materials_Timer_Amina.png)
+
+# AI Tools
+Amina did 3a)
+Jonathan did 3b)
+Jonathan and Amina did 3c)
+
+# AI Documentation
+
+![](images/AI_Documentation_2.png)
+
+![](images/AI_Documentation.png)
+
+# AI Tests
+Chatgpt created integration tests in a separate python file which should test if each class in the pygame code is
+correctly initialized.
+When running the test file there should be a result printed in the command line which shows the success or failure
+of the test.
+This is supposed to happen:
+
+![](images/AI_Test.JPG)
+
+When running the test, there was no message, so the AI test didn't really work.
+
+# AI Flake8 Correction
+Chatgpt was able to fix a file with 19 Flake8 Errors. 
+
+Before:
+
+![](images/Flake8_AI_1.JPG)
+After:
+
+![](images/Flake8_AI_2.JPG)

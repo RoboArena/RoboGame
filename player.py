@@ -2,15 +2,24 @@ import pygame
 
 
 class Player:
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, energy, wood, stone,
+                 battery, speed, healing, force, points):
         self.x = x
         self.y = y
         self.r = 32
+        self.energy = energy
+        self.wood = wood
+        self.stone = stone
+        self.battery = battery
+        self.speed = speed
+        self.healing = healing
+        self.force = force
+        self.points = points
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
         # This is the player's hitbox, change when we have a sprite
-        self.image = pygame.Surface((self.r * 2, self.r * 2))
+        self.image = pygame.image.load('robot.png').convert_alpha()
         self.rect = self.image.get_rect()
 
     def update(self):
@@ -20,8 +29,13 @@ class Player:
         self.draw()
 
     def draw(self):
-        pygame.draw.rect(self.surface, "black", self.rect)
-        pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
+        # make Hitbox visible
+        #pygame.draw.rect(self.surface, "black", self.rect)
+        # (1) The player is a blue circle
+        # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
+        # (2) The player is a robot
+        self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
+                                       self.y - self.image.get_height() // 2))
         endOfLine = (self.x - self.dir[0], self.y - self.dir[1])
         pygame.draw.line(self.surface, "black", (self.x, self.y), endOfLine)
 
