@@ -13,6 +13,7 @@ Jonathan added a free Tileset with 16x16 Tiles and designed the Arena with a dif
 (Tileset from itch.io: https://wareya.itch.io/versatile-255-tile-pixel-art-pack)
 ![](images/New_Tilemap_Jonathan.JPG) 
 
+Jonathan added a Robot Design drawn using Gimp.
 ![](images/robot_Jonathan.JPG) 
 
 ![](images/Main_Menu_Matthias.png)
