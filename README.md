@@ -1,9 +1,7 @@
 # RoboGame
 
-# Sketches
-- created Arena with Level Editor "Tiled". Created the map by inserting Tiles into the Grid. 
-You then get a csv file which has numbers for each Tile and makes building the Arena easier. 
-
+# Coding
+- We can store and load Tiles using "Tiled" which created .csv files (part of our Sprint_2 github.io page)
 
 
 ![](images/Tiled_1.JPG)
