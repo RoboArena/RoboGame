@@ -49,6 +49,7 @@ of the test.
 This is supposed to happen:
 
 ![](images/AI_Test.JPG)
+
 When running the test, there was no message, so the AI test didn't really work.
 
 # AI Flake8 Correction
