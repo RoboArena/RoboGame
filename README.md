@@ -40,6 +40,7 @@ correctly initialized.
 When running the test file there should be a result printed in the command line which shows the success or failure
 of the test.
 This is supposed to happen:
+
 ![](images/AI_Test.JPG)
 
 When running the test, there was no message, so the AI test didn't really work.
