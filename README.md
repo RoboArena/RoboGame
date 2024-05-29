@@ -4,6 +4,13 @@
 ## Jonathan
 ![](images/Tiled_1.JPG)
 
+# Design
+
+Jonathan added the function that the Game Window automatically adjusts to the screen size. 
+The Game Window is now placed in the middle of the screen.
+
+Jonathan added a free Tileset with 16x16 Tiles and designed the Arena with a different size.
+(Tileset from itch.io: https://wareya.itch.io/versatile-255-tile-pixel-art-pack)
 ![](images/New_Tilemap_Jonathan.JPG) 
 
 ![](images/robot_Jonathan.JPG) 
