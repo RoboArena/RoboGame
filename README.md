@@ -2,17 +2,21 @@
 
 # Sketches
 ## Jonathan
-![](images/Design_Jonathan.png)
+![](images/Tiled_1.JPG)
 
-![](images/Menu_Jonathan.png) 
+![](images/New_Tilemap_Jonathan.JPG) 
 
-![](images/Roboter_Jonathan.jpeg)
+![](images/robot_Jonathan.JPG) 
+
+![](images/Main_Menu_Matthias.png)
 ## Matthias
-![](images/Tank_Matthias.png)
+![](images/Options_Matthias.png)
 
-![](images/Cats_Matthias.png)
+![](images/AI_Test.JPG)
 ## Amina
-![](images/Design_Amina.JPG)
+![](images/Flake8_AI_1.JPG)
+
+![](images/Flake8_AI_2.JPG)
 
 # Arena
 
