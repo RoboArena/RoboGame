@@ -37,6 +37,10 @@ Jonathan and Amina did 3c)
 
 # AI Documentation
 
+![](images/AI_Documentation_2.png)
+
+![](images/AI_Documentation.png)
+
 # AI Tests
 Chatgpt created integration tests in a separate python file which should test if each class in the pygame code is
 correctly initialized.
