@@ -60,5 +60,3 @@ Before:
 After:
 
 ![](images/Flake8_AI_2.JPG)
-
-![](images/AI_Test.JPG)
