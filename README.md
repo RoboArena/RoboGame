@@ -13,12 +13,15 @@ The Game Window is now placed in the middle of the screen.
 
 Jonathan added a free Tileset with 16x16 Tiles and designed the Arena with a different size.
 (Tileset from itch.io: https://wareya.itch.io/versatile-255-tile-pixel-art-pack)
+
 ![](images/New_Tilemap_Jonathan.JPG) 
 
 Jonathan added a Robot Design drawn using Gimp.
+
 ![](images/robot_Jonathan.JPG) 
 
 Matthias added a start screen and a menu screen and got started at trying to figure out collisions.
+
 ![](images/Main_Menu_Matthias.png)
 
 ![](images/Options_Matthias.png)
