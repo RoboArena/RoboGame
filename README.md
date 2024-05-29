@@ -47,12 +47,16 @@ correctly initialized.
 When running the test file there should be a result printed in the command line which shows the success or failure
 of the test.
 This is supposed to happen:
+
 ![](images/AI_Test.JPG)
 When running the test, there was no message, so the AI test didn't really work.
 
 # AI Flake8 Correction
 Chatgpt was able to fix a file with 19 Flake8 Errors. 
+Before:
+
 ![](images/Flake8_AI_1.JPG)
+After:
 
 ![](images/Flake8_AI_2.JPG)
 
