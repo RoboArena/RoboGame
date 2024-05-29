@@ -1,7 +1,12 @@
 # RoboGame
 
 # Sketches
-## Jonathan
+- created Arena with Level Editor "Tiled". Created the map by inserting Tiles into the Grid. 
+You then get a csv file which has numbers for each Tile and makes building the Arena easier. 
+![](images/Materials_Timer_Amina.png)
+
+
+
 ![](images/Tiled_1.JPG)
 
 # Design
@@ -27,12 +32,14 @@ Jonathan added a Robot Design drawn using Gimp.
 ![](images/Flake8_AI_2.JPG)
 
 # Arena
+Jonathan and Amina did 
+3a
+3b) 
+Chatgpt created integration tests in a separate python file which should test if each class in the pygame code is
+correctly initialized.
+When running the test file there should be a result printed in the command line which shows the success or failure
+of the test.
+This is supposed to happen:
+![](images/AI_Test.JPG)
 
-- created Arena with Level Editor "Tiled". Created the map by inserting Tiles into the Grid. 
-You then get a csv file which has numbers for each Tile and makes building the Arena easier. 
-![](images/Materials_Timer_Amina.png)
-
-
-## Arena with Player
-Currently we have a labyrinth with different tiles, that Jonathan and Matze created together, over which a player (blue circle) can move. Starting in the middle of the blue circle there is also a black line that ends at the position of the mouse. This can later help if we want to "shoot" in the direction of the mouse.
-The movement of the player was also implemented by Jonathan and Matze, while the rest was made by Amina.
+When running the test, there was no message, so the AI test didn't really work.
