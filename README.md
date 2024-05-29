@@ -6,7 +6,7 @@
 
 ![](images/Tiled_1.JPG)
 
-# Design
+# Graphics Design
 
 Jonathan added the function that the Game Window automatically adjusts to the screen size. 
 The Game Window is now placed in the middle of the screen.
