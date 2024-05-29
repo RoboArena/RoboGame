@@ -18,7 +18,7 @@ class Player:
         self.game = game
         self.surface = game.canvas
         self.image = pygame.image.load('robot.png').convert_alpha()
-        
+
         # This is the player's hitbox
         self.rect = self.image.get_rect()
         self.rectX = -25
@@ -57,8 +57,8 @@ class Player:
     def get_hits(self, tiles):
         hits = []
         for tile in tiles:
-            tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x, 
-                                    tile.rect.y + self.game.offset_y, 
+            tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
+                                    tile.rect.y + self.game.offset_y,
                                     tile.rect.width, tile.rect.height)
             if self.rect.colliderect(tile_rect):
                 if tile.tileName != "darkGrey.png":
