@@ -1,7 +1,7 @@
 # RoboGame
 
 # Coding
-- We can store and load Tiles using "Tiled" which created .csv files (part of our Sprint_2 github.io page)
+- We can store and load Tilemaps using "Tiled" which created .csv files (part of our Sprint_2 github.io page)
 
 
 ![](images/Tiled_1.JPG)
