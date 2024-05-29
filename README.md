@@ -31,19 +31,25 @@ Amina added a timer as well as the player's points, properties and collections.
 ![](images/Materials_Timer_Amina.png)
 
 # AI Tools
-Jonathan and Amina did 
-3a)
-3b) 
+Amina did 3a)
+Jonathan did 3b)
+Jonathan and Amina did 3c)
+
+# AI Documentation
+
+# AI Tests
 Chatgpt created integration tests in a separate python file which should test if each class in the pygame code is
 correctly initialized.
 When running the test file there should be a result printed in the command line which shows the success or failure
 of the test.
 This is supposed to happen:
-3c)
+![](images/AI_Test.JPG)
+When running the test, there was no message, so the AI test didn't really work.
+
+# AI Flake8 Correction
+Chatgpt was able to fix a file with 19 Flake8 Errors. 
 ![](images/Flake8_AI_1.JPG)
 
 ![](images/Flake8_AI_2.JPG)
 
 ![](images/AI_Test.JPG)
-
-When running the test, there was no message, so the AI test didn't really work.
