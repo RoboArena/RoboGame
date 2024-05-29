@@ -25,7 +25,6 @@ Matthias added a start screen and a menu screen and got started at trying to fig
 
 ![](images/Options_Matthias.png)
 
-![](images/AI_Test.JPG)
 ## Amina
 
 Amina added a timer as well as the player's points, properties and collections.
