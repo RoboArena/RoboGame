@@ -42,7 +42,8 @@ class Player:
         hits = []
         for tile in tiles:
             if self.rect.colliderect(tile):
-                hits.append(tile)
+                if tile.tileName != "darkGrey.png":
+                    hits.append(tile)
         return hits
 
     def checkCollisionsx(self, tiles, keys):

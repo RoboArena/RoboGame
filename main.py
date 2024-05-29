@@ -21,7 +21,7 @@ class Game:
         self.window = pygame.display.set_mode((self.window_witdh,
                                                self.window_height))
         spritesheet = Spritesheet('Tiles50.png')
-        self.map = TileMap('ArenaNoBackground.csv', spritesheet)
+        self.map = TileMap('RoboArena.csv', spritesheet)
         self.clock = pygame.time.Clock()
         self.player = player.Player(self, 500, 500)
         self.main_menu()
