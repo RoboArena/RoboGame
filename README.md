@@ -53,6 +53,7 @@ When running the test, there was no message, so the AI test didn't really work.
 
 # AI Flake8 Correction
 Chatgpt was able to fix a file with 19 Flake8 Errors. 
+
 Before:
 
 ![](images/Flake8_AI_1.JPG)
