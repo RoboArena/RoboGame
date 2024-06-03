@@ -19,7 +19,7 @@ class Tile(pygame.sprite.Sprite):
 
 class TileMap():
     def __init__(self, filename, spritesheet):
-        self.tile_size = 16
+        self.tile_size = 32
         self.start_x, self.start_y = 0, 0
         self.spritesheet = spritesheet
         self.tiles = self.load_tiles(filename)
@@ -54,22 +54,22 @@ class TileMap():
                     self.start_x = x * self.tile_size,
                     self.start_y = y * self.tile_size
                 elif tile == '0':
-                    tiles.append(Tile('lightGrey.png', x * self.tile_size,
+                    tiles.append(Tile('wall.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '1':
-                    tiles.append(Tile('blue.png', x * self.tile_size,
+                    tiles.append(Tile('material.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '2':
-                    tiles.append(Tile('black.png', x * self.tile_size,
+                    tiles.append(Tile('stone.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '3':
-                    tiles.append(Tile('darkGrey.png', x * self.tile_size,
+                    tiles.append(Tile('floor.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '4':
-                    tiles.append(Tile('green.png', x * self.tile_size,
+                    tiles.append(Tile('toxic_puddle.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '5':
-                    tiles.append(Tile('brown.png', x * self.tile_size,
+                    tiles.append(Tile('wood.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 x += 1
             y += 1
