@@ -147,6 +147,7 @@ class Game:
         running = True
         timer_event = pygame.USEREVENT+1
         pygame.time.set_timer(timer_event, 1000)
+        clock = pygame.time.Clock()
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -235,6 +236,8 @@ class Game:
             pygame.display.flip()
 
             pygame.display.update()
+
+            clock.tick(30)
 
 
 game = Game()
