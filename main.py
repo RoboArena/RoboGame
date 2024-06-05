@@ -19,8 +19,6 @@ class Game:
         # clock variables:
         self.clock = pygame.time.Clock()
         self.timer = 120
-        self.font = get_font(50)
-        self.text = self.font.render(str(self.timer), True, "Black")
 
         # Get the current display information
         display_info = pygame.display.Info()
@@ -62,11 +60,11 @@ class Game:
             MENU_MOUSE_POS = pygame.mouse.get_pos()
 
             MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
-            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width / 2,
+            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width * 0.5,
                                                    self.window_height * 0.15))
 
             PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
-                              pos=(self.window_width / 2,
+                              pos=(self.window_width * 0.5,
                                    self.window_height * 0.35),
                               text_input="PLAY",
                               font=get_font(75),
@@ -74,7 +72,7 @@ class Game:
                               hovering_color="White")
             OPT_BTN = Button(image=pygame.image.load(
                             "assets/Options Rect.png"),
-                             pos=(self.window_width / 2,
+                             pos=(self.window_width * 0.5,
                                   self.window_height * 0.5),
                              text_input="OPTIONS",
                              font=get_font(75),
@@ -82,7 +80,7 @@ class Game:
                              hovering_color="White")
             QUIT_BTN = Button(image=pygame.image.load(
                             "assets/Quit Rect.png"),
-                              pos=(self.window_width / 2,
+                              pos=(self.window_width * 0.5,
                                    self.window_height * 0.65),
                               text_input="QUIT",
                               font=get_font(75),
@@ -117,12 +115,12 @@ class Game:
             self.canvas.fill("white")
 
             OPT_TEXT = get_font(45).render("OPTIONS screen.", True, "Black")
-            OPT_RECT = OPT_TEXT.get_rect(center=(self.window_width / 2,
+            OPT_RECT = OPT_TEXT.get_rect(center=(self.window_width * 0.5,
                                                  self.window_height * 0.25))
             self.canvas.blit(OPT_TEXT, OPT_RECT)
 
             OPT_BACK = Button(image=None,
-                              pos=(self.window_width / 2,
+                              pos=(self.window_width * 0.5,
                                    self.window_height * 0.45),
                               text_input="BACK",
                               font=get_font(75),
@@ -156,8 +154,6 @@ class Game:
                     running = False
                 if event.type == timer_event:
                     self.timer -= 1
-                    self.text = self.font.render(str(self.timer),
-                                                 True, "Black")
                     if self.timer == 0:
                         pygame.time.set_timer(timer_event, 0)
 
@@ -177,8 +173,11 @@ class Game:
             self.window.blit(self.canvas, (0, 0))
 
             # display timer
-            text_rect = self.text.get_rect(topright=(1380, 100))
-            self.window.blit(self.text, text_rect)
+            timer_font = get_font(50)
+            timer_text = timer_font.render(str(self.timer), True, "Black")
+            timer_text_rect = timer_text.get_rect(topright=(1380, 100))
+            timer_text = timer_font.render(str(self.timer), True, "Black")
+            self.window.blit(timer_text, timer_text_rect)
 
             # display robot points
             points_font = get_font(35)
@@ -188,47 +187,53 @@ class Game:
             points_text_rect = points_text.get_rect(topleft=(165, 100))
             self.window.blit(points_text, points_text_rect)
 
-            # display robot properties
-            properties_font = get_font(25)
+        # display robot properties
+            prop_font = get_font(25)
+            prop_color = "Black"
 
-            speed_text = properties_font.render("Speed: " +
-                                                str(self.player.speed),
-                                                True, "Black")
+            # display speed
+            speed_text = prop_font.render("Speed: " +
+                                          str(self.player.speed),
+                                          True, prop_color)
             speed_text_rect = speed_text.get_rect(topleft=(165, 665))
             self.window.blit(speed_text, speed_text_rect)
 
-            healing_text = properties_font.render("Healing: " +
-                                                  str(self.player.healing),
-                                                  True, "Black")
+            # display healing ability
+            healing_text = prop_font.render("Healing: " +
+                                            str(self.player.healing),
+                                            True, prop_color)
             healing_text_rect = healing_text.get_rect(topleft=(165, 700))
             self.window.blit(healing_text, healing_text_rect)
 
-            force_text = properties_font.render("Shooting Force: " +
-                                                str(self.player.force),
-                                                True, "Black")
+            # display shooting force
+            force_text = prop_font.render("Shooting Force: " +
+                                          str(self.player.force),
+                                          True, prop_color)
             force_text_rect = force_text.get_rect(topleft=(165, 735))
             self.window.blit(force_text, force_text_rect)
 
-            # display robot collections
+        # display robot collections
             collect_font = get_font(25)
-            wood_text = collect_font.render(
-                "Wood: " + str(self.player.wood),
-                True, "Black"
-            )
+            collect_color = "Black"
+
+            # display collected wood
+            wood_text = collect_font.render("Wood: " +
+                                            str(self.player.wood),
+                                            True, collect_color)
             wood_text_rect = wood_text.get_rect(topright=(1380, 665))
             self.window.blit(wood_text, wood_text_rect)
 
-            stone_text = collect_font.render(
-                "Stone: " + str(self.player.stone),
-                True, "Black"
-            )
+            # display collected stone
+            stone_text = collect_font.render("Stone: " +
+                                             str(self.player.stone),
+                                             True, collect_color)
             stone_text_rect = stone_text.get_rect(topright=(1380, 700))
             self.window.blit(stone_text, stone_text_rect)
 
-            battery_text = collect_font.render(
-                "Batteries: " + str(self.player.battery),
-                True, "Black"
-            )
+            # display collected battery
+            battery_text = collect_font.render("Batteries: " +
+                                               str(self.player.battery),
+                                               True, collect_color)
             battery_text_rect = battery_text.get_rect(topright=(1380, 735))
             self.window.blit(battery_text, battery_text_rect)
 
