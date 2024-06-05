@@ -63,7 +63,7 @@ class TileMap():
                     tiles.append(Tile('stone.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '3':
-                    tiles.append(Tile('floor.png', x * self.tile_size,
+                    tiles.append(Tile('background.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
                 elif tile == '4':
                     tiles.append(Tile('toxic_puddle.png', x * self.tile_size,
