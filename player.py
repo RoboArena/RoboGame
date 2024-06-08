@@ -61,7 +61,7 @@ class Player:
                                     tile.rect.y + self.game.offset_y,
                                     tile.rect.width, tile.rect.height)
             if self.rect.colliderect(tile_rect):
-                if tile.tileName != "darkGrey.png":
+                if tile.tileName != "background.png":
                     hits.append(tile)
         return hits
 
