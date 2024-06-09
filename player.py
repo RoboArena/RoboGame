@@ -24,15 +24,30 @@ class Player:
         self.rectX = -25
         self.rectY = -25
 
+        # player's mining hitbox - change pygame.rect to change size of hitbox
+        self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
+        self.mining_hitboxX = -75
+        self.mining_hitboxY = -75
+
+        # To track mouse clicks of left mouse button
+        self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
         self.draw()
+        # update the currently mineable tiles
+        self.get_hits_mining(self.game.map.tiles)
+        # save the previous mouse click so that you can't hold left mouse click
+        # to mine stone/wood but have to click each time
+        self.previous_mouse_state = pygame.mouse.get_pressed()[0]
 
     def draw(self):
         # make Hitbox visible
         pygame.draw.rect(self.surface, "black", self.rect)
+        # draw mining hitbox (for debugging)
+        pygame.draw.rect(self.surface, "red", self.mining_hitbox, 2)
         # (1) The player is a blue circle
         # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
         # (2) The player is a robot
@@ -48,11 +63,13 @@ class Player:
         if keys[pygame.K_RIGHT]:
             self.x += speed * self.game.delta_time
         self.checkCollisionsx(self.game.map.tiles, keys)
+        self.get_hits_mining(self.game.map.tiles)
         if keys[pygame.K_UP]:
             self.y -= speed * self.game.delta_time
         if keys[pygame.K_DOWN]:
             self.y += speed * self.game.delta_time
         self.checkCollisionsy(self.game.map.tiles, keys)
+        self.get_hits_mining(self.game.map.tiles)
 
     def get_hits(self, tiles):
         hits = []
@@ -89,3 +106,44 @@ class Player:
                 self.y = tile.rect.top - self.rect.height // 2
                 self.y += self.game.offset_y
         self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+
+    # check if the mining_hitbox collides with wood/stone tiles.
+    # If a collision happens and the player is clicking
+    # on the colliding tile (stone or wood) it will be mined and the resource
+    # is added to the players inventory
+    def get_hits_mining(self, tiles):
+        self.mining_hitbox.center = (self.x, self.y)
+        mouse_pos = pygame.mouse.get_pos()
+        if self.new_left_mouse_click():
+            for tile in tiles:
+                tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
+                                        tile.rect.y + self.game.offset_y,
+                                        tile.rect.width, tile.rect.height)
+                if self.mining_hitbox.colliderect(tile_rect):
+                    # checks if the player aims at a tile and also presses
+                    # the left mouse button
+                    if self.aiming_at_tile(tile_rect, mouse_pos) and \
+                       pygame.mouse.get_pressed()[0]:
+                        if tile.tileName == "stone.png":
+                            # update the stone tile at x,y with background.png
+                            self.game.map.update_tile(tile.rect.x, tile.rect.y,
+                                                      'background.png')
+                            self.stone = self.stone + 1
+                        if tile.tileName == "wood.png":
+                            self.game.map.update_tile(tile.rect.x, tile.rect.y,
+                                                      'background.png')
+                            self.wood = self.wood + 1
+        self.mining_hitbox.center = (self.x, self.y)
+        return
+
+    # Is the mouse currently aiming at the tile tile_rect?
+    def aiming_at_tile(self, tile_rect, mouse_pos):
+        # Check if the mouse position is within the bounds of the tile
+        return tile_rect.collidepoint(mouse_pos)
+
+    # if the current LMB click is a "new" click (not holding LMB)
+    # then return true
+    def new_left_mouse_click(self):
+        current_mouse_state = pygame.mouse.get_pressed()[0]
+        is_new_click = current_mouse_state and not self.previous_mouse_state
+        return is_new_click
