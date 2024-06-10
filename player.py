@@ -21,6 +21,8 @@ class Player:
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
+        self.rect.width -= 12   # Adjust the hitbox size
+        self.rect.height -= 12
         self.rect.center = (self.x, self.y)
 
     def update(self):
