@@ -18,6 +18,7 @@ class Player:
         self.game = game
         self.surface = game.canvas
         self.image = pygame.image.load('robot.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40, 40))
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
