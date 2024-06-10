@@ -21,8 +21,7 @@ class Player:
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
-        self.rectX = -25
-        self.rectY = -25
+        self.rect.center = (self.x, self.y)
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -43,16 +42,31 @@ class Player:
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
+        dx, dy = 0, 0
         if keys[pygame.K_LEFT]:
-            self.x -= speed * self.game.delta_time
+            dx -= speed * self.game.delta_time
         if keys[pygame.K_RIGHT]:
-            self.x += speed * self.game.delta_time
-        self.checkCollisionsx(self.game.map.tiles, keys)
+            dx += speed * self.game.delta_time
         if keys[pygame.K_UP]:
-            self.y -= speed * self.game.delta_time
+            dy -= speed * self.game.delta_time
         if keys[pygame.K_DOWN]:
-            self.y += speed * self.game.delta_time
-        self.checkCollisionsy(self.game.map.tiles, keys)
+            dy += speed * self.game.delta_time
+
+        # Aufteilen der Bewegung in kleinere Schritte
+        steps = max(abs(dx), abs(dy))
+        if steps == 0:
+            return
+
+        dx /= steps
+        dy /= steps
+
+        for _ in range(int(steps)):
+            if dx != 0:
+                self.x += dx
+                self.checkCollisionsx(self.game.map.tiles, keys)
+            if dy != 0:
+                self.y += dy
+                self.checkCollisionsy(self.game.map.tiles, keys)
 
     def get_hits(self, tiles):
         hits = []
@@ -66,7 +80,7 @@ class Player:
         return hits
 
     def checkCollisionsx(self, tiles, keys):
-        self.rect.x = self.x + self.rectX  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         collisions = self.get_hits(tiles)
         for tile in collisions:
             if keys[pygame.K_LEFT]:
@@ -75,11 +89,12 @@ class Player:
             if keys[pygame.K_RIGHT]:
                 self.x = tile.rect.left - self.rect.width // 2
                 self.x += self.game.offset_x
-        self.rect.x = self.x + self.rectX  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
     def checkCollisionsy(self, tiles, keys):
-        self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
+        self.rect.top -= 1
         collisions = self.get_hits(tiles)
         for tile in collisions:
             if keys[pygame.K_UP]:
@@ -88,4 +103,4 @@ class Player:
             if keys[pygame.K_DOWN]:
                 self.y = tile.rect.top - self.rect.height // 2
                 self.y += self.game.offset_y
-        self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position

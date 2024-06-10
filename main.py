@@ -49,7 +49,7 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, 500, 500, 10, 0, 0, 0, 1, 1, 1, 0)
+        self.player = player.Player(self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0)
         self.main_menu()
 
     def main_menu(self):
