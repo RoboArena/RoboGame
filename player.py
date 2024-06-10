@@ -1,4 +1,5 @@
 import pygame
+import bullet
 
 
 class Player:
@@ -18,16 +19,21 @@ class Player:
         self.game = game
         self.surface = game.canvas
         self.image = pygame.image.load('robot.png').convert_alpha()
+        self.bullets = []
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
-        self.rectX = -25
-        self.rectY = -25
+        self.rect.center = (self.x, self.y)
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].updateBullet()
+            if not self.bullets[x-1].valid:
+                self.bullets.pop(x-1)
+                break
         self.draw()
 
     def draw(self):
@@ -38,21 +44,43 @@ class Player:
         # (2) The player is a robot
         self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
                                        self.y - self.image.get_height() // 2))
-        endOfLine = (self.x - self.dir[0], self.y - self.dir[1])
-        pygame.draw.line(self.surface, "black", (self.x, self.y), endOfLine)
+        bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].drawBullet(self.surface)
+
+        if pygame.mouse.get_pressed()[0]:
+            bullet_x = self.x
+            bullet_y = self.y
+            self.bullets.append(bullet.Bullet(bullet_x, bullet_y,
+                                              self.dir, bullet_destination))
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
+        dx, dy = 0, 0
         if keys[pygame.K_LEFT]:
-            self.x -= speed * self.game.delta_time
+            dx -= speed * self.game.delta_time
         if keys[pygame.K_RIGHT]:
-            self.x += speed * self.game.delta_time
-        self.checkCollisionsx(self.game.map.tiles, keys)
+            dx += speed * self.game.delta_time
         if keys[pygame.K_UP]:
-            self.y -= speed * self.game.delta_time
+            dy -= speed * self.game.delta_time
         if keys[pygame.K_DOWN]:
-            self.y += speed * self.game.delta_time
-        self.checkCollisionsy(self.game.map.tiles, keys)
+            dy += speed * self.game.delta_time
+
+        # Aufteilen der Bewegung in kleinere Schritte
+        steps = max(abs(dx), abs(dy))
+        if steps == 0:
+            return
+
+        dx /= steps
+        dy /= steps
+
+        for _ in range(int(steps)):
+            if dx != 0:
+                self.x += dx
+                self.checkCollisionsx(self.game.map.tiles, keys)
+            if dy != 0:
+                self.y += dy
+                self.checkCollisionsy(self.game.map.tiles, keys)
 
     def get_hits(self, tiles):
         hits = []
@@ -66,7 +94,7 @@ class Player:
         return hits
 
     def checkCollisionsx(self, tiles, keys):
-        self.rect.x = self.x + self.rectX  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         collisions = self.get_hits(tiles)
         for tile in collisions:
             if keys[pygame.K_LEFT]:
@@ -75,11 +103,12 @@ class Player:
             if keys[pygame.K_RIGHT]:
                 self.x = tile.rect.left - self.rect.width // 2
                 self.x += self.game.offset_x
-        self.rect.x = self.x + self.rectX  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
     def checkCollisionsy(self, tiles, keys):
-        self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
+        self.rect.top -= 1
         collisions = self.get_hits(tiles)
         for tile in collisions:
             if keys[pygame.K_UP]:
@@ -88,4 +117,4 @@ class Player:
             if keys[pygame.K_DOWN]:
                 self.y = tile.rect.top - self.rect.height // 2
                 self.y += self.game.offset_y
-        self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+        self.rect.center = (self.x, self.y)  # Update the Hitbox Position
