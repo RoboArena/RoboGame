@@ -145,6 +145,7 @@ class Game:
         running = True
         timer_event = pygame.USEREVENT+1
         pygame.time.set_timer(timer_event, 1000)
+        clock = pygame.time.Clock()
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -174,72 +175,85 @@ class Game:
 
             # display timer
             timer_font = get_font(50)
-            timer_text = timer_font.render(str(self.timer), True, "Black")
-            timer_text_rect = timer_text.get_rect(topright=(1380, 100))
-            timer_text = timer_font.render(str(self.timer), True, "Black")
+            timer_text = timer_font.render(str(self.timer), True, "White")
+            timer_text_rect = timer_text.get_rect(topright=(self.window_width
+                                                            - 50, 100))
+            timer_text = timer_font.render(str(self.timer), True, "White")
             self.window.blit(timer_text, timer_text_rect)
 
             # display robot points
             points_font = get_font(35)
             points_text = points_font.render("Points: " +
                                              str(self.player.points),
-                                             True, "Black")
-            points_text_rect = points_text.get_rect(topleft=(165, 100))
+                                             True, "White")
+            points_text_rect = points_text.get_rect(topleft=(50, 100))
             self.window.blit(points_text, points_text_rect)
 
         # display robot properties
             prop_font = get_font(25)
-            prop_color = "Black"
+            prop_color = "White"
+            bottom_left = self.window_height - 100
 
             # display speed
             speed_text = prop_font.render("Speed: " +
                                           str(self.player.speed),
                                           True, prop_color)
-            speed_text_rect = speed_text.get_rect(topleft=(165, 665))
+            speed_text_rect = speed_text.get_rect(topleft=(50,
+                                                           bottom_left - 35))
             self.window.blit(speed_text, speed_text_rect)
 
             # display healing ability
             healing_text = prop_font.render("Healing: " +
                                             str(self.player.healing),
                                             True, prop_color)
-            healing_text_rect = healing_text.get_rect(topleft=(165, 700))
+            healing_text_rect = healing_text.get_rect(topleft=(50,
+                                                               bottom_left
+                                                               ))
             self.window.blit(healing_text, healing_text_rect)
 
             # display shooting force
             force_text = prop_font.render("Shooting Force: " +
                                           str(self.player.force),
                                           True, prop_color)
-            force_text_rect = force_text.get_rect(topleft=(165, 735))
+            force_text_rect = force_text.get_rect(topleft=(50,
+                                                           bottom_left + 35))
             self.window.blit(force_text, force_text_rect)
 
-        # display robot collections
+            # display robot collections
             collect_font = get_font(25)
-            collect_color = "Black"
+            collect_color = "White"
+            bottom_right = self.window_height - 100
 
             # display collected wood
             wood_text = collect_font.render("Wood: " +
                                             str(self.player.wood),
                                             True, collect_color)
-            wood_text_rect = wood_text.get_rect(topright=(1380, 665))
+            wood_text_rect = wood_text.get_rect(topright=(self.window_width-50,
+                                                          bottom_right - 35))
             self.window.blit(wood_text, wood_text_rect)
 
             # display collected stone
             stone_text = collect_font.render("Stone: " +
                                              str(self.player.stone),
                                              True, collect_color)
-            stone_text_rect = stone_text.get_rect(topright=(1380, 700))
+            stone_text_rect = stone_text.get_rect(topright=(self.window_width
+                                                            - 50,
+                                                            bottom_right))
             self.window.blit(stone_text, stone_text_rect)
 
             # display collected battery
             battery_text = collect_font.render("Batteries: " +
                                                str(self.player.battery),
                                                True, collect_color)
-            battery_text_rect = battery_text.get_rect(topright=(1380, 735))
+            battery_text_rect = battery_text.get_rect(
+                topright=(self.window_width - 50, bottom_right + 35))
             self.window.blit(battery_text, battery_text_rect)
 
             pygame.display.flip()
 
             pygame.display.update()
+
+            clock.tick(30)
 
 
 game = Game()
