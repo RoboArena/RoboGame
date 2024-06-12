@@ -89,3 +89,10 @@ class Player:
                 self.y = tile.rect.top - self.rect.height // 2
                 self.y += self.game.offset_y
         self.rect.y = self.y + self.rectY  # Update the Hitbox Position
+
+    def get_position(self):
+        return (self.x, self.y)
+
+    def set_position(self, position):
+        self.x, self.y = position
+        self.rect.center = (self.x, self.y)

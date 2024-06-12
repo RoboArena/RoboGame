@@ -5,6 +5,7 @@ import player
 from spritesheet import Spritesheet
 from tiles import TileMap
 from button import Button
+from network import Network
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -49,7 +50,12 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, 500, 500, 10, 0, 0, 0, 1, 1, 1, 0)
+        # self.player = player.Player(self, 500, 500, 10, 0, 0, 0, 1, 1, 1, 0)
+        self.network = Network("10.0.13.213", 5555)
+        startPos = self.network.get_pos()
+        self.player = player.Player(self, startPos[0], startPos[1], 10, 0, 0, 0, 1, 1, 1, 0)
+        self.other_player = player.Player(self, 0, 0, 10, 0, 0, 0, 1, 1, 1, 0)
+
         self.main_menu()
 
     def main_menu(self):
@@ -167,6 +173,9 @@ class Game:
 
             # draw the player
             self.player.update()
+            self.other_player.update()
+
+            self.other_player.set_position(self.network.send(self.player.get_position()))
             self.player.draw()
 
             # display the canvas on the window
