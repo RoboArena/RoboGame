@@ -42,7 +42,7 @@ class Game:
                                                self.window_height))
 
         # Load in the Spritesheet and the Tilemap
-        spritesheet = Spritesheet('Tiles.png')
+        spritesheet = Spritesheet('assets/Tiles.png')
         self.map = TileMap('RoboArena.csv', spritesheet)
 
         # Calculate the offsets to center the map
