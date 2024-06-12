@@ -6,7 +6,7 @@
 
 ![](images/New_Arena.png)
 
-- Jonathan added the function that you can mine tiles and collect stone/wood resources.
+- added the function that you can mine tiles and collect stone/wood resources.
 
 ![](images/mining_Jonathan.png)
 
@@ -21,7 +21,7 @@
 
 # Amina
 
-- Amina changed the font and adapted it for the new map.
+- changed the font and adapted it for the new map.
 
 ![](images/new_font.png)
 
