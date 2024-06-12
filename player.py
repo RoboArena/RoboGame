@@ -52,6 +52,8 @@ class Player:
         # save the previous mouse click so that you can't hold left mouse click
         # to mine stone/wood but have to click each time
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+        if pygame.mouse.get_pressed()[0]:
+            self.shoot()
 
     def draw(self):
         # make Hitbox visible
@@ -63,15 +65,16 @@ class Player:
         # (2) The player is a robot
         self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
                                        self.y - self.image.get_height() // 2))
-        bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
         for x in range(len(self.bullets)):
             self.bullets[x-1].drawBullet(self.surface)
 
-        if pygame.mouse.get_pressed()[0]:
-            bullet_x = self.x
-            bullet_y = self.y
-            self.bullets.append(bullet.Bullet(bullet_x, bullet_y,
-                                              self.dir, bullet_destination))
+    def shoot(self):
+        bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
+        bullet_x = self.x
+        bullet_y = self.y
+        self.bullets.append(bullet.Bullet(bullet_x, bullet_y,
+                                          self.dir,
+                                          bullet_destination))
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
@@ -106,6 +109,10 @@ class Player:
     def get_hits(self, tiles):
         hits = []
         for tile in tiles:
+            # This is a simple optimization to only check for nearby tiles
+            if (abs(self.x - tile.rect.x) > 300 or
+                    abs(self.y - tile.rect.y) > 300):
+                continue
             tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
                                     tile.rect.y + self.game.offset_y,
                                     tile.rect.width, tile.rect.height)
@@ -149,6 +156,10 @@ class Player:
         mouse_pos = pygame.mouse.get_pos()
         if self.new_left_mouse_click():
             for tile in tiles:
+                # This is a simple optimization to only check for nearby tiles
+                if (abs(self.x - tile.rect.x) > 300 or
+                        abs(self.y - tile.rect.y) > 300):
+                    continue
                 tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
                                         tile.rect.y + self.game.offset_y,
                                         tile.rect.width, tile.rect.height)
