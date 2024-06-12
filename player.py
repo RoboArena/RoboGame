@@ -21,6 +21,13 @@ class Player:
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
 
+        self.tileTupleList = []
+        for tile in self.game.map.tiles:
+            tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
+                                    tile.rect.y + self.game.offset_y,
+                                    tile.rect.width, tile.rect.height)
+            self.tileTupleList.append((tile_rect, tile.tileName))
+
         # This is the player's hitbox
         self.rect = self.image.get_rect()
         self.rect.width -= 12   # Adjust the hitbox size
@@ -88,8 +95,6 @@ class Player:
         if keys[pygame.K_DOWN]:
             dy += speed * self.game.delta_time
 
-        self.get_hits_mining(self.game.map.tiles)
-
         # Aufteilen der Bewegung in kleinere Schritte
         steps = max(abs(dx), abs(dy))
         if steps == 0:
@@ -101,50 +106,43 @@ class Player:
         for _ in range(int(steps)):
             if dx != 0:
                 self.x += dx
-                self.checkCollisionsx(self.game.map.tiles, keys)
+                self.checkCollisionsx(keys)
             if dy != 0:
                 self.y += dy
-                self.checkCollisionsy(self.game.map.tiles, keys)
+                self.checkCollisionsy(keys)
 
-    def get_hits(self, tiles):
+    def get_collisions(self):
         hits = []
-        for tile in tiles:
+        for tile_rect, tile_name in self.tileTupleList:
             # This is a simple optimization to only check for nearby tiles
-            if (abs(self.x - tile.rect.x) > 300 or
-                    abs(self.y - tile.rect.y) > 300):
+            if (abs(self.x - tile_rect.x) > 300 or
+                    abs(self.y - tile_rect.y) > 300):
                 continue
-            tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
-                                    tile.rect.y + self.game.offset_y,
-                                    tile.rect.width, tile.rect.height)
             if self.rect.colliderect(tile_rect):
-                if tile.tileName != "background.png":
-                    hits.append(tile)
+                if tile_name != "background.png":
+                    hits.append(tile_rect)
         return hits
 
-    def checkCollisionsx(self, tiles, keys):
+    def checkCollisionsx(self, keys):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
-        collisions = self.get_hits(tiles)
-        for tile in collisions:
+        collisions = self.get_collisions()
+        for tile_rect in collisions:
             if keys[pygame.K_LEFT]:
-                self.x = tile.rect.right + self.rect.width // 2
-                self.x += self.game.offset_x
+                self.x = tile_rect.right + self.rect.width // 2
             if keys[pygame.K_RIGHT]:
-                self.x = tile.rect.left - self.rect.width // 2
-                self.x += self.game.offset_x
+                self.x = tile_rect.left - self.rect.width // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
-    def checkCollisionsy(self, tiles, keys):
+    def checkCollisionsy(self, keys):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
         self.rect.top -= 1
-        collisions = self.get_hits(tiles)
-        for tile in collisions:
+        collisions = self.get_collisions()
+        for tile_rect in collisions:
             if keys[pygame.K_UP]:
-                self.y = tile.rect.bottom + self.rect.height // 2
-                self.y += self.game.offset_y
+                self.y = tile_rect.bottom + self.rect.height // 2
             if keys[pygame.K_DOWN]:
-                self.y = tile.rect.top - self.rect.height // 2
-                self.y += self.game.offset_y
+                self.y = tile_rect.top - self.rect.height // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
     # check if the mining_hitbox collides with wood/stone tiles.
@@ -155,30 +153,37 @@ class Player:
         self.mining_hitbox.center = (self.x, self.y)
         mouse_pos = pygame.mouse.get_pos()
         if self.new_left_mouse_click():
-            for tile in tiles:
+            for i, (tile_rect, tile_name) in enumerate(self.tileTupleList):
                 # This is a simple optimization to only check for nearby tiles
-                if (abs(self.x - tile.rect.x) > 300 or
-                        abs(self.y - tile.rect.y) > 300):
+                if (abs(self.x - tile_rect.x) > 300 or
+                        abs(self.y - tile_rect.y) > 300):
                     continue
-                tile_rect = pygame.Rect(tile.rect.x + self.game.offset_x,
-                                        tile.rect.y + self.game.offset_y,
-                                        tile.rect.width, tile.rect.height)
                 if self.mining_hitbox.colliderect(tile_rect):
                     # checks if the player aims at a tile and also presses
                     # the left mouse button
-                    if self.aiming_at_tile(tile_rect, mouse_pos) and \
-                       pygame.mouse.get_pressed()[0]:
-                        if tile.tileName == "stone.png":
+                    if (self.aiming_at_tile(tile_rect, mouse_pos) and
+                            pygame.mouse.get_pressed()[0]):
+                        if tile_name == "stone.png":
                             # update the stone tile at x,y with background.png
-                            self.game.map.update_tile(tile.rect.x, tile.rect.y,
-                                                      'background.png')
-                            self.stone = self.stone + 1
-                        if tile.tileName == "wood.png":
-                            self.game.map.update_tile(tile.rect.x, tile.rect.y,
-                                                      'background.png')
-                            self.wood = self.wood + 1
+                            self.game.map.update_tile(
+                                tile_rect.x - self.game.offset_x,
+                                tile_rect.y - self.game.offset_y,
+                                'background.png'
+                            )
+                            self.tileTupleList[i] = (tile_rect,
+                                                     "background.png")
+                            self.stone += 1
+                            print("mine stone")
+                        elif tile_name == "wood.png":
+                            self.game.map.update_tile(
+                                tile_rect.x - self.game.offset_x,
+                                tile_rect.y - self.game.offset_y,
+                                'background.png'
+                            )
+                            self.tileTupleList[i] = (tile_rect,
+                                                     "background.png")
+                            self.wood += 1
         self.mining_hitbox.center = (self.x, self.y)
-        return
 
     # Is the mouse currently aiming at the tile tile_rect?
     def aiming_at_tile(self, tile_rect, mouse_pos):
