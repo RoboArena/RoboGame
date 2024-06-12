@@ -19,11 +19,15 @@ class Player:
         self.game = game
         self.surface = game.canvas
         self.image = pygame.image.load('robot.png').convert_alpha()
-        self.bullets = []
+        self.image = pygame.transform.scale(self.image, (40, 40))
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
+        self.rect.width -= 12   # Adjust the hitbox size
+        self.rect.height -= 12
         self.rect.center = (self.x, self.y)
+
+        self.bullets = []
 
         # player's mining hitbox - change pygame.rect to change size of hitbox
         self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
@@ -32,6 +36,7 @@ class Player:
 
         # To track mouse clicks of left mouse button
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -80,6 +85,7 @@ class Player:
             dy -= speed * self.game.delta_time
         if keys[pygame.K_DOWN]:
             dy += speed * self.game.delta_time
+            
         self.get_hits_mining(self.game.map.tiles)
 
         # Aufteilen der Bewegung in kleinere Schritte
@@ -175,3 +181,4 @@ class Player:
         current_mouse_state = pygame.mouse.get_pressed()[0]
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
+
