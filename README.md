@@ -2,7 +2,7 @@
 
 # Jonathan
 
-- Jonathan added a new Arena Design.
+- added a new Arena Design.
 
 ![](images/New_Arena.png)
 
@@ -10,10 +10,13 @@
 
 ![](images/mining_Jonathan.png)
 
-- Jonathan adapted the Font on screen so that it adapts to the screen size
+- adapted the Font on screen so that it adapts to the screen size
 
 
 # Matthias
+
+- fixed all collision issues
+- tried to add multiplayer
 
 
 # Amina
@@ -22,9 +25,9 @@
 
 ![](images/new_font.png)
 
-- Amina did some cleanups in the code and added documentation
+- did some cleanups in the code and added documentation
 
-- Amina added a shooting effect.
+- added a shooting effect.
 
 ![](images/shooting_Amina.png)
 
