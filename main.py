@@ -13,7 +13,7 @@ def get_font(size):  # Returns Press-Start-2P in the desired size
 
 class Game:
 
-    def __init__(self) -> None:
+    def __init__(self, start_pos) -> None:
         pygame.init()
         self.status = 0
 
@@ -50,7 +50,9 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0)
+        self.player = player.Player(self, start_pos[0], start_pos[1],
+                                    10, 0, 0, 0, 1, 1, 1, 0)
+        self.player2 = player.Player(self, 900, 450, 10, 0, 0, 0, 1, 1, 1, 0)
 
     def main_menu(self):
     
@@ -166,9 +168,9 @@ class Game:
         # draw the tilemap with the calculated offsets
         self.map.draw_map(self.canvas, self.offset_x, self.offset_y)
 
-        # draw the player
+        # draw the players
         self.player.update()
-        self.player.draw()
+        self.player2.draw()
 
         # display the canvas on the window
         self.window.blit(self.canvas, (0, 0))
@@ -256,4 +258,4 @@ class Game:
         clock.tick(30)
 
 
-game = Game()
+
