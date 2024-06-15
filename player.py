@@ -1,10 +1,9 @@
 import pygame
-import bullet
 
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 battery, speed, healing, force, points):
+                 battery, speed, healing, force, points, weapon):
         self.x = x
         self.y = y
         self.energy = energy
@@ -19,7 +18,8 @@ class Player:
         self.game = game
         self.surface = game.canvas
         self.image = pygame.image.load('robot.png').convert_alpha()
-        self.bullets = []
+        # self.bullets = []
+        self.weapon = weapon
 
         # This is the player's hitbox
         self.rect = self.image.get_rect()
@@ -37,11 +37,7 @@ class Player:
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].updateBullet()
-            if not self.bullets[x-1].valid:
-                self.bullets.pop(x-1)
-                break
+        self.weapon.update_weapon()
         self.draw()
         # update the currently mineable tiles
         self.get_hits_mining(self.game.map.tiles)
@@ -59,15 +55,8 @@ class Player:
         # (2) The player is a robot
         self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
                                        self.y - self.image.get_height() // 2))
-        bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(self.surface)
-
-        if pygame.mouse.get_pressed()[0]:
-            bullet_x = self.x
-            bullet_y = self.y
-            self.bullets.append(bullet.Bullet(bullet_x, bullet_y,
-                                              self.dir, bullet_destination))
+        self.weapon.draw_weapon(
+            self.x, self.y, self.dir[0], self.dir[1], self.surface)
 
     def movement(self, speed):
         keys = pygame.key.get_pressed()
