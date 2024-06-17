@@ -4,7 +4,7 @@ import bullet
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 battery, speed, healing, force, points):
+                 battery, speed, healing, force, points, weapon):
         self.x = x
         self.y = y
         self.energy = energy
@@ -20,6 +20,7 @@ class Player:
         self.surface = game.canvas
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
+        self.weapon = weapon
 
         self.tileTupleList = []
         for tile in self.game.map.tiles:
@@ -34,8 +35,6 @@ class Player:
         self.rect.height -= 12
         self.rect.center = (self.x, self.y)
 
-        self.bullets = []
-
         # player's mining hitbox - change pygame.rect to change size of hitbox
         self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
         self.mining_hitboxX = -75
@@ -48,19 +47,13 @@ class Player:
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].updateBullet()
-            if not self.bullets[x-1].valid:
-                self.bullets.pop(x-1)
-                break
+        self.weapon.update_weapon()
         self.draw()
         # update the currently mineable tiles
         self.get_hits_mining(self.game.map.tiles)
         # save the previous mouse click so that you can't hold left mouse click
         # to mine stone/wood but have to click each time
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
-        if pygame.mouse.get_pressed()[0]:
-            self.shoot()
 
     def draw(self):
         # make Hitbox visible
@@ -72,8 +65,8 @@ class Player:
         # (2) The player is a robot
         self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
                                        self.y - self.image.get_height() // 2))
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(self.surface)
+        self.weapon.draw_weapon(
+            self.x, self.y, self.dir[0], self.dir[1], self.surface)
 
     def shoot(self):
         bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
