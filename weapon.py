@@ -4,8 +4,7 @@ import math
 
 
 class Weapon:
-    def __init__(self, kind):
-        self.kind = kind
+    def __init__(self):
         self.force = 1
         self.distance = 1000
 
@@ -76,3 +75,8 @@ class Cutting_Weapon(Weapon):
 class Sword(Cutting_Weapon):
     pass
     image = pygame.image.load('assets/sword.png')
+
+
+class Knife(Cutting_Weapon):
+    pass
+    image = pygame.image.load('assets/knife.png')
