@@ -41,6 +41,7 @@ class Gun(Firearm):
 class Lasergun(Firearm):
     pass
     # this is mostly the same as above. Maybe fixable?
+
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
         for x in range(len(self.bullets)):
