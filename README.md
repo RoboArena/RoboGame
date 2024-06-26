@@ -17,6 +17,8 @@
 
 ## Jonathan
 
+- created powerpoint presentation
+
 - added a new map in 2.5D style with new wall tiles
   
 ![](images/2.5D_map.png)
@@ -25,4 +27,3 @@
 
 ![](images/mine_wall1.JPG)
 ![](images/mine_wall2.JPG)
-
