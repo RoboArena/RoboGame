@@ -11,6 +11,8 @@
 
 
 ## Matthias
+- start a server on aws
+- First multiplayer functionality implemented - player positions are updated correctly
 
 ![](images/multiplayer.png)
 
