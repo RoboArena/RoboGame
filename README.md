@@ -1,33 +1,22 @@
 # RoboGame
 
-# Jonathan
+# Amina
 
-- added a new Arena Design.
-
-![](images/New_Arena.png)
-
-- added the function that you can mine tiles and collect stone/wood resources.
-
-![](images/mining_Jonathan.png)
-
-- adapted the Font on screen so that it adapts to the screen size
+![](images/robot_sword.JPG)
 
 
 # Matthias
 
-- fixed all collision issues
-- tried to add multiplayer
+
+![](images/multiplayer.png)
 
 
-# Amina
+# Jonathan
 
-- changed the font and adapted it for the new map.
 
-![](images/new_font.png)
+![](images/2.5D_map.png)
 
-- did some cleanups in the code and added documentation
 
-- added a shooting effect.
-
-![](images/shooting_Amina.png)
+![](images/mine_wall1.JPG)
+![](images/mine_wall2.JPG)
 
