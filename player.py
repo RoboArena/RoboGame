@@ -112,7 +112,10 @@ class Player:
                     abs(self.y - tile_rect.y) > 300):
                 continue
             if self.rect.colliderect(tile_rect):
-                if tile_name != "background.png":
+                if tile_name not in ["background.png",
+                                     "stone_wall.png",
+                                     "wall_edge.png",
+                                     "wood_wall.png"]:
                     hits.append(tile_rect)
         return hits
 
@@ -156,27 +159,116 @@ class Player:
                     # the left mouse button
                     if (self.aiming_at_tile(tile_rect, mouse_pos) and
                             pygame.mouse.get_pressed()[0]):
+
+                        # if the tile that is being mined is a stone tile
+                        # correct the walls below and above the tile
                         if tile_name == "stone.png":
-                            # update the stone tile at x,y with background.png
-                            self.game.map.update_tile(
-                                tile_rect.x - self.game.offset_x,
-                                tile_rect.y - self.game.offset_y,
-                                'background.png'
-                            )
-                            self.tileTupleList[i] = (tile_rect,
-                                                     "background.png")
+
+                            self.handle_tile_below(tile_rect)
+
+                            if (self.handle_tile_above(tile_rect) == "stone"):
+                                self.game.map.update_tile(
+                                    tile_rect.x - self.game.offset_x,
+                                    tile_rect.y - self.game.offset_y,
+                                    'stone_wall.png'
+                                )
+                                self.tileTupleList[i] = (tile_rect,
+                                                         "stone_wall.png")
+                            else:
+                                self.game.map.update_tile(
+                                    tile_rect.x - self.game.offset_x,
+                                    tile_rect.y - self.game.offset_y,
+                                    'background.png'
+                                )
+                                self.tileTupleList[i] = (tile_rect,
+                                                         "background.png")
+
                             self.stone += 1
-                            print("mine stone")
+
+                        # if the tile that is being mined is a wood tile
+                        # correct the walls below and above the tile
                         elif tile_name == "wood.png":
-                            self.game.map.update_tile(
-                                tile_rect.x - self.game.offset_x,
-                                tile_rect.y - self.game.offset_y,
-                                'background.png'
-                            )
-                            self.tileTupleList[i] = (tile_rect,
-                                                     "background.png")
+                            self.handle_tile_below(tile_rect)
+
+                            if (self.handle_tile_above(tile_rect) == "wood"):
+                                self.game.map.update_tile(
+                                    tile_rect.x - self.game.offset_x,
+                                    tile_rect.y - self.game.offset_y,
+                                    'wood_wall.png'
+                                )
+                                self.tileTupleList[i] = (tile_rect,
+                                                         "wood_wall.png")
+                            elif (self.handle_tile_above(tile_rect) == "wall"):
+                                self.game.map.update_tile(
+                                    tile_rect.x - self.game.offset_x,
+                                    tile_rect.y - self.game.offset_y,
+                                    'wall_edge.png'
+                                )
+                                self.tileTupleList[i] = (tile_rect,
+                                                         "edge_wall.png")
+                            else:
+                                self.game.map.update_tile(
+                                    tile_rect.x - self.game.offset_x,
+                                    tile_rect.y - self.game.offset_y,
+                                    'background.png'
+                                )
+                                self.tileTupleList[i] = (tile_rect,
+                                                         "background.png")
+
+                            # update the wood in player inventory
                             self.wood += 1
         self.mining_hitbox.center = (self.x, self.y)
+
+    # if the tile above tile_rect is either stone, wood or a wall return
+    def handle_tile_above(self, tile_rect):
+
+        # coordinates of the tile directly above
+        ab_tile_x = tile_rect.x
+        ab_tile_y = tile_rect.y - tile_rect.height
+
+        for j, (ab_tile_rect, ab_tile_name) in enumerate(self.tileTupleList):
+            if ab_tile_rect.collidepoint(ab_tile_x, ab_tile_y):
+                if ab_tile_name == "stone.png":
+
+                    return "stone"
+
+                elif ab_tile_name == "wood.png":
+
+                    return "wood"
+
+                elif ab_tile_name == "wall.png":
+
+                    return "wall"
+
+                break
+
+    # if the tile above tile_rect is either stone, wood or a wall return
+    def handle_tile_below(self, tile_rect):
+
+        # coordinates of the tile directly above
+        bl_tile_x = tile_rect.x
+        bl_tile_y = tile_rect.y + tile_rect.height
+
+        for j, (bl_tile_rect, bl_tile_name) in enumerate(self.tileTupleList):
+            if bl_tile_rect.collidepoint(bl_tile_x, bl_tile_y):
+                if bl_tile_name == "stone_wall.png":
+                    self.game.map.update_tile(
+                                    bl_tile_x - self.game.offset_x,
+                                    bl_tile_y - self.game.offset_y,
+                                    'background.png'
+                                            )
+                    self.tileTupleList[j] = (bl_tile_rect,
+                                             "background.png")
+
+                elif bl_tile_name == "wood_wall.png":
+                    self.game.map.update_tile(
+                                    bl_tile_x - self.game.offset_x,
+                                    bl_tile_y - self.game.offset_y,
+                                    'background.png'
+                                            )
+                    self.tileTupleList[j] = (bl_tile_rect,
+                                             "background.png")
+                break
 
     # Is the mouse currently aiming at the tile tile_rect?
     def aiming_at_tile(self, tile_rect, mouse_pos):
