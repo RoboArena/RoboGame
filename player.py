@@ -1,6 +1,5 @@
 import pygame
 import bullet
-import weapon
 
 
 class Player:
