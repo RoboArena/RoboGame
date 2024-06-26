@@ -4,6 +4,8 @@ import math
 
 
 class Weapon:
+    kind = "weapon"
+
     def __init__(self):
         self.force = 1
         self.distance = 1000
@@ -72,11 +74,25 @@ class Cutting_Weapon(Weapon):
                              self.start[1] - image.get_height() // 2))
 
 
+class Knife(Cutting_Weapon):  # keep this in? Maybe better sword as default?
+    pass
+    kind = "Knife"
+    image = pygame.image.load('assets/knife.png')
+
+
 class Sword(Cutting_Weapon):
     pass
+    kind = "Sword"
     image = pygame.image.load('assets/sword.png')
 
 
-class Knife(Cutting_Weapon):
+class Longsword(Cutting_Weapon):
     pass
-    image = pygame.image.load('assets/knife.png')
+    kind = "Longsword"
+    image = pygame.image.load('assets/longSword.png')
+
+
+class Lasersword(Cutting_Weapon):
+    pass
+    kind = "Lasersword"
+    image = pygame.image.load('assets/laserSword.png')
