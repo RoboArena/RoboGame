@@ -1,11 +1,11 @@
 # RoboGame
 
 ## Amina
-
+Added lasersword:
 ![](images/robot_sword.JPG)
-
+Created icons for speed and healing ability:
 ![](images/symbole.JPG)
-
+Created two different Design Suggestions:
 ![](images/design1.png)
 
 ![](images/design2.png)
