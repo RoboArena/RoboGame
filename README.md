@@ -4,7 +4,7 @@
 
 ![](images/robot_sword.JPG)
 
-![](images/symbole.png)
+![](images/symbole.JPG)
 
 ![](images/design1.png)
 
