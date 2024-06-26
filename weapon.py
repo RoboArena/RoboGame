@@ -10,7 +10,7 @@ class Weapon:
         self.distance = 1000
 
 
-class Gun(Weapon):
+class Firearm(Weapon):
     pass
     bullets = []
 
@@ -21,7 +21,6 @@ class Gun(Weapon):
                 self.bullets.pop(x-1)
                 break
 
-    # maybe tuple instead of x and y seperate?
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
         for x in range(len(self.bullets)):
@@ -34,14 +33,14 @@ class Gun(Weapon):
                 bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
 
-class Sword(Weapon):
+class Cutting_Weapon(Weapon):
     pass
     distance = 10
     in_use = False
     start = 0
     angle = 45
     hitting_angle = math.radians(0)
-    image = pygame.image.load('sword.png')
+    image = pygame.image.load('assets/robot.png')
 
     def update_weapon(self):
         if self.in_use:
@@ -72,3 +71,8 @@ class Sword(Weapon):
             1).convert_alpha()
         surface.blit(image, (self.start[0] - image.get_width() // 2,
                              self.start[1] - image.get_height() // 2))
+
+
+class Sword(Cutting_Weapon):
+    pass
+    image = pygame.image.load('assets/sword.png')
