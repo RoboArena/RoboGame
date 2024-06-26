@@ -14,9 +14,6 @@ class Bullet:
         self.distance = math.sqrt((self.x - self.destination[0]) ** 2 +
                                   (self.y - self.destination[1]) ** 2)
 
-    def drawBullet(self, surface):
-        pygame.draw.circle(surface, "black", (self.x, self.y), 5)
-
     def updateBullet(self):
         self.x -= self.dir[0] * 30 / self.distance
         self.y -= self.dir[1] * 30 / self.distance
@@ -27,3 +24,19 @@ class Bullet:
             (not self.y_is_bigger and self.y >= self.destination[1])
         ):
             self.valid = False
+
+
+class Gunbullet(Bullet):
+    pass
+
+    def drawBullet(self, surface):
+        pygame.draw.circle(surface, "black", (self.x, self.y), 5)
+
+
+class Laserbullet(Bullet):
+    pass
+
+    def drawBullet(self, surface):
+        l_bullet = pygame.image.load('assets/laserbullet.png')
+        l_bullet = pygame.transform.scale(l_bullet, (16, 16))
+        surface.blit(l_bullet, (self.x, self.y))
