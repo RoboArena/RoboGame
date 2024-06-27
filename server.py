@@ -1,10 +1,10 @@
 import socket
 from _thread import start_new_thread
-from player import Player
 import pickle
-import main
+from main import Game
 
-server = ""
+# server = "" # Public IP
+server = "10.0.13.213"  # Local IP Matthias
 port = 5555
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,47 +17,42 @@ except socket.error as e:
 
 socket.listen(2)
 print("Waiting for a connection, Server Started")
-
-
-def read_pos(str):
-    try:
-        pos = str.split(",")
-        return float(pos[0]), float(pos[1])  # Parse as floats
-    except:
-        return 0.0, 0.0
-
-
-def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1])
-
-
-pos = [(500, 450), (900, 450)]
-""""
-players = [Player(main.game, 0, 0, 50, 50, 50, 50, 50, 50, 50, 50),
-           Player(main.game, 0, 100, 50, 50, 50, 50, 50, 50, 50, 50)]
-"""
+game = Game()
+players = [game.player, game.player2]
+game_state = {
+    "playerX": game.player.x,
+    "playerY": game.player.y,
+    "player2X": game.player2.x,
+    "player2Y": game.player2.y,
+    "mapList": [tile_tuple[1] for tile_tuple in game.player.tileTupleList]
+}
 
 
 def threaded_client(conn, player):
-    conn.send(str.encode(make_pos(pos[player])))
+    conn.send(pickle.dumps(player))
     reply = ""
     while True:
         try:
-            data = read_pos(conn.recv(2048).decode())
-            pos[player] = data
+            data = pickle.loads(conn.recv(2048))
+            players[player] = data
 
             if not data:
                 print("Disconnected")
                 break
             else:
-                if player == 1:
-                    reply = pos[0]
+                game_state["mapList"] = data["mapList"]
+                if player == 0:
+                    # Update game state with received data
+                    game_state["playerX"] = data["playerX"]
+                    game_state["playerY"] = data["playerY"]
                 else:
-                    reply = pos[1]
+                    game_state["player2X"] = data["player2X"]
+                    game_state["player2Y"] = data["player2Y"]
+                reply = game_state
                 print("Received: ", data)
                 print("Sending : ", reply)
 
-            conn.sendall(str.encode(make_pos(reply)))
+            conn.sendall(pickle.dumps(reply))
         except Exception as e:
             print("Error:", e)
             break
