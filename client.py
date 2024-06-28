@@ -36,7 +36,8 @@ class Client:
                 "playerY": self.game.player.y,
                 "player2X": self.game.player2.x,
                 "player2Y": self.game.player2.y,
-                "mapList": [tile_tuple[1] for tile_tuple in self.game.player.tileTupleList]
+                "mapList": [tile_tuple[1] for tile_tuple in
+                            self.game.player.tileTupleList]
             }
         else:
             state = {
@@ -44,22 +45,29 @@ class Client:
                 "playerY": self.game.player2.y,
                 "player2X": self.game.player.x,
                 "player2Y": self.game.player.y,
-                "mapList": [tile_tuple[1] for tile_tuple in self.game.player.tileTupleList]
+                "mapList": [tile_tuple[1] for tile_tuple in
+                            self.game.player.tileTupleList]
             }
         return state
 
     def update_game_state(self, state):
         # Update your local game state with the received state
         if self.p == 0:
-            self.game.player.x = state["playerX"]
-            self.game.player.y = state["playerY"]
             self.game.player2.x = state["player2X"]
             self.game.player2.y = state["player2Y"]
+            self.game.player2.rect.center = (self.game.player2.x,
+                                             self.game.player2.y)
+            self.game.player2.weapon.update_weapon()
         else:
             self.game.player.x = state["player2X"]
             self.game.player.y = state["player2Y"]
+            self.game.player.rect.center = (self.game.player.x,
+                                            self.game.player.y)
             self.game.player2.x = state["playerX"]
             self.game.player2.y = state["playerY"]
+            self.game.player2.rect.center = (self.game.player2.x,
+                                             self.game.player2.y)
+            self.game.player2.weapon.update_weapon()
 
         for i, tile_tuple in enumerate(self.game.player.tileTupleList):
             if tile_tuple[1] != state["mapList"][i]:
@@ -72,21 +80,24 @@ class Client:
                         tile_rect.y - self.game.offset_y,
                         'stone_wall.png'
                     )
-                    self.game.player.tileTupleList[i] = (tile_rect, "stone_wall.png")
+                    self.game.player.tileTupleList[i] = (tile_rect,
+                                                         "stone_wall.png")
                 elif new_tile_name == "wood.png":
                     self.game.map.update_tile(
                         tile_rect.x - self.game.offset_x,
                         tile_rect.y - self.game.offset_y,
                         'wood_wall.png'
                     )
-                    self.game.player.tileTupleList[i] = (tile_rect, "wood_wall.png")
+                    self.game.player.tileTupleList[i] = (tile_rect,
+                                                         "wood_wall.png")
                 else:
                     self.game.map.update_tile(
                         tile_rect.x - self.game.offset_x,
                         tile_rect.y - self.game.offset_y,
                         'background.png'
                     )
-                    self.game.player.tileTupleList[i] = (tile_rect, "background.png")
+                    self.game.player.tileTupleList[i] = (tile_rect,
+                                                         "background.png")
 
 
 client = Client()
