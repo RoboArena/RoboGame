@@ -63,8 +63,6 @@ class Sword(Weapon):
 
             self.angle = 360 - math.atan2(dir_y, dir_x)
 
-        if pygame.mouse.get_pressed()[0]:
-            self.in_use = True
         image = self.image.copy()
         image = pygame.transform.scale(image, (50, 50))
         image = pygame.transform.rotozoom(

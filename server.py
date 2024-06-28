@@ -3,8 +3,8 @@ from _thread import start_new_thread
 import pickle
 from main import Game
 
-# server = "" # Public IP
-server = "10.0.13.213"  # Local IP Matthias
+server = ""  # Public IP
+# server = "10.0.13.213"  # Local IP Matthias
 port = 5555
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,7 +24,9 @@ game_state = {
     "playerY": game.player.y,
     "player2X": game.player2.x,
     "player2Y": game.player2.y,
-    "mapList": [tile_tuple[1] for tile_tuple in game.player.tileTupleList]
+    "mapList": [tile_tuple[1] for tile_tuple in game.player.tileTupleList],
+    "playerRightMouse": False,
+    "player2RightMouse": False
 }
 
 
@@ -41,6 +43,8 @@ def threaded_client(conn, player):
                 break
             else:
                 game_state["mapList"] = data["mapList"]
+                game_state["playerRightMouse"] = data["playerRightMouse"]
+                game_state["player2RightMouse"] = data["player2RightMouse"]
                 if player == 0:
                     # Update game state with received data
                     game_state["playerX"] = data["playerX"]
@@ -50,7 +54,7 @@ def threaded_client(conn, player):
                     game_state["player2Y"] = data["player2Y"]
                 reply = game_state
                 print("Received: ", data)
-                print("Sending : ", reply)
+                # print("Sending : ", reply)
 
             conn.sendall(pickle.dumps(reply))
         except Exception as e:
