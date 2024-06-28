@@ -53,7 +53,7 @@ def threaded_client(conn, player):
                     game_state["player2X"] = data["player2X"]
                     game_state["player2Y"] = data["player2Y"]
                 reply = game_state
-                print("Received: ", data)
+                # print("Received: ", data)
                 # print("Sending : ", reply)
 
             conn.sendall(pickle.dumps(reply))
