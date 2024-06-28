@@ -42,7 +42,6 @@ def threaded_client(conn, player):
                 print("Disconnected")
                 break
             else:
-                game_state["mapList"] = data["mapList"]
                 game_state["playerRightMouse"] = data["playerRightMouse"]
                 game_state["player2RightMouse"] = data["player2RightMouse"]
                 if player == 0:
@@ -57,6 +56,7 @@ def threaded_client(conn, player):
                 # print("Sending : ", reply)
 
             conn.sendall(pickle.dumps(reply))
+            game_state["mapList"] = data["mapList"]
         except Exception as e:
             print("Error:", e)
             break
