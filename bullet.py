@@ -26,11 +26,23 @@ class Bullet:
             self.valid = False
 
 
+class Arrow(Bullet):
+    pass
+
+    def drawBullet(self, surface, angle):
+        arrow = pygame.image.load('assets/arrow.png')
+        arrow = pygame.transform.scale(arrow, (24, 24))
+        arrow = pygame.transform.rotozoom(
+                arrow, 180 + math.degrees(angle + 2.8),
+                1).convert_alpha()
+        surface.blit(arrow, (self.x, self.y))
+
+
 class Gunbullet(Bullet):
     pass
 
     def drawBullet(self, surface):
-        g_bullet = pygame.image.load('assets/gunbullet.png')
+        g_bullet = pygame.image.load('assets/bullet.png')
         g_bullet = pygame.transform.scale(g_bullet, (16, 16))
         surface.blit(g_bullet, (self.x, self.y))
 
@@ -39,6 +51,6 @@ class Rifflebullet(Bullet):
     pass
 
     def drawBullet(self, surface):
-        g_bullet = pygame.image.load('assets/gunbullet.png')
-        g_bullet = pygame.transform.scale(g_bullet, (16, 16))
+        g_bullet = pygame.image.load('assets/bullet.png')
+        g_bullet = pygame.transform.scale(g_bullet, (8, 8))
         surface.blit(g_bullet, (self.x, self.y))
