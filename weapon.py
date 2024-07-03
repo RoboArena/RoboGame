@@ -14,6 +14,7 @@ class Weapon:
 class Firearm(Weapon):
     pass
     bullets = []
+    image = pygame.image.load('assets/robot.png')
 
     def update_weapon(self):
         for x in range(len(self.bullets)):
@@ -23,8 +24,42 @@ class Firearm(Weapon):
                 break
 
 
+class Bow(Firearm):
+    pass
+    image = pygame.image.load('assets/bow.png')
+    kind = "Bow"
+
+    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        bullet_destination = (player_x - dir_x, player_y - dir_y)
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].drawBullet(surface)
+
+        if pygame.mouse.get_pressed()[0]:
+            bullet_x = player_x
+            bullet_y = player_y
+            self.bullets.append(bullet.Gunbullet(
+                bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+
+        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
+        n_dir_x = dir_x / dir_len
+        n_dir_y = dir_y / dir_len
+
+        self.start = ((player_x - (n_dir_x * 50)),
+                                (player_y - (n_dir_y * 50)))
+
+        self.angle = 360 - math.atan2(dir_y, dir_x)
+        image = self.image.copy()
+        image = pygame.transform.rotozoom(
+                image, 180 + math.degrees(self.angle + 2.8),
+                1).convert_alpha()
+        surface.blit(image, (self.start[0] - image.get_width() // 2,
+                                    self.start[1] - image.get_height() // 2))
+
+
 class Gun(Firearm):
     pass
+    image = pygame.image.load('assets/gun.png')
+    kind = "Gun"
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
@@ -37,10 +72,27 @@ class Gun(Firearm):
             self.bullets.append(bullet.Gunbullet(
                  bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
+        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
+        n_dir_x = dir_x / dir_len
+        n_dir_y = dir_y / dir_len
 
-class Lasergun(Firearm):
+        self.start = ((player_x - (n_dir_x * 50)),
+                            (player_y - (n_dir_y * 50)))
+
+        self.angle = 360 - math.atan2(dir_y, dir_x)
+        image = self.image.copy()
+        image = pygame.transform.rotozoom(
+                image, 180 + math.degrees(self.angle + 2.8),
+                1).convert_alpha()
+        surface.blit(image, (self.start[0] - image.get_width() // 2,
+                                self.start[1] - image.get_height() // 2))
+
+
+class Rifle(Firearm):
     pass
     # this is mostly the same as above. Maybe fixable?
+    image = pygame.image.load('assets/rifle2.png')
+    kind = "Rifle"
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
@@ -50,8 +102,24 @@ class Lasergun(Firearm):
         if pygame.mouse.get_pressed()[0]:
             bullet_x = player_x
             bullet_y = player_y
-            self.bullets.append(bullet.Laserbullet(
+            self.bullets.append(bullet.Gunbullet(
                  bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+
+        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
+        n_dir_x = dir_x / dir_len
+        n_dir_y = dir_y / dir_len
+
+        self.start = ((player_x - (n_dir_x * 50)),
+                            (player_y - (n_dir_y * 50)))
+
+        self.angle = 360 - math.atan2(dir_y, dir_x)
+        image = self.image.copy()
+        image = pygame.transform.scale(image, (64, 64))
+        image = pygame.transform.rotozoom(
+                image, 180 + math.degrees(self.angle + 2.8),
+                1).convert_alpha()
+        surface.blit(image, (self.start[0] - image.get_width() // 2,
+                                self.start[1] - image.get_height() // 2))
 
 
 class Cutting_Weapon(Weapon):
@@ -86,7 +154,6 @@ class Cutting_Weapon(Weapon):
         if pygame.mouse.get_pressed()[0]:
             self.in_use = True
         image = self.image.copy()
-        image = pygame.transform.scale(image, (50, 50))
         image = pygame.transform.rotozoom(
             image, 180 + math.degrees(self.angle + math.degrees(5)),
             1).convert_alpha()
@@ -94,25 +161,34 @@ class Cutting_Weapon(Weapon):
                              self.start[1] - image.get_height() // 2))
 
 
-class Knife(Cutting_Weapon):  # keep this in? Maybe better sword as default?
+class Knife(Cutting_Weapon):
     pass
     kind = "Knife"
     image = pygame.image.load('assets/knife.png')
+    image = pygame.transform.scale(image, (20, 20))
 
 
 class Sword(Cutting_Weapon):
     pass
     kind = "Sword"
     image = pygame.image.load('assets/sword.png')
+    image = pygame.transform.scale(image, (64, 64))
 
 
 class Longsword(Cutting_Weapon):
     pass
     kind = "Longsword"
-    image = pygame.image.load('assets/longSword.png')
+    image = pygame.image.load('assets/Longsword2.png')
+    image = pygame.transform.scale(image, (128, 128))
 
 
 class Lasersword(Cutting_Weapon):
     pass
     kind = "Lasersword"
     image = pygame.image.load('assets/laserSword.png')
+    image = pygame.transform.scale(image, (40, 40))
+
+class DefaultWeapon(Cutting_Weapon):
+    pass
+    kind = "DefaultWeapon"
+    

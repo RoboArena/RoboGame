@@ -30,13 +30,15 @@ class Gunbullet(Bullet):
     pass
 
     def drawBullet(self, surface):
-        pygame.draw.circle(surface, "black", (self.x, self.y), 5)
+        g_bullet = pygame.image.load('assets/gunbullet.png')
+        g_bullet = pygame.transform.scale(g_bullet, (16, 16))
+        surface.blit(g_bullet, (self.x, self.y))
 
 
-class Laserbullet(Bullet):
+class Rifflebullet(Bullet):
     pass
 
     def drawBullet(self, surface):
-        l_bullet = pygame.image.load('assets/laserbullet.png')
-        l_bullet = pygame.transform.scale(l_bullet, (16, 16))
-        surface.blit(l_bullet, (self.x, self.y))
+        g_bullet = pygame.image.load('assets/gunbullet.png')
+        g_bullet = pygame.transform.scale(g_bullet, (16, 16))
+        surface.blit(g_bullet, (self.x, self.y))

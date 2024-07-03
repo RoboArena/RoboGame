@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Lasergun())
+            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Knife())
         self.main_menu()
 
     def main_menu(self):
@@ -121,7 +121,7 @@ class Game:
                                                  self.window_height * 0.25))
             self.canvas.blit(OPT_TEXT, OPT_RECT)
 
-            OPT_BACK = Button(image=None,
+            OPT_BACK = button.Button(image=None,
                               pos=(self.window_width * 0.5,
                                    self.window_height * 0.45),
                               text_input="BACK",
@@ -142,6 +142,36 @@ class Game:
 
             self.window.blit(self.canvas, (0, 0))
             pygame.display.update()
+
+    def weaponButtons(self, displayed_weapon, pos):
+        # weapon buttons
+            W_BUTTON = Button(
+                            displayed_weapon.image,
+                             pos,
+                             text_input=displayed_weapon.kind,
+                             font=get_font(75),
+                             base_color="#d7fcd4",
+                             hovering_color="White")
+            W_BUTTON.changeColor(pygame.mouse.get_pos())
+            W_BUTTON.update(self.canvas)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if W_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                        self.player.weapon = displayed_weapon
+            W_BUTTON.displayButton(self.window)
+
+    def getNextButtons(self):
+        kind = self.player.weapon.kind
+        if (kind == "Knife"):
+            return (weapon.Bow(), weapon.Sword())
+        if (kind == "Bow"):
+            return (weapon.Gun(), weapon.Rifle())
+        if (kind == "Sword"):
+            return (weapon.Longsword(), weapon.Lasersword())
+        else:
+            return (weapon.DefaultWeapon(), weapon.DefaultWeapon())
 
     def play(self):
         running = True
@@ -250,6 +280,12 @@ class Game:
             battery_text_rect = battery_text.get_rect(
                 topright=(self.window_width - 50, bottom_right + 35))
             self.window.blit(battery_text, battery_text_rect)
+
+            nextButtons = self.getNextButtons()
+            self.weaponButtons(nextButtons[0], (self.window_width * 0.45,
+                                  self.window_height * 0.9))
+            self.weaponButtons(nextButtons[1], (self.window_width * 0.55,
+                                  self.window_height * 0.9))
 
             pygame.display.flip()
 

@@ -36,14 +36,9 @@ class Player:
         self.rect.center = (self.x, self.y)
 
         # player's mining hitbox - change pygame.rect to change size of hitbox
-        if (self.weapon.kind == "Sword"):
-            self.mining_hitbox = pygame.Rect(0, 0, 90, 90)
-            self.mining_hitboxX = -45
-            self.mining_hitboxY = -45
-        else:
-            self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
-            self.mining_hitboxX = -75
-            self.mining_hitboxY = -75
+        self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
+        self.mining_hitboxX = -75
+        self.mining_hitboxY = -75
 
         # To track mouse clicks of left mouse button
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
@@ -53,6 +48,16 @@ class Player:
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
         self.weapon.update_weapon()
+        # update mining box
+        if (self.weapon.kind == "Knife"):
+            self.mining_hitbox = pygame.Rect(0, 0, 90, 90)
+            self.mining_hitboxX = -45
+            self.mining_hitboxY = -45
+        if (self.weapon.kind == "Longsword"):
+            self.mining_hitbox = pygame.Rect(0, 0, 350, 350)
+            self.mining_hitboxX = -175
+            self.mining_hitboxY = -175
+
         self.draw()
         # update the currently mineable tiles
         self.get_hits_mining(self.game.map.tiles)
