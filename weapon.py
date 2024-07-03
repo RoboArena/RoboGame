@@ -63,8 +63,9 @@ class Gun(Firearm):
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
+        self.angle = 360 - math.atan2(dir_y, dir_x)
         for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(surface)
+            self.bullets[x-1].drawBullet(surface, self.angle)
 
         if pygame.mouse.get_pressed()[0]:
             bullet_x = player_x
@@ -79,7 +80,6 @@ class Gun(Firearm):
         self.start = ((player_x - (n_dir_x * 50)),
                             (player_y - (n_dir_y * 50)))
 
-        self.angle = 360 - math.atan2(dir_y, dir_x)
         image = self.image.copy()
         image = pygame.transform.rotozoom(
                 image, 180 + math.degrees(self.angle + 2.8),
@@ -96,8 +96,9 @@ class Rifle(Firearm):
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
+        self.angle = 360 - math.atan2(dir_y, dir_x)
         for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(surface)
+            self.bullets[x-1].drawBullet(surface, self.angle)
 
         if pygame.mouse.get_pressed()[0]:
             bullet_x = player_x
@@ -112,7 +113,6 @@ class Rifle(Firearm):
         self.start = ((player_x - (n_dir_x * 50)),
                             (player_y - (n_dir_y * 50)))
 
-        self.angle = 360 - math.atan2(dir_y, dir_x)
         image = self.image.copy()
         image = pygame.transform.scale(image, (64, 64))
         image = pygame.transform.rotozoom(

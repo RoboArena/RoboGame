@@ -3,6 +3,10 @@ import math
 
 
 class Bullet:
+    image = 'assets/robot.png'
+    angle = 0
+    scale = (24, 24)
+
     def __init__(self, x, y, dir, destination):
         self.x = x
         self.y = y
@@ -25,32 +29,28 @@ class Bullet:
         ):
             self.valid = False
 
+    def drawBullet(self, surface, angle):
+        image_l = pygame.image.load(self.image)
+        image_l = pygame.transform.scale(image_l, (self.scale))
+        image_l = pygame.transform.rotozoom(
+                image_l, 180 + math.degrees(angle + 2.8),
+                1).convert_alpha()
+        surface.blit(image_l, (self.x, self.y))
+
 
 class Arrow(Bullet):
     pass
-
-    def drawBullet(self, surface, angle):
-        arrow = pygame.image.load('assets/arrow.png')
-        arrow = pygame.transform.scale(arrow, (24, 24))
-        arrow = pygame.transform.rotozoom(
-                arrow, 180 + math.degrees(angle + 2.8),
-                1).convert_alpha()
-        surface.blit(arrow, (self.x, self.y))
+    image = 'assets/arrow.png'
+    scale = (24, 24)
 
 
 class Gunbullet(Bullet):
     pass
-
-    def drawBullet(self, surface):
-        g_bullet = pygame.image.load('assets/bullet.png')
-        g_bullet = pygame.transform.scale(g_bullet, (16, 16))
-        surface.blit(g_bullet, (self.x, self.y))
+    image = 'assets/bullet.png'
+    scale = (16, 16)
 
 
 class Rifflebullet(Bullet):
     pass
-
-    def drawBullet(self, surface):
-        g_bullet = pygame.image.load('assets/bullet.png')
-        g_bullet = pygame.transform.scale(g_bullet, (8, 8))
-        surface.blit(g_bullet, (self.x, self.y))
+    image = 'assets/bullet.png'
+    scale = (8, 8)
