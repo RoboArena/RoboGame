@@ -48,16 +48,6 @@ class Player:
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
         self.movement(500)
         self.weapon.update_weapon()
-        # update mining box
-        if (self.weapon.kind == "Knife"):
-            self.mining_hitbox = pygame.Rect(0, 0, 90, 90)
-            self.mining_hitboxX = -45
-            self.mining_hitboxY = -45
-        if (self.weapon.kind == "Longsword"):
-            self.mining_hitbox = pygame.Rect(0, 0, 350, 350)
-            self.mining_hitboxX = -175
-            self.mining_hitboxY = -175
-
         self.draw()
         # update the currently mineable tiles
         self.get_hits_mining(self.game.map.tiles)
