@@ -115,7 +115,19 @@ class Player:
                 if tile_name not in ["background.png",
                                      "stone_wall.png",
                                      "wall_edge.png",
-                                     "wood_wall.png"]:
+                                     "wood_wall.png",
+                                     "toxic_puddle_1.png",
+                                     "toxic_puddle_2.png",
+                                     "toxic_puddle_3.png",
+                                     "toxic_puddle_4.png",
+                                     "toxic_puddle_5.png",
+                                     "toxic_puddle_6.png",
+                                     "toxic_puddle_7.png",
+                                     "toxic_puddle_8.png",
+                                     "toxic_puddle_9.png",
+                                     "toxic_puddle_10.png",
+                                     "toxic_puddle_11.png",
+                                     "toxic_puddle_12.png",]:
                     hits.append(tile_rect)
         return hits
 
