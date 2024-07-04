@@ -14,6 +14,7 @@ class Weapon:
 class Firearm(Weapon):
     pass
     bullets = []
+    kind = "weapon"
     image = pygame.image.load('assets/robot.png')
 
     def update_weapon(self):
@@ -23,11 +24,9 @@ class Firearm(Weapon):
                 self.bullets.pop(x-1)
                 break
 
-
-class Bow(Firearm):
-    pass
-    image = pygame.image.load('assets/bow.png')
-    kind = "Bow"
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        self.bullets.append(bullet.Arrow(
+            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
@@ -38,22 +37,28 @@ class Bow(Firearm):
         if pygame.mouse.get_pressed()[0]:
             bullet_x = player_x
             bullet_y = player_y
-            self.bullets.append(bullet.Arrow(
-                bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+            self.add_bullet(
+                bullet_x, bullet_y, dir_x, dir_y, bullet_destination)
 
         dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
         n_dir_x = dir_x / dir_len
         n_dir_y = dir_y / dir_len
 
         self.start = ((player_x - (n_dir_x * 50)),
-                                (player_y - (n_dir_y * 50)))
+                      (player_y - (n_dir_y * 50)))
 
         image = self.image.copy()
         image = pygame.transform.rotozoom(
                 image, 180 + math.degrees(self.angle + 2.8),
                 1).convert_alpha()
         surface.blit(image, (self.start[0] - image.get_width() // 2,
-                                    self.start[1] - image.get_height() // 2))
+                             self.start[1] - image.get_height() // 2))
+
+
+class Bow(Firearm):
+    pass
+    image = pygame.image.load('assets/bow.png')
+    kind = "Bow"
 
 
 class Gun(Firearm):
@@ -61,31 +66,9 @@ class Gun(Firearm):
     image = pygame.image.load('assets/gun.png')
     kind = "Gun"
 
-    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
-        bullet_destination = (player_x - dir_x, player_y - dir_y)
-        self.angle = 360 - math.atan2(dir_y, dir_x)
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(surface, self.angle)
-
-        if pygame.mouse.get_pressed()[0]:
-            bullet_x = player_x
-            bullet_y = player_y
-            self.bullets.append(bullet.Gunbullet(
-                 bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
-
-        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
-        n_dir_x = dir_x / dir_len
-        n_dir_y = dir_y / dir_len
-
-        self.start = ((player_x - (n_dir_x * 50)),
-                            (player_y - (n_dir_y * 50)))
-
-        image = self.image.copy()
-        image = pygame.transform.rotozoom(
-                image, 180 + math.degrees(self.angle + 2.8),
-                1).convert_alpha()
-        surface.blit(image, (self.start[0] - image.get_width() // 2,
-                                self.start[1] - image.get_height() // 2))
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        self.bullets.append(bullet.Gunbullet(
+            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
 
 class Rifle(Firearm):
@@ -94,32 +77,9 @@ class Rifle(Firearm):
     image = pygame.image.load('assets/rifle2.png')
     kind = "Rifle"
 
-    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
-        bullet_destination = (player_x - dir_x, player_y - dir_y)
-        self.angle = 360 - math.atan2(dir_y, dir_x)
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(surface, self.angle)
-
-        if pygame.mouse.get_pressed()[0]:
-            bullet_x = player_x
-            bullet_y = player_y
-            self.bullets.append(bullet.Rifflebullet(
-                 bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
-
-        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
-        n_dir_x = dir_x / dir_len
-        n_dir_y = dir_y / dir_len
-
-        self.start = ((player_x - (n_dir_x * 50)),
-                            (player_y - (n_dir_y * 50)))
-
-        image = self.image.copy()
-        image = pygame.transform.scale(image, (64, 64))
-        image = pygame.transform.rotozoom(
-                image, 180 + math.degrees(self.angle + 2.8),
-                1).convert_alpha()
-        surface.blit(image, (self.start[0] - image.get_width() // 2,
-                                self.start[1] - image.get_height() // 2))
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        self.bullets.append(bullet.Rifflebullet(
+            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
 
 class Cutting_Weapon(Weapon):
@@ -188,7 +148,7 @@ class Lasersword(Cutting_Weapon):
     image = pygame.image.load('assets/laserSword.png')
     image = pygame.transform.scale(image, (40, 40))
 
+
 class DefaultWeapon(Cutting_Weapon):
     pass
     kind = "DefaultWeapon"
-    
