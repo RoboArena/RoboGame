@@ -22,6 +22,10 @@ class Firearm(Weapon):
                 self.bullets.pop(x-1)
                 break
 
+
+class Gun(Firearm):
+    pass
+
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         bullet_destination = (player_x - dir_x, player_y - dir_y)
         for x in range(len(self.bullets)):
@@ -30,8 +34,24 @@ class Firearm(Weapon):
         if pygame.mouse.get_pressed()[0]:
             bullet_x = player_x
             bullet_y = player_y
-            self.bullets.append(bullet.Bullet(
-                bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+            self.bullets.append(bullet.Gunbullet(
+                 bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+
+
+class Lasergun(Firearm):
+    pass
+    # this is mostly the same as above. Maybe fixable?
+
+    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        bullet_destination = (player_x - dir_x, player_y - dir_y)
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].drawBullet(surface)
+
+        if pygame.mouse.get_pressed()[0]:
+            bullet_x = player_x
+            bullet_y = player_y
+            self.bullets.append(bullet.Laserbullet(
+                 bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
 
 
 class Cutting_Weapon(Weapon):

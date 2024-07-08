@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Sword())
+            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Lasergun())
         self.main_menu()
 
     def main_menu(self):
