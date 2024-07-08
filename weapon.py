@@ -58,6 +58,7 @@ class Firearm(Weapon):
 class Bow(Firearm):
     pass
     image = pygame.image.load('assets/bow.png')
+    image = pygame.transform.scale(image, (30, 30))
     kind = "Bow"
 
 
