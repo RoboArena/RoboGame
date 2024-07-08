@@ -3,6 +3,10 @@ import math
 
 
 class Bullet:
+    image = 'assets/robot.png'
+    angle = 0
+    scale = (24, 24)
+
     def __init__(self, x, y, dir, destination):
         self.x = x
         self.y = y
@@ -25,18 +29,28 @@ class Bullet:
         ):
             self.valid = False
 
+    def drawBullet(self, surface, angle):
+        image_l = pygame.image.load(self.image)
+        image_l = pygame.transform.scale(image_l, (self.scale))
+        image_l = pygame.transform.rotozoom(
+                image_l, 180 + math.degrees(angle + 2.8),
+                1).convert_alpha()
+        surface.blit(image_l, (self.x, self.y))
+
+
+class Arrow(Bullet):
+    pass
+    image = 'assets/arrow.png'
+    scale = (24, 24)
+
 
 class Gunbullet(Bullet):
     pass
+    image = 'assets/bullet.png'
+    scale = (16, 16)
 
-    def drawBullet(self, surface):
-        pygame.draw.circle(surface, "black", (self.x, self.y), 5)
 
-
-class Laserbullet(Bullet):
+class Rifflebullet(Bullet):
     pass
-
-    def drawBullet(self, surface):
-        l_bullet = pygame.image.load('assets/laserbullet.png')
-        l_bullet = pygame.transform.scale(l_bullet, (16, 16))
-        surface.blit(l_bullet, (self.x, self.y))
+    image = 'assets/bullet.png'
+    scale = (8, 8)

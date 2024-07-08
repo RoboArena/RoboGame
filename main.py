@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Lasergun())
+            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Knife())
         self.main_menu()
 
     def main_menu(self):
@@ -140,7 +140,7 @@ class Game:
                     if OPT_BACK.checkForInput(OPT_MOUSE_POS):
                         self.main_menu()
 
-            self.window.blit(self.canvas, (0, 0))
+            self.canvas.blit(self.canvas, (0, 0))
             pygame.display.update()
 
     def play(self):
@@ -149,16 +149,6 @@ class Game:
         pygame.time.set_timer(timer_event, 1000)
         clock = pygame.time.Clock()
         while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                if (event.type == pygame.KEYDOWN and
-                        event.key == pygame.K_ESCAPE):
-                    running = False
-                if event.type == timer_event:
-                    self.timer -= 1
-                    if self.timer == 0:
-                        pygame.time.set_timer(timer_event, 0)
 
             self.delta_time = self.clock.tick(60) / 1000
 
@@ -172,90 +162,110 @@ class Game:
             self.player.update()
             self.player.draw()
 
+            # display timer
+            self.displayInfoRect(50, str(self.timer),
+                                 (self.window_width - 50, 100), 'topright')
+            # display points
+            self.displayInfoRect(35, "Points: " + str(self.player.points),
+                                 (50, 100), 'topleft')
+            # display speed
+            self.displayInfoRect(25, "Speed: " + str(self.player.speed),
+                                 (50, self.window_height - 135), 'topleft')
+            # display healing ability
+            self.displayInfoRect(25, "Healing: " + str(self.player.healing),
+                                 (50, self.window_height - 100), 'topleft')
+            # display shooting force
+            self.displayInfoRect(25, "Shooting Force: " +
+                                 str(self.player.force),
+                                 (50, self.window_height - 65), 'topleft')
+            # display collected wood
+            self.displayInfoRect(25, "Wood: " + str(self.player.wood),
+                                 (self.window_width - 50,
+                                  self.window_height - 135), 'topright')
+            # display collected stone
+            self.displayInfoRect(25, "Stone: " + str(self.player.stone),
+                                 (self.window_width - 50,
+                                  self.window_height - 100), 'topright')
+            # display collected battery
+            self.displayInfoRect(25, "Batteries: " + str(self.player.battery),
+                                 (self.window_width - 50,
+                                 self.window_height - 65), 'topright')
+
+            WEAPON_BTNS = self.weaponButtons()
+            for button in [WEAPON_BTNS[0], WEAPON_BTNS[1]]:
+                button.changeColor(pygame.mouse.get_pos())
+                button.update(self.canvas)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if (event.type == pygame.KEYDOWN and
+                        event.key == pygame.K_ESCAPE):
+                    running = False
+                if event.type == timer_event:
+                    self.timer -= 1
+                    if self.timer == 0:
+                        pygame.time.set_timer(timer_event, 0)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if WEAPON_BTNS[0].checkForInput(pygame.mouse.get_pos()):
+                        self.player.weapon = self.getNextWeapons()[0]
+                    if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()):
+                        self.player.weapon = self.getNextWeapons()[1]
+
             # display the canvas on the window
             self.window.blit(self.canvas, (0, 0))
-
-            # display timer
-            timer_font = get_font(50)
-            timer_text = timer_font.render(str(self.timer), True, "White")
-            timer_text_rect = timer_text.get_rect(topright=(self.window_width
-                                                            - 50, 100))
-            timer_text = timer_font.render(str(self.timer), True, "White")
-            self.window.blit(timer_text, timer_text_rect)
-
-            # display robot points
-            points_font = get_font(35)
-            points_text = points_font.render("Points: " +
-                                             str(self.player.points),
-                                             True, "White")
-            points_text_rect = points_text.get_rect(topleft=(50, 100))
-            self.window.blit(points_text, points_text_rect)
-
-        # display robot properties
-            prop_font = get_font(25)
-            prop_color = "White"
-            bottom_left = self.window_height - 100
-
-            # display speed
-            speed_text = prop_font.render("Speed: " +
-                                          str(self.player.speed),
-                                          True, prop_color)
-            speed_text_rect = speed_text.get_rect(topleft=(50,
-                                                           bottom_left - 35))
-            self.window.blit(speed_text, speed_text_rect)
-
-            # display healing ability
-            healing_text = prop_font.render("Healing: " +
-                                            str(self.player.healing),
-                                            True, prop_color)
-            healing_text_rect = healing_text.get_rect(topleft=(50,
-                                                               bottom_left
-                                                               ))
-            self.window.blit(healing_text, healing_text_rect)
-
-            # display shooting force
-            force_text = prop_font.render("Shooting Force: " +
-                                          str(self.player.force),
-                                          True, prop_color)
-            force_text_rect = force_text.get_rect(topleft=(50,
-                                                           bottom_left + 35))
-            self.window.blit(force_text, force_text_rect)
-
-            # display robot collections
-            collect_font = get_font(25)
-            collect_color = "White"
-            bottom_right = self.window_height - 100
-
-            # display collected wood
-            wood_text = collect_font.render("Wood: " +
-                                            str(self.player.wood),
-                                            True, collect_color)
-            wood_text_rect = wood_text.get_rect(topright=(self.window_width-50,
-                                                          bottom_right - 35))
-            self.window.blit(wood_text, wood_text_rect)
-
-            # display collected stone
-            stone_text = collect_font.render("Stone: " +
-                                             str(self.player.stone),
-                                             True, collect_color)
-            stone_text_rect = stone_text.get_rect(topright=(self.window_width
-                                                            - 50,
-                                                            bottom_right))
-            self.window.blit(stone_text, stone_text_rect)
-
-            # display collected battery
-            battery_text = collect_font.render("Batteries: " +
-                                               str(self.player.battery),
-                                               True, collect_color)
-            battery_text_rect = battery_text.get_rect(
-                topright=(self.window_width - 50, bottom_right + 35))
-            self.window.blit(battery_text, battery_text_rect)
-
             pygame.display.flip()
 
             pygame.display.update()
 
             clock.tick(30)
+
+    def displayInfoRect(self, fontSize, text, pos, align='center'):
+        info_font = get_font(fontSize)
+        info_text = info_font.render(text, True, "White")
+        info_rect = info_text.get_rect()
+
+        if align == 'center':
+            info_rect.center = pos
+        elif align == 'topleft':
+            info_rect.topleft = pos
+        elif align == 'topright':
+            info_rect.topright = pos
+        # Add other alignment options if needed
+
+        self.canvas.blit(info_text, info_rect)
+
+    def weaponButtons(self):
+        nextWeapons = self.getNextWeapons()
+        # weapon buttons
+        W1_BUTTON = Button(
+                        nextWeapons[0].image,
+                        pos=(self.window_width * 0.45,
+                             self.window_height * 0.9),
+                        text_input="",
+                        font=get_font(75),
+                        base_color="#d7fcd4",
+                        hovering_color="White")
+        W2_BUTTON = Button(
+                        nextWeapons[1].image,
+                        pos=(self.window_width * 0.55,
+                             self.window_height * 0.9),
+                        text_input="",
+                        font=get_font(75),
+                        base_color="#d7fcd4",
+                        hovering_color="White")
+        return [W1_BUTTON, W2_BUTTON]
+
+    def getNextWeapons(self):
+        kind = self.player.weapon.kind
+        if (kind == "Knife"):
+            return (weapon.Bow(), weapon.Sword())
+        if (kind == "Bow"):
+            return (weapon.Gun(), weapon.Rifle())
+        if (kind == "Sword"):
+            return (weapon.Longsword(), weapon.Lasersword())
+        else:
+            return (weapon.DefaultWeapon(), weapon.DefaultWeapon())
 
 
 game = Game()

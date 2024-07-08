@@ -36,14 +36,9 @@ class Player:
         self.rect.center = (self.x, self.y)
 
         # player's mining hitbox - change pygame.rect to change size of hitbox
-        if (self.weapon.kind == "Sword"):
-            self.mining_hitbox = pygame.Rect(0, 0, 90, 90)
-            self.mining_hitboxX = -45
-            self.mining_hitboxY = -45
-        else:
-            self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
-            self.mining_hitboxX = -75
-            self.mining_hitboxY = -75
+        self.mining_hitbox = pygame.Rect(0, 0, 150, 150)
+        self.mining_hitboxX = -75
+        self.mining_hitboxY = -75
 
         # To track mouse clicks of left mouse button
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]

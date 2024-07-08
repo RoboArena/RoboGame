@@ -32,3 +32,6 @@ class Button:
         else:
             self.text = self.font.render(self.text_input,
                                          True, self.base_color)
+
+    def displayButton(self, window):
+        window.blit(self.image, self.rect)
