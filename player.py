@@ -40,8 +40,12 @@ class Player:
         self.mining_hitboxX = -75
         self.mining_hitboxY = -75
 
-        # To track mouse clicks of left mouse button
+        # To track previous mouse clicks of left mouse button
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+
+        # Right mouse button tracking for mining_timer
+        self.rmb_pressed = False
+        self.rmb_press_start_time = 0
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -52,8 +56,12 @@ class Player:
         # update the currently mineable tiles
         self.get_hits_mining(self.game.map.tiles)
         # save the previous mouse click so that you can't hold left mouse click
-        # to mine stone/wood but have to click each time
+        # to mine stone/wood but have to click each time, this is not in
+        # effect now to try out another technique for mining
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+
+        # update Right mouse button press tracking
+        self.mining_timer()
 
     def draw(self):
         # make Hitbox visible
@@ -161,17 +169,17 @@ class Player:
     def get_hits_mining(self, tiles):
         self.mining_hitbox.center = (self.x, self.y)
         mouse_pos = pygame.mouse.get_pos()
-        if self.new_left_mouse_click():
-            for i, (tile_rect, tile_name) in enumerate(self.tileTupleList):
-                # This is a simple optimization to only check for nearby tiles
-                if (abs(self.x - tile_rect.x) > 300 or
-                        abs(self.y - tile_rect.y) > 300):
-                    continue
-                if self.mining_hitbox.colliderect(tile_rect):
-                    # checks if the player aims at a tile and also presses
-                    # the left mouse button
-                    if (self.aiming_at_tile(tile_rect, mouse_pos) and
-                            pygame.mouse.get_pressed()[0]):
+        for i, (tile_rect, tile_name) in enumerate(self.tileTupleList):
+            # This is a simple optimization to only check for nearby tiles
+            if (abs(self.x - tile_rect.x) > 300 or
+                    abs(self.y - tile_rect.y) > 300):
+                continue
+            if self.mining_hitbox.colliderect(tile_rect):
+                # checks if the player aims at a tile and also presses
+                # the left mouse button
+                if (self.aiming_at_tile(tile_rect, mouse_pos) and
+                        pygame.mouse.get_pressed()[2]):
+                    if self.mining_timer():
 
                         # if the tile that is being mined is a stone tile
                         # correct the walls below and above the tile
@@ -294,6 +302,29 @@ class Player:
         current_mouse_state = pygame.mouse.get_pressed()[0]
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
+
+    # Check if Right mouse button has been held for 1 second,
+    # if so, return true (rmb = right mouse button)
+    def mining_timer(self):
+
+        if pygame.mouse.get_pressed()[2]:
+            if not self.rmb_press:
+                self.rmb_press = True
+                self.rmb_press_start_time = pygame.time.get_ticks()
+            else:
+                current_time = pygame.time.get_ticks()
+                elapsed_time = current_time - self.rmb_press_start_time
+
+                # all things considered this tests for roughly a second of
+                # holding RMB even though it tests for ">= 700ms"
+                if elapsed_time >= 700:
+                    elapsed_time = current_time - self.rmb_press_start_time
+                    self.rmb_press = False
+                    return True
+        else:
+            self.rmb_press = False
+            self.rmb_press_start_time = 0
+        return False
 
     # display the health bar depending on the health (healing) of the player
     def draw_health_bar(self, player_x, player_y, surface):
