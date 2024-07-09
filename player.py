@@ -67,6 +67,7 @@ class Player:
                                        self.y - self.image.get_height() // 2))
         self.weapon.draw_weapon(
             self.x, self.y, self.dir[0], self.dir[1], self.surface)
+        self.draw_health_bar(self.x, self.y, self.surface)
 
     def shoot(self):
         bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
@@ -293,3 +294,11 @@ class Player:
         current_mouse_state = pygame.mouse.get_pressed()[0]
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
+
+    # display the health bar depending on the health (healing) of the player
+    def draw_health_bar(self, player_x, player_y, surface):
+
+        if self.healing > 0:
+            image = pygame.image.load('assets/health_bar.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
