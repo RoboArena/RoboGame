@@ -60,12 +60,16 @@ class Bow(Firearm):
     image = pygame.image.load('assets/bow.png')
     image = pygame.transform.scale(image, (30, 30))
     kind = "Bow"
+    wood_cost = 4
+    stone_cost = 1
 
 
 class Gun(Firearm):
     pass
     image = pygame.image.load('assets/gun.png')
     kind = "Gun"
+    wood_cost = 4
+    stone_cost = 4
 
     def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
         self.bullets.append(bullet.Gunbullet(
@@ -77,6 +81,8 @@ class Rifle(Firearm):
     # this is mostly the same as above. Maybe fixable?
     image = pygame.image.load('assets/rifle2.png')
     kind = "Rifle"
+    wood_cost = 8
+    stone_cost = 0
 
     def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
         self.bullets.append(bullet.Rifflebullet(
@@ -134,6 +140,8 @@ class Sword(Cutting_Weapon):
     kind = "Sword"
     image = pygame.image.load('assets/sword.png')
     image = pygame.transform.scale(image, (64, 64))
+    wood_cost = 3
+    stone_cost = 2
 
 
 class Longsword(Cutting_Weapon):
@@ -141,6 +149,8 @@ class Longsword(Cutting_Weapon):
     kind = "Longsword"
     image = pygame.image.load('assets/Longsword2.png')
     image = pygame.transform.scale(image, (128, 128))
+    wood_cost = 6
+    stone_cost = 2
 
 
 class Lasersword(Cutting_Weapon):
@@ -148,6 +158,8 @@ class Lasersword(Cutting_Weapon):
     kind = "Lasersword"
     image = pygame.image.load('assets/laserSword.png')
     image = pygame.transform.scale(image, (40, 40))
+    wood_cost = 3
+    stone_cost = 5
 
 
 class DefaultWeapon(Cutting_Weapon):
