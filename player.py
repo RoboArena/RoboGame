@@ -75,6 +75,7 @@ class Player:
                                        self.y - self.image.get_height() // 2))
         self.weapon.draw_weapon(
             self.x, self.y, self.dir[0], self.dir[1], self.surface)
+        self.draw_health_bar(self.x, self.y, self.surface)
 
     def shoot(self):
         bullet_destination = (self.x - self.dir[0], self.y - self.dir[1])
@@ -123,7 +124,19 @@ class Player:
                 if tile_name not in ["background.png",
                                      "stone_wall.png",
                                      "wall_edge.png",
-                                     "wood_wall.png"]:
+                                     "wood_wall.png",
+                                     "toxic_puddle_1.png",
+                                     "toxic_puddle_2.png",
+                                     "toxic_puddle_3.png",
+                                     "toxic_puddle_4.png",
+                                     "toxic_puddle_5.png",
+                                     "toxic_puddle_6.png",
+                                     "toxic_puddle_7.png",
+                                     "toxic_puddle_8.png",
+                                     "toxic_puddle_9.png",
+                                     "toxic_puddle_10.png",
+                                     "toxic_puddle_11.png",
+                                     "toxic_puddle_12.png",]:
                     hits.append(tile_rect)
         return hits
 
@@ -290,6 +303,7 @@ class Player:
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
 
+
     # Check if Right mouse button has been held for 1 second,
     # if so, return true (rmb = right mouse button)
     def mining_timer(self):
@@ -312,3 +326,11 @@ class Player:
             self.rmb_press = False
             self.rmb_press_start_time = 0
         return False
+
+    # display the health bar depending on the health (healing) of the player
+    def draw_health_bar(self, player_x, player_y, surface):
+
+        if self.healing > 0:
+            image = pygame.image.load('assets/health_bar.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
