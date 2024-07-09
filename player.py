@@ -303,7 +303,6 @@ class Player:
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
 
-
     # Check if Right mouse button has been held for 1 second,
     # if so, return true (rmb = right mouse button)
     def mining_timer(self):
