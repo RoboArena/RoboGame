@@ -18,6 +18,7 @@
 ## Matthias
 - Update the map to 2.5d Version
 - Synchronize the map
+- Fix Position Issues
 
 ![](images/multiplayer.png)
 
