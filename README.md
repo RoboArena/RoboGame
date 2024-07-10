@@ -25,6 +25,7 @@
 ## Jonathan
 
 - added Pickaxe to the game, player can now mine by holding right mouse button
+
 ![](images/pickaxe.JPG)
 
 - added new design for toxic puddle
