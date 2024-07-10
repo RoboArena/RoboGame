@@ -3,17 +3,17 @@
 ## Amina
 - added lasersword:
 
-![](images/robot_sword.JPG)
-
 - created icons for speed and healing ability:
-
-![](images/symbole.JPG)
 
 - created two different Design Suggestions:
 
-![](images/design1.png)
+![](images/knife.JPG)
 
-![](images/design2.png)
+![](images/weapons1.JPG)
+
+![](images/weapons2.JPG)
+
+![](images/weapons3.JPG)
 
 
 
@@ -26,13 +26,13 @@
 
 ## Jonathan
 
-- created powerpoint presentation
+- added Pickaxe to the game, player can now mine by holding right mouse button
+![](images/pickaxe.JPG)
 
-- added a new map in 2.5D style with new wall tiles
-  
-![](images/2.5D_map.png)
+- added new design for toxic puddle
 
-- wall tiles adapt to the surrounding tiles so they are correctly placed
+![](images/toxic_puddle.JPG)
 
-![](images/mine_wall1.JPG)
-![](images/mine_wall2.JPG)
+- added healthbar, that displays the current health of the player
+
+![](images/Healthbar.JPG)
