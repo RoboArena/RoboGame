@@ -1,11 +1,7 @@
 # RoboGame
 
 ## Amina
-- added lasersword:
-
-- created icons for speed and healing ability:
-
-- created two different Design Suggestions:
+- added Weapons
 
 ![](images/knife.JPG)
 
@@ -15,7 +11,9 @@
 
 ![](images/weapons3.JPG)
 
+- added the function that you can upgrade a weapon by selecting one of two upgrade weapons
 
+![](images/buttons.JPG)
 
 ## Matthias
 - start a server on aws
