@@ -16,8 +16,8 @@
 ![](images/buttons.JPG)
 
 ## Matthias
-- start a server on aws
-- First multiplayer functionality implemented - player positions are updated correctly
+- Update the map to 2.5d Version
+- Synchronize the map
 
 ![](images/multiplayer.png)
 
