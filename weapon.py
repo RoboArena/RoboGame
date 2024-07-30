@@ -28,10 +28,6 @@ class Weapon:
         self.start = ((player_x - (new_dir[0] * 50)),
                       (player_y - (new_dir[1] * 50)))
 
-    def set_start_and_angle(self, player_x, player_y, dir_x, dir_y):
-        Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
-        self.angle = 360 - math.atan2(dir_y, dir_x)
-
     def show_image(self, image, angle, surface):
         image = pygame.transform.rotozoom(
             image, 180 + math.degrees(self.angle + angle),
@@ -42,7 +38,8 @@ class Weapon:
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
         if not self.in_use:
 
-            Weapon.set_start_and_angle(self, player_x, player_y, dir_x, dir_y)
+            Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
+            self.angle = 360 - math.atan2(dir_y, dir_x)
 
         if pygame.mouse.get_pressed()[0]:
 
@@ -65,35 +62,6 @@ class Weapon:
                 self.hitting_angle = 0
         else:
             self.update_bullets()
-
-
-class Pickaxe(Weapon):
-    pass
-    # below is only for generating the mining animation and pickaxe image
-    image = Weapon.adjustImage('assets/pickaxe.png', (30, 30))
-    distance = 10
-    in_use = False
-    start = 0
-    angle = 45
-    hitting_angle = math.radians(0)
-
-    def draw_weapon(self):
-        # when the player hits the right mouse button display the pickaxe
-        if pygame.mouse.get_pressed()[2]:
-            self.in_use = True
-            image = self.pickaxe_image.copy()
-            image = pygame.transform.rotozoom(
-                image, 180 + math.degrees(self.angle + math.degrees(5)),
-                1).convert_alpha()
-
-    def update_weapon(self):
-        # for the mining animation
-        if self.in_use:
-            self.angle += self.hitting_angle
-            self.hitting_angle += math.radians(15)
-            if self.hitting_angle >= math.radians(45):
-                self.in_use = False
-                self.hitting_angle = 0
 
 
 class Firearm(Weapon):
