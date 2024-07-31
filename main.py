@@ -145,33 +145,43 @@ class Game:
 
     def draw_info(self):
         # display timer
-        self.displayText(50, str(self.timer),
-                         (self.window_width - 50, 100), 'topright')
+        self.displayText(
+            50, str(self.timer),
+            (self.window_width * 0.945, self.window_height * 0.085),
+            'topright')
         # display points
-        self.displayText(35, "Points: " + str(self.player.points),
-                             (50, 100), 'topleft')
+        self.displayText(35,
+                         "Points: " + str(self.player.points),
+                         (self.window_width * 0.055,
+                          self.window_height * 0.085), 'topleft')
         # display speed
         self.displayText(
             25, str(self.player.speed),
-            (self.window_width - 1200, self.window_height - 110), 'topleft')
-        self.displayImage((35, 35), 'assets/speedometer.png',
-                          (self.window_width - 1150, self.window_height - 100),
-                          'topleft')
+            (self.window_width * 0.22, self.window_height * 0.878), 'topleft')
+        self.displayImage(
+            (35, 35), 'assets/speedometer.png',
+            (self.window_width * 0.25, self.window_height * 0.889), 'topleft')
         # display healing ability
         self.displayText(
             25, str(self.player.healing),
-            (self.window_width - 1200, self.window_height - 60), 'topleft')
-        self.displayImage((35, 35), 'assets/wrench.png',
-                          (self.window_width - 1150, self.window_height - 50),
-                          'topleft')
+            (self.window_width * 0.22, self.window_height * 0.939), 'topleft')
+        self.displayImage(
+            (35, 35), 'assets/wrench.png',
+            (self.window_width * 0.25, self.window_height * 0.95), 'topleft')
         # display collected wood
-        self.displayText(25, "Wood: " + str(self.player.wood),
-                             (self.window_width - 50,
-                              self.window_height - 135), 'topright')
+        self.displayText(
+            25, str(self.player.wood),
+            (self.window_width * 0.75, self.window_height * 0.878), 'topright')
+        self.displaySprite(
+            (35, 35), 'wood.png',
+            (self.window_width * 0.78, self.window_height * 0.889), 'topright')
         # display collected stone
-        self.displayText(25, "Stone: " + str(self.player.stone),
-                             (self.window_width - 50,
-                              self.window_height - 100), 'topright')
+        self.displayText(
+            25, str(self.player.stone),
+            (self.window_width * 0.75, self.window_height * 0.939), 'topright')
+        self.displaySprite(
+            (35, 35), 'stone.png',
+            (self.window_width * 0.78, self.window_height * 0.95), 'topright')
 
     def play(self):
         running = True
@@ -238,11 +248,18 @@ class Game:
 
         self.canvas.blit(info_text, info_rect)
 
-    def displayImage(self, scale, image, pos, align='center'):
-        image = pygame.image.load(image)
-        image = pygame.transform.scale(image, (35, 35))
+    def displayLoadedImage(self, scale, image, pos, align='center'):
+        image = pygame.transform.scale(image, scale)
         image_rect = image.get_rect(center=(pos[0], pos[1]))
         self.canvas.blit(image, image_rect)
+
+    def displayImage(self, scale, image, pos, align='center'):
+        image = pygame.image.load(image)
+        self.displayLoadedImage(scale, image, pos, align='center')
+
+    def displaySprite(self, scale, image, pos, align='center'):
+        image = self.map.spritesheet.parse_sprite(image)
+        self.displayLoadedImage(scale, image, pos, align='center')
 
     def weaponButtons(self):
         nextWeapons = self.getNextWeapons()
