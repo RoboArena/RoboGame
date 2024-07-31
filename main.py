@@ -146,18 +146,24 @@ class Game:
     def draw_info(self):
         # display timer
         self.displayText(50, str(self.timer),
-                             (self.window_width - 50, 100), 'topright')
+                         (self.window_width - 50, 100), 'topright')
         # display points
         self.displayText(35, "Points: " + str(self.player.points),
                              (50, 100), 'topleft')
         # display speed
-        self.displayText(25, str(self.player.speed),
+        self.displayText(
+            25, str(self.player.speed),
             (self.window_width - 1200, self.window_height - 110), 'topleft')
-        self.displayImage((35, 35), 'assets/speedometer.png',  (self.window_width - 1150, self.window_height - 100), 'topleft')
+        self.displayImage((35, 35), 'assets/speedometer.png',
+                          (self.window_width - 1150, self.window_height - 100),
+                          'topleft')
         # display healing ability
-        self.displayText(25, str(self.player.healing),
-                             (self.window_width - 1200, self.window_height - 60), 'topleft')
-        self.displayImage((35, 35), 'assets/wrench.png',  (self.window_width - 1150, self.window_height - 50), 'topleft')
+        self.displayText(
+            25, str(self.player.healing),
+            (self.window_width - 1200, self.window_height - 60), 'topleft')
+        self.displayImage((35, 35), 'assets/wrench.png',
+                          (self.window_width - 1150, self.window_height - 50),
+                          'topleft')
         # display collected wood
         self.displayText(25, "Wood: " + str(self.player.wood),
                              (self.window_width - 50,
