@@ -143,6 +143,24 @@ class Game:
             self.canvas.blit(self.canvas, (0, 0))
             pygame.display.update()
 
+    def get_upgrade_cost(self, ability, ressource):
+        if ability == "speed":
+            abi = 0
+            level = self.player.speed
+        else:
+            abi = 1
+            level = self.player.healing
+        if ressource == "wood":
+            res = 0
+        else:
+            res = 1
+        wood_cost_speed = [3, 5, 10]
+        stone_cost_speed = [2, 7, 14]
+        wood_cost_healing = [4, 6, 12]
+        stone_cost_healing = [1, 4, 13]
+        costs = [[wood_cost_speed, stone_cost_speed], [wood_cost_healing, stone_cost_healing]]
+        return costs[abi][res][level - 1]
+
     def draw_info(self):
         # display timer
         self.displayText(
@@ -161,13 +179,40 @@ class Game:
         self.displayImage(
             (35, 35), 'assets/speedometer.png',
             (self.window_width * 0.25, self.window_height * 0.889), 'topleft')
+        # display upgrade costs for speed
+        self.displayText(
+            25, str(self.get_upgrade_cost("speed", "wood")),
+            (self.window_width * 0.09, self.window_height * 0.878), 'topleft')
+        self.displaySprite(
+            (35, 35), 'wood.png',
+            (self.window_width * 0.12, self.window_height * 0.889), 'topleft')
+        self.displayText(
+            25, str(self.get_upgrade_cost("speed", "stone")),
+            (self.window_width * 0.15, self.window_height * 0.878), 'topleft')
+        self.displaySprite(
+            (35, 35), 'stone.png',
+            (self.window_width * 0.18, self.window_height * 0.889), 'topleft')
         # display healing ability
         self.displayText(
-            25, str(self.player.healing),
+            25, str(self.player.speed),
             (self.window_width * 0.22, self.window_height * 0.939), 'topleft')
         self.displayImage(
             (35, 35), 'assets/wrench.png',
             (self.window_width * 0.25, self.window_height * 0.95), 'topleft')
+        # display upgrade costs for healing ability
+        self.displayText(
+            25, str(self.get_upgrade_cost("healing", "wood")),
+            (self.window_width * 0.09, self.window_height * 0.939), 'topleft')
+        self.displaySprite(
+            (35, 35), 'wood.png',
+            (self.window_width * 0.12, self.window_height * 0.95), 'topleft')
+        
+        self.displayText(
+            25, str(self.get_upgrade_cost("healing", "stone")),
+            (self.window_width * 0.15, self.window_height * 0.939), 'topleft')
+        self.displaySprite(
+            (35, 35), 'stone.png',
+            (self.window_width * 0.18, self.window_height * 0.95), 'topleft')
         # display collected wood
         self.displayText(
             25, str(self.player.wood),
