@@ -158,7 +158,8 @@ class Game:
         stone_cost_speed = [2, 7, 14]
         wood_cost_healing = [4, 6, 12]
         stone_cost_healing = [1, 4, 13]
-        costs = [[wood_cost_speed, stone_cost_speed], [wood_cost_healing, stone_cost_healing]]
+        costs = [[wood_cost_speed, stone_cost_speed],
+                 [wood_cost_healing, stone_cost_healing]]
         return costs[abi][res][level - 1]
 
     def draw_info(self):
@@ -206,7 +207,6 @@ class Game:
         self.displaySprite(
             (35, 35), 'wood.png',
             (self.window_width * 0.12, self.window_height * 0.95), 'topleft')
-        
         self.displayText(
             25, str(self.get_upgrade_cost("healing", "stone")),
             (self.window_width * 0.15, self.window_height * 0.939), 'topleft')
