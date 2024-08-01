@@ -39,10 +39,10 @@ class Client:
         # Create and return a representation of the game state
         if self.p == 0:
             state = {
-                "playerX": self.game.player.x-self.game.offset_x, 
-                "playerY": self.game.player.y-self.game.offset_y,
-                "player2X": self.game.player2.x - self.game.offset_x,
-                "player2Y": self.game.player2.y - self.game.offset_y,
+                "playerX": self.game.player.x/self.game.window_width,
+                "playerY": self.game.player.y/self.game.window_height,
+                "player2X": self.game.player2.x / self.game.window_width,
+                "player2Y": self.game.player2.y / self.game.window_height,
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
                 "playerRightMouse": self.PlayerRightMouse,
@@ -50,10 +50,10 @@ class Client:
             }
         else:
             state = {
-                "playerX": self.game.player2.x - self.game.offset_x,
-                "playerY": self.game.player2.y - self.game.offset_y,
-                "player2X": self.game.player.x - self.game.offset_x,
-                "player2Y": self.game.player.y - self.game.offset_y,
+                "playerX": self.game.player2.x / self.game.window_width,
+                "playerY": self.game.player2.y / self.game.window_height,
+                "player2X": self.game.player.x / self.game.window_width,
+                "player2Y": self.game.player.y / self.game.window_height,
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
                 "playerRightMouse": self.Player2RightMouse,
@@ -64,8 +64,8 @@ class Client:
     def update_game_state(self, state):
         # Update your local game state with the received state
         if self.p == 0:
-            self.game.player2.x = state["player2X"] + self.game.offset_x
-            self.game.player2.y = state["player2Y"] + self.game.offset_y
+            self.game.player2.x = state["player2X"] * self.game.window_width
+            self.game.player2.y = state["player2Y"] * self.game.window_height
             self.game.player2.rect.center = (self.game.player2.x,
                                              self.game.player2.y)
             self.game.player2.weapon.in_use = state["player2RightMouse"]
@@ -73,12 +73,12 @@ class Client:
             self.game.player.weapon.in_use = state["playerRightMouse"]
             self.game.player.weapon.update_weapon()
         else:
-            self.game.player.x = state["player2X"] + self.game.offset_x
-            self.game.player.y = state["player2Y"] + self.game.offset_y
+            self.game.player.x = state["player2X"] * self.game.window_width
+            self.game.player.y = state["player2Y"] * self.game.window_height
             self.game.player.rect.center = (self.game.player.x,
                                             self.game.player.y)
-            self.game.player2.x = state["playerX"] + self.game.offset_x
-            self.game.player2.y = state["playerY"] + self.game.offset_y
+            self.game.player2.x = state["playerX"] * self.game.window_width
+            self.game.player2.y = state["playerY"] * self.game.window_height
             self.game.player2.rect.center = (self.game.player2.x,
                                              self.game.player2.y)
             self.game.player2.weapon.in_use = state["playerRightMouse"]
