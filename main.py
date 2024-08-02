@@ -412,7 +412,7 @@ class Game:
         nextWeapons = self.getNextWeapons()
         # weapon buttons
         W1_BUTTON = Button(
-                        nextWeapons[0].image,
+                        pygame.transform.scale(nextWeapons[0].image, (40, 40)),
                         pos=(self.window_width * 0.45,
                              self.window_height * 0.9),
                         text_input="",
@@ -420,7 +420,7 @@ class Game:
                         base_color="#d7fcd4",
                         hovering_color="White")
         W2_BUTTON = Button(
-                        nextWeapons[1].image,
+                        pygame.transform.scale(nextWeapons[1].image, (40, 40)),
                         pos=(self.window_width * 0.55,
                              self.window_height * 0.9),
                         text_input="",
