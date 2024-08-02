@@ -168,10 +168,10 @@ class Game:
         y_healing_info = self.window_height * 0.939
         x_icons = self.window_width * 0.25
         x_levels = self.window_width * 0.22
-        x_wood_cost = self.window_width * 0.09
-        x_wood_cost_im = self.window_width * 0.12
-        x_stone_cost = self.window_width * 0.15
-        x_stone_cost_im = self.window_width * 0.18
+        x_wood_cost = self.window_width * 0.1
+        x_wood_cost_im = self.window_width * 0.13
+        x_stone_cost = self.window_width * 0.16
+        x_stone_cost_im = self.window_width * 0.19
         x_collected = self.window_width * 0.75
         x_collected_im = self.window_width * 0.78
         # the images are a bit offset, this fixes that
