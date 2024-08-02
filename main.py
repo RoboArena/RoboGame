@@ -174,9 +174,13 @@ class Game:
         x_stone_cost_im = self.window_width * 0.19
         x_collected = self.window_width * 0.75
         x_collected_im = self.window_width * 0.78
-        # button x positions
+        # button positions
         x_speed_button = self.upgradeButtons()[0].x_pos
         x_healing_button = self.upgradeButtons()[1].x_pos
+        x_weapon_button_1 = self.weaponButtons()[0].x_pos
+        y_weapon_button_1 = self.weaponButtons()[0].y_pos
+        x_weapon_button_2 = self.weaponButtons()[1].x_pos
+        y_weapon_button_2 = self.weaponButtons()[1].y_pos
         # scales
         image_scale = (35, 35)
         text_size = 25
@@ -200,6 +204,9 @@ class Game:
         # position of ressource image - position of ressource counter + buffer
         wood_bg = pygame.Rect(0, 0, x_collected_im - x_collected + 50, 50)
         stone_bg = pygame.Rect(0, 0, x_collected_im - x_collected + 50, 50)
+        # for the weapon you can just take a square bigger than the weapons
+        weapon_1_bg = pygame.Rect(0, 0, 65, 65)
+        weapon_2_bg = pygame.Rect(0, 0, 65, 65)
         # get positions by calculating:
         # middle of button and start of level display
         # + fourth of the buttons size
@@ -219,6 +226,9 @@ class Game:
         # - fourth of image size
         wood_bg.center = x_collected + ((x_collected_im - x_collected)/2), y_speed_info
         stone_bg.center = x_collected + ((x_collected_im - x_collected)/2), y_healing_info
+        # for the weapons you can just use the buttons position
+        weapon_1_bg.center = x_weapon_button_1, y_weapon_button_1
+        weapon_2_bg.center = x_weapon_button_2, y_weapon_button_2
         # draw rectangles:
         light_gray = pygame.Color(133, 133, 133)
         dark_gray = pygame.Color(110, 110, 110)
@@ -228,17 +238,19 @@ class Game:
         pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
         pygame.draw.rect(self.canvas, light_gray, wood_bg)
         pygame.draw.rect(self.canvas, light_gray, stone_bg)
+        pygame.draw.rect(self.canvas, light_gray, weapon_1_bg)
+        pygame.draw.rect(self.canvas, light_gray, weapon_2_bg)
 
         # display timer
         self.displayText(
             50, str(self.timer),
-            (self.window_width * 0.945, self.window_height * 0.085),
+            (self.window_width * 0.9, self.window_height * 0.1),
             'topright')
         # display points
         self.displayText(35,
                          "Points: " + str(self.player.points),
-                         (self.window_width * 0.055,
-                          self.window_height * 0.085), 'topleft')
+                         (self.window_width * 0.14,
+                          self.window_height * 0.1))
         # display speed
         self.displayText(
             text_size, str(self.player.speed),
@@ -370,14 +382,6 @@ class Game:
         info_text = info_font.render(text, True, "White")
         info_rect = info_text.get_rect()
         info_rect.center = pos
-
-        """ if align == 'center':
-            info_rect.center = pos
-        elif align == 'topleft':
-            info_rect.topleft = pos
-        elif align == 'topright':
-            info_rect.topright = pos """
-        # Add other alignment options if needed
 
         self.canvas.blit(info_text, info_rect)
 
