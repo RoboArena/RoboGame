@@ -228,8 +228,10 @@ class Game:
         # or by calculating:
         # middle of ressource image and ressource counter
         # - fourth of image size
-        wood_bg.center = x_collected + ((x_collected_im - x_collected)/2), y_speed_info
-        stone_bg.center = x_collected + ((x_collected_im - x_collected)/2), y_healing_info
+        wood_bg.center = x_collected + (
+            (x_collected_im - x_collected)/2), y_speed_info
+        stone_bg.center = x_collected + (
+            (x_collected_im - x_collected)/2), y_healing_info
         # for the weapons you can just use the buttons position
         weapon_1_bg.center = x_weapon_button_1, y_weapon_button_1
         weapon_2_bg.center = x_weapon_button_2, y_weapon_button_2
@@ -246,6 +248,8 @@ class Game:
         pygame.draw.rect(self.canvas, light_gray, stone_bg)
         pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
         pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
+        pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
+        pygame.draw.rect(self.canvas, "black", weapon_2_bg, 3)
 
         # display timer
         self.displayText(
