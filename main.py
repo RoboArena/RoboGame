@@ -176,8 +176,8 @@ class Game:
         x_wood_cost_im = self.window_width * 0.13
         x_stone_cost = self.window_width * 0.16
         x_stone_cost_im = self.window_width * 0.19
-        x_collected = self.window_width * 0.75
-        x_collected_im = self.window_width * 0.78
+        x_collected = self.window_width * 0.87
+        x_collected_im = self.window_width * 0.9
         # button positions
         x_speed_button = self.upgradeButtons()[0].x_pos
         x_healing_button = self.upgradeButtons()[1].x_pos
@@ -244,8 +244,8 @@ class Game:
         pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
         pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
         pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
-        pygame.draw.rect(self.canvas, light_gray, wood_bg)
-        pygame.draw.rect(self.canvas, light_gray, stone_bg)
+        pygame.draw.rect(self.canvas, dark_gray, wood_bg)
+        pygame.draw.rect(self.canvas, dark_gray, stone_bg)
         pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
         pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
         pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
