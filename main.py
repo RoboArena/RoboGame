@@ -162,6 +162,10 @@ class Game:
                  [wood_cost_healing, stone_cost_healing]]
         return costs[abi][res][level - 1]
 
+    def get_weapon_color(self, weapon):
+        # return pygame.Color(215, 0, 0)
+        return pygame.Color(29, 160, 0)
+
     def draw_info(self):
         # positions
         y_speed_info = self.window_height * 0.889
@@ -232,14 +236,16 @@ class Game:
         # draw rectangles:
         light_gray = pygame.Color(133, 133, 133)
         dark_gray = pygame.Color(110, 110, 110)
+        weapon_1_color = self.get_weapon_color(self.getNextWeapons()[0])
+        weapon_2_color = self.get_weapon_color(self.getNextWeapons()[1])
         pygame.draw.rect(self.canvas, dark_gray, speed_bg_dark)
         pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
         pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
         pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
         pygame.draw.rect(self.canvas, light_gray, wood_bg)
         pygame.draw.rect(self.canvas, light_gray, stone_bg)
-        pygame.draw.rect(self.canvas, light_gray, weapon_1_bg)
-        pygame.draw.rect(self.canvas, light_gray, weapon_2_bg)
+        pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
+        pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
 
         # display timer
         self.displayText(
