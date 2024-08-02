@@ -195,7 +195,7 @@ class Game:
             (self.window_width * 0.18, self.window_height * 0.889), 'topleft')
         # display healing ability
         self.displayText(
-            25, str(self.player.speed),
+            25, str(self.player.healing),
             (self.window_width * 0.22, self.window_height * 0.939), 'topleft')
         self.displayImage(
             (35, 35), 'assets/wrench.png',
@@ -254,6 +254,11 @@ class Game:
                 button.changeColor(pygame.mouse.get_pos())
                 button.update(self.canvas)
 
+            UPGRADE_BTNS = self.upgradeButtons()
+            for up_button in [UPGRADE_BTNS[0], UPGRADE_BTNS[1]]:
+                up_button.changeColor(pygame.mouse.get_pos())
+                up_button.update(self.canvas)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -269,6 +274,22 @@ class Game:
                         self.player.weapon = self.getNextWeapons()[0]
                     if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()):
                         self.player.weapon = self.getNextWeapons()[1]
+                    if UPGRADE_BTNS[0].checkForInput(
+                        pygame.mouse.get_pos()) and self.is_affordable(
+                            "speed"):
+                        self.player.wood -= self.get_upgrade_cost(
+                            "speed", "wood")
+                        self.player.stone -= self.get_upgrade_cost(
+                            "speed", "stone")
+                        self.player.speed += 1
+                    if UPGRADE_BTNS[1].checkForInput(
+                        pygame.mouse.get_pos()) and self.is_affordable(
+                            "healing"):
+                        self.player.wood -= self.get_upgrade_cost(
+                            "healing", "wood")
+                        self.player.stone -= self.get_upgrade_cost(
+                            "healing", "stone")
+                        self.player.healing += 1
 
             # display the canvas on the window
             self.window.blit(self.canvas, (0, 0))
@@ -326,6 +347,31 @@ class Game:
                         base_color="#d7fcd4",
                         hovering_color="White")
         return [W1_BUTTON, W2_BUTTON]
+
+    def upgradeButtons(self):
+        if self.is_affordable("speed"):
+            im_1 = pygame.image.load('assets/upgrade_green.png')
+        else:
+            im_1 = pygame.image.load('assets/upgrade_red.png')
+        im_1 = pygame.transform.scale(im_1, (40, 40))
+        U1_BUTTON = Button(
+            im_1, pos=(self.window_width * 0.29, self.window_height * 0.889),
+            text_input="", font=get_font(75),
+            base_color="#d7fcd4", hovering_color="White")
+
+        if self.is_affordable("healing"):
+            im_2 = pygame.image.load('assets/upgrade_green.png')
+        else:
+            im_2 = pygame.image.load('assets/upgrade_red.png')
+        im_2 = pygame.transform.scale(im_2, (40, 40))
+        U2_BUTTON = Button(
+            im_2, pos=(self.window_width * 0.29, self.window_height * 0.939),
+            text_input="", font=get_font(75),
+            base_color="#d7fcd4", hovering_color="White")
+        return [U1_BUTTON, U2_BUTTON]
+
+    def is_affordable(self, ability):
+        return self.get_upgrade_cost(ability, "wood") <= self.player.wood and self.get_upgrade_cost(ability, "stone") <= self.player.stone
 
     def getNextWeapons(self):
         kind = self.player.weapon.kind
