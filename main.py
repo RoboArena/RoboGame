@@ -371,7 +371,9 @@ class Game:
         return [U1_BUTTON, U2_BUTTON]
 
     def is_affordable(self, ability):
-        return self.get_upgrade_cost(ability, "wood") <= self.player.wood and self.get_upgrade_cost(ability, "stone") <= self.player.stone
+        return self.get_upgrade_cost(
+            ability, "wood") <= self.player.wood and self.get_upgrade_cost(
+                ability, "stone") <= self.player.stone
 
     def getNextWeapons(self):
         kind = self.player.weapon.kind
