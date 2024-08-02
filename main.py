@@ -163,6 +163,65 @@ class Game:
         return costs[abi][res][level - 1]
 
     def draw_info(self):
+        # positions
+        y_speed_info = self.window_height * 0.878
+        y_healing_info = self.window_height * 0.939
+        x_icons = self.window_width * 0.25
+        x_levels = self.window_width * 0.22
+        x_wood_cost = self.window_width * 0.09
+        x_wood_cost_im = self.window_width * 0.12
+        x_stone_cost = self.window_width * 0.15
+        x_stone_cost_im = self.window_width * 0.18
+        x_collected = self.window_width * 0.75
+        x_collected_im = self.window_width * 0.78
+        # the images are a bit offset, this fixes that
+        im_offset = self.window_height * 0.011
+        # button x positions
+        x_speed_button = self.upgradeButtons()[0].x_pos
+        x_healing_button = self.upgradeButtons()[1].x_pos
+        # scales
+        image_scale = (35, 35)
+        text_size = 25
+
+        # draw background
+
+        # get widths by calculating:
+        # position of button - position of text that show the level
+        # + buffer to make it look nicer
+        speed_bg_dark = pygame.Rect(0, 0, x_speed_button - x_levels + 40, 50)
+        healing_bg_dark = pygame.Rect(
+            0, 0, x_healing_button - x_levels + 40, 50)
+        # or by calculation:
+        # position of end of upgrade costs
+        # - position of start of upgrade costs + buffer
+        speed_bg_light = pygame.Rect(
+            0, 0, x_stone_cost_im - x_wood_cost + 40, 50)
+        healing_bg_light = pygame.Rect(
+            0, 0, x_stone_cost_im - x_wood_cost + 40, 50)
+        # get positions by calculating:
+        # middle of button and start of level display
+        # + fourth of the buttons size
+        speed_bg_dark.center = x_levels + (
+            (x_speed_button - x_levels)/2) + 10, y_speed_info + im_offset
+        healing_bg_dark.center = x_levels + (
+            (x_healing_button - x_levels)/2) + 10, y_healing_info + im_offset
+        # or by calculating:
+        # middle of start of upgrade costs and end of upgrade costs
+        # + fourth of image size
+        speed_bg_light.center = x_wood_cost + (
+            (x_stone_cost_im - x_wood_cost +
+             1/2 * image_scale[0])/2), y_speed_info + im_offset
+        healing_bg_light.center = x_wood_cost + (
+            (x_stone_cost_im - x_wood_cost +
+             1/2 * image_scale[0])/2), y_healing_info + im_offset
+        # draw rectangles:
+        light_gray = pygame.Color(133, 133, 133)
+        dark_gray = pygame.Color(110, 110, 110)
+        pygame.draw.rect(self.canvas, dark_gray, speed_bg_dark)
+        pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
+        pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
+        pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
+
         # display timer
         self.displayText(
             50, str(self.timer),
@@ -175,58 +234,58 @@ class Game:
                           self.window_height * 0.085), 'topleft')
         # display speed
         self.displayText(
-            25, str(self.player.speed),
-            (self.window_width * 0.22, self.window_height * 0.878), 'topleft')
+            text_size, str(self.player.speed),
+            (x_levels, y_speed_info), 'topleft')
         self.displayImage(
-            (35, 35), 'assets/speedometer.png',
-            (self.window_width * 0.25, self.window_height * 0.889), 'topleft')
+            image_scale, 'assets/speedometer.png',
+            (x_icons, y_speed_info + im_offset), 'topleft')
         # display upgrade costs for speed
         self.displayText(
-            25, str(self.get_upgrade_cost("speed", "wood")),
-            (self.window_width * 0.09, self.window_height * 0.878), 'topleft')
+            text_size, str(self.get_upgrade_cost("speed", "wood")),
+            (x_wood_cost, y_speed_info), 'topleft')
         self.displaySprite(
-            (35, 35), 'wood.png',
-            (self.window_width * 0.12, self.window_height * 0.889), 'topleft')
+            image_scale, 'wood.png',
+            (x_wood_cost_im, y_speed_info + im_offset), 'topleft')
         self.displayText(
-            25, str(self.get_upgrade_cost("speed", "stone")),
-            (self.window_width * 0.15, self.window_height * 0.878), 'topleft')
+            text_size, str(self.get_upgrade_cost("speed", "stone")),
+            (x_stone_cost, y_speed_info), 'topleft')
         self.displaySprite(
-            (35, 35), 'stone.png',
-            (self.window_width * 0.18, self.window_height * 0.889), 'topleft')
+            image_scale, 'stone.png',
+            (x_stone_cost_im, y_speed_info + im_offset), 'topleft')
         # display healing ability
         self.displayText(
-            25, str(self.player.healing),
-            (self.window_width * 0.22, self.window_height * 0.939), 'topleft')
+            text_size, str(self.player.healing),
+            (x_levels, y_healing_info), 'topleft')
         self.displayImage(
-            (35, 35), 'assets/wrench.png',
-            (self.window_width * 0.25, self.window_height * 0.95), 'topleft')
+            image_scale, 'assets/wrench.png',
+            (x_icons, y_healing_info + im_offset), 'topleft')
         # display upgrade costs for healing ability
         self.displayText(
-            25, str(self.get_upgrade_cost("healing", "wood")),
-            (self.window_width * 0.09, self.window_height * 0.939), 'topleft')
+            text_size, str(self.get_upgrade_cost("healing", "wood")),
+            (x_wood_cost, y_healing_info), 'topleft')
         self.displaySprite(
-            (35, 35), 'wood.png',
-            (self.window_width * 0.12, self.window_height * 0.95), 'topleft')
+            image_scale, 'wood.png',
+            (x_wood_cost_im, y_healing_info + im_offset), 'topleft')
         self.displayText(
-            25, str(self.get_upgrade_cost("healing", "stone")),
-            (self.window_width * 0.15, self.window_height * 0.939), 'topleft')
+            text_size, str(self.get_upgrade_cost("healing", "stone")),
+            (x_stone_cost, y_healing_info), 'topleft')
         self.displaySprite(
-            (35, 35), 'stone.png',
-            (self.window_width * 0.18, self.window_height * 0.95), 'topleft')
+            image_scale, 'stone.png',
+            (x_stone_cost_im, y_healing_info + im_offset), 'topleft')
         # display collected wood
         self.displayText(
-            25, str(self.player.wood),
-            (self.window_width * 0.75, self.window_height * 0.878), 'topright')
+            text_size, str(self.player.wood),
+            (x_collected, y_speed_info), 'topright')
         self.displaySprite(
-            (35, 35), 'wood.png',
-            (self.window_width * 0.78, self.window_height * 0.889), 'topright')
+            image_scale, 'wood.png',
+            (x_collected_im, y_speed_info + im_offset), 'topright')
         # display collected stone
         self.displayText(
-            25, str(self.player.stone),
-            (self.window_width * 0.75, self.window_height * 0.939), 'topright')
+            text_size, str(self.player.stone),
+            (x_collected, y_healing_info), 'topright')
         self.displaySprite(
-            (35, 35), 'stone.png',
-            (self.window_width * 0.78, self.window_height * 0.95), 'topright')
+            image_scale, 'stone.png',
+            (x_collected_im, y_healing_info + im_offset), 'topright')
 
     def play(self):
         running = True
@@ -365,7 +424,7 @@ class Game:
             im_2 = pygame.image.load('assets/upgrade_red.png')
         im_2 = pygame.transform.scale(im_2, (40, 40))
         U2_BUTTON = Button(
-            im_2, pos=(self.window_width * 0.29, self.window_height * 0.939),
+            im_2, pos=(self.window_width * 0.29, self.window_height * 0.95),
             text_input="", font=get_font(75),
             base_color="#d7fcd4", hovering_color="White")
         return [U1_BUTTON, U2_BUTTON]
