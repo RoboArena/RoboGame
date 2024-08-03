@@ -145,23 +145,31 @@ class Game:
 
     def draw_info(self):
         # display timer
-        self.displayInfoRect(50, str(self.timer),
-                             (self.window_width - 50, 100), 'topright')
+        self.displayText(50, str(self.timer),
+                         (self.window_width - 50, 100), 'topright')
         # display points
-        self.displayInfoRect(35, "Points: " + str(self.player.points),
+        self.displayText(35, "Points: " + str(self.player.points),
                              (50, 100), 'topleft')
         # display speed
-        self.displayInfoRect(25, "Speed: " + str(self.player.speed),
-                             (50, self.window_height - 135), 'topleft')
+        self.displayText(
+            25, str(self.player.speed),
+            (self.window_width - 1200, self.window_height - 110), 'topleft')
+        self.displayImage((35, 35), 'assets/speedometer.png',
+                          (self.window_width - 1150, self.window_height - 100),
+                          'topleft')
         # display healing ability
-        self.displayInfoRect(25, "Healing: " + str(self.player.healing),
-                             (50, self.window_height - 100), 'topleft')
+        self.displayText(
+            25, str(self.player.healing),
+            (self.window_width - 1200, self.window_height - 60), 'topleft')
+        self.displayImage((35, 35), 'assets/wrench.png',
+                          (self.window_width - 1150, self.window_height - 50),
+                          'topleft')
         # display collected wood
-        self.displayInfoRect(25, "Wood: " + str(self.player.wood),
+        self.displayText(25, "Wood: " + str(self.player.wood),
                              (self.window_width - 50,
                               self.window_height - 135), 'topright')
         # display collected stone
-        self.displayInfoRect(25, "Stone: " + str(self.player.stone),
+        self.displayText(25, "Stone: " + str(self.player.stone),
                              (self.window_width - 50,
                               self.window_height - 100), 'topright')
 
@@ -215,7 +223,7 @@ class Game:
 
             clock.tick(30)
 
-    def displayInfoRect(self, fontSize, text, pos, align='center'):
+    def displayText(self, fontSize, text, pos, align='center'):
         info_font = get_font(fontSize)
         info_text = info_font.render(text, True, "White")
         info_rect = info_text.get_rect()
@@ -229,6 +237,12 @@ class Game:
         # Add other alignment options if needed
 
         self.canvas.blit(info_text, info_rect)
+
+    def displayImage(self, scale, image, pos, align='center'):
+        image = pygame.image.load(image)
+        image = pygame.transform.scale(image, (35, 35))
+        image_rect = image.get_rect(center=(pos[0], pos[1]))
+        self.canvas.blit(image, image_rect)
 
     def weaponButtons(self):
         nextWeapons = self.getNextWeapons()
