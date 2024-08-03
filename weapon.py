@@ -13,7 +13,7 @@ class Weapon:
 
     def adjustImage(image, scale):
         im = pygame.image.load(image)
-        im = pygame.transform.scale(im, scale)
+        im = pygame.transform.scale(im, (scale))
         return im
 
     def normalizeDir(dir):
@@ -172,7 +172,7 @@ class Knife(Cutting_Weapon):
 class Sword(Cutting_Weapon):
     pass
     kind = "Sword"
-    image = Weapon.adjustImage('assets/sword.png', (64, 64))
+    image = Weapon.adjustImage('assets/sword.png', (30, 30))
 
 
 class Longsword(Cutting_Weapon):
