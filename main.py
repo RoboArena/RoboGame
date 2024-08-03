@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0, weapon.Knife())
+            self, 500, 450, 10, 0, 0, 1, 1, 0, weapon.Knife())
         self.main_menu()
 
     def main_menu(self):
@@ -143,6 +143,28 @@ class Game:
             self.canvas.blit(self.canvas, (0, 0))
             pygame.display.update()
 
+    def draw_info(self):
+        # display timer
+        self.displayInfoRect(50, str(self.timer),
+                             (self.window_width - 50, 100), 'topright')
+        # display points
+        self.displayInfoRect(35, "Points: " + str(self.player.points),
+                             (50, 100), 'topleft')
+        # display speed
+        self.displayInfoRect(25, "Speed: " + str(self.player.speed),
+                             (50, self.window_height - 135), 'topleft')
+        # display healing ability
+        self.displayInfoRect(25, "Healing: " + str(self.player.healing),
+                             (50, self.window_height - 100), 'topleft')
+        # display collected wood
+        self.displayInfoRect(25, "Wood: " + str(self.player.wood),
+                             (self.window_width - 50,
+                              self.window_height - 135), 'topright')
+        # display collected stone
+        self.displayInfoRect(25, "Stone: " + str(self.player.stone),
+                             (self.window_width - 50,
+                              self.window_height - 100), 'topright')
+
     def play(self):
         running = True
         timer_event = pygame.USEREVENT+1
@@ -162,34 +184,7 @@ class Game:
             self.player.update()
             self.player.draw()
 
-            # display timer
-            self.displayInfoRect(50, str(self.timer),
-                                 (self.window_width - 50, 100), 'topright')
-            # display points
-            self.displayInfoRect(35, "Points: " + str(self.player.points),
-                                 (50, 100), 'topleft')
-            # display speed
-            self.displayInfoRect(25, "Speed: " + str(self.player.speed),
-                                 (50, self.window_height - 135), 'topleft')
-            # display healing ability
-            self.displayInfoRect(25, "Healing: " + str(self.player.healing),
-                                 (50, self.window_height - 100), 'topleft')
-            # display shooting force
-            self.displayInfoRect(25, "Shooting Force: " +
-                                 str(self.player.force),
-                                 (50, self.window_height - 65), 'topleft')
-            # display collected wood
-            self.displayInfoRect(25, "Wood: " + str(self.player.wood),
-                                 (self.window_width - 50,
-                                  self.window_height - 135), 'topright')
-            # display collected stone
-            self.displayInfoRect(25, "Stone: " + str(self.player.stone),
-                                 (self.window_width - 50,
-                                  self.window_height - 100), 'topright')
-            # display collected battery
-            self.displayInfoRect(25, "Batteries: " + str(self.player.battery),
-                                 (self.window_width - 50,
-                                 self.window_height - 65), 'topright')
+            self.draw_info()
 
             WEAPON_BTNS = self.weaponButtons()
             for button in [WEAPON_BTNS[0], WEAPON_BTNS[1]]:
