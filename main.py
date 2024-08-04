@@ -185,6 +185,16 @@ class Game:
             image_scale, 'stone.png',
             (x_stone_im, y_pos))
 
+    def draw_ability(self, level, icon, rel_pos):
+        image_scale = (35, 35)
+        text_size = 25
+        self.displayText(
+            text_size, str(level),
+            (self.window_width * (rel_pos[0] - 0.015), self.window_height * rel_pos[1]))
+        self.displayImage(
+            image_scale, icon,
+            (self.window_width * (rel_pos[0] + 0.015), self.window_height * rel_pos[1]))
+
     def draw_bg_square(self, center_x, center_y, height, width, color):
         square = pygame.Rect(0, 0, self.window_width * width, self.window_height * height)
         square.center = (self.window_width * center_x, self.window_height * center_y)
@@ -196,6 +206,7 @@ class Game:
         y_s_info = 0.889
         upg_c_abi = 0.145
         y_h_info = 0.95
+        x_icon = 0.235
         y_healing_info = self.window_height * 0.95
         x_icons = self.window_width * 0.25
         x_levels = self.window_width * 0.22
@@ -316,23 +327,13 @@ class Game:
                          (self.window_width * 0.14,
                           self.window_height * 0.1))
         # display speed
-        self.displayText(
-            text_size, str(self.player.speed),
-            (x_levels, y_speed_info))
-        self.displayImage(
-            image_scale, 'assets/speedometer.png',
-            (x_icons, y_speed_info))
+        self.draw_ability(self.player.speed, 'assets/speedometer.png', (x_icon, y_s_info))
         # display upgrade costs for speed
         w_c_speed = self.get_upgrade_cost("speed", "wood")
         s_c_speed = self.get_upgrade_cost("speed", "stone")
         self.draw_cost(w_c_speed, s_c_speed, (upg_c_abi, y_s_info))
         # display healing ability
-        self.displayText(
-            text_size, str(self.player.healing),
-            (x_levels, y_healing_info))
-        self.displayImage(
-            image_scale, 'assets/wrench.png',
-            (x_icons, y_healing_info))
+        self.draw_ability(self.player.healing, 'assets/wrench.png', (x_icon, y_h_info))
         # display upgrade costs for healing ability
         w_c_healing = self.get_upgrade_cost("healing", "wood")
         s_c_healing = self.get_upgrade_cost("healing", "stone")
