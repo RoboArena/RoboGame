@@ -185,6 +185,10 @@ class Game:
             image_scale, 'stone.png',
             (x_stone_im, y_pos))
 
+    def draw_bg_square(self, center_x, center_y, height, width, color):
+        square = pygame.Rect(0, 0, self.window_width * width, self.window_height * height)
+        square.center = (self.window_width * center_x, self.window_height * center_y)
+        pygame.draw.rect(self.canvas, color, square)
 
     def draw_info(self):
         # positions
@@ -236,8 +240,6 @@ class Game:
         # or by calculating:
         # position of end of upgrade costs
         # - position of start of upgrade costs + buffer
-        speed_bg_light = pygame.Rect(
-            0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
         healing_bg_light = pygame.Rect(
             0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
         # or by calculationg:
@@ -264,8 +266,6 @@ class Game:
         # or by calculating:
         # middle of start of upgrade costs and end of upgrade costs
         # + fourth of image size
-        speed_bg_light.center = x_wood_cost + (
-            (x_stone_cost_im - x_wood_cost)/2), y_speed_info
         healing_bg_light.center = x_wood_cost + (
             (x_stone_cost_im - x_wood_cost)/2), y_healing_info
         # or by calculationg:
@@ -291,8 +291,7 @@ class Game:
         weapon_2_color = self.get_weapon_color(self.getNextWeapons()[1])
         pygame.draw.rect(self.canvas, dark_gray, speed_bg_dark)
         pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
-        pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
-        pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
+        # pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
         pygame.draw.rect(self.canvas, light_gray, w_1_bg_light)
         pygame.draw.rect(self.canvas, light_gray, w_2_bg_light)
         pygame.draw.rect(self.canvas, dark_gray, wood_bg)
@@ -301,6 +300,10 @@ class Game:
         pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
         pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
         pygame.draw.rect(self.canvas, "black", weapon_2_bg, 3)
+        # draw background of speed upgrade costs:
+        self.draw_bg_square(upg_c_abi, y_s_info, 0.06, 0.12, light_gray)
+        # draw background of healing upgrade costs:
+        self.draw_bg_square(upg_c_abi, y_h_info, 0.06, 0.12, light_gray)
 
         # display timer
         self.displayText(
@@ -319,7 +322,6 @@ class Game:
         self.displayImage(
             image_scale, 'assets/speedometer.png',
             (x_icons, y_speed_info))
-        
         # display upgrade costs for speed
         w_c_speed = self.get_upgrade_cost("speed", "wood")
         s_c_speed = self.get_upgrade_cost("speed", "stone")
@@ -354,18 +356,6 @@ class Game:
         s_c_w_1 = self.getNextWeapons()[0].stone_cost
         self.draw_cost(w_c_w_1, s_c_w_1, (x_upg_c_w_1, y_w_1))
         # display costs for weapon 2
-        """ self.displayText(
-            text_size, str((self.getNextWeapons()[1].wood_cost)),
-            (x_w_cost_w_2, y_weapon_button_2))
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_w_cost_w_2_im, y_weapon_button_2))
-        self.displayText(
-            text_size, str(self.getNextWeapons()[1].stone_cost),
-            (x_s_cost_w_2, y_weapon_button_2))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_s_cost_w_2_im, y_weapon_button_2)) """
         w_c_w_2 = self.getNextWeapons()[1].wood_cost
         s_c_w_2 = self.getNextWeapons()[1].stone_cost
         self.draw_cost(w_c_w_2, s_c_w_2, (x_upg_c_w_2, y_w_2))
