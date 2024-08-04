@@ -205,6 +205,12 @@ class Game:
             image_scale, icon,
             (self.window_width * (rel_pos[0] + 0.015), self.window_height * rel_pos[1]))
 
+    def draw_bg_weapon(self, center_x, center_y, color):
+        square = pygame.Rect(0, 0, 65, 65)
+        square.center = (self.window_width * center_x, self.window_height * center_y)
+        pygame.draw.rect(self.canvas, color, square)
+        pygame.draw.rect(self.canvas, "black", square, 4)
+
     def draw_bg_square(self, center_x, center_y, height, width, color):
         square = pygame.Rect(0, 0, self.window_width * width, self.window_height * height)
         square.center = (self.window_width * center_x, self.window_height * center_y)
@@ -243,6 +249,7 @@ class Game:
         y_weapon_button_1 = self.weaponButtons()[0].y_pos
         y_w_1 = self.weaponButtons()[0].y_pos / self.window_height
         y_w_2 = self.weaponButtons()[1].y_pos / self.window_height
+        x_w_buttons = self.weaponButtons()[0].x_pos / self.window_width
         x_upg_c_w_1 = 0.365
         x_upg_c_w_2 = 0.465
         x_weapon_button_2 = self.weaponButtons()[1].x_pos
@@ -315,13 +322,13 @@ class Game:
         # pygame.draw.rect(self.canvas, dark_gray, speed_bg_dark)
         # pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
         # pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
-        pygame.draw.rect(self.canvas, light_gray, w_1_bg_light)
+        # pygame.draw.rect(self.canvas, light_gray, w_1_bg_light)
         pygame.draw.rect(self.canvas, light_gray, w_2_bg_light)
-        pygame.draw.rect(self.canvas, dark_gray, wood_bg)
-        pygame.draw.rect(self.canvas, dark_gray, stone_bg)
-        pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
+        # pygame.draw.rect(self.canvas, dark_gray, wood_bg)
+        # pygame.draw.rect(self.canvas, dark_gray, stone_bg)
+        # pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
         pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
-        pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
+        # pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
         pygame.draw.rect(self.canvas, "black", weapon_2_bg, 3)
         # draw background of speed upgrade costs:
         self.draw_bg_square(upg_c_abi, y_s_info, 0.06, 0.12, light_gray)
@@ -331,6 +338,13 @@ class Game:
         self.draw_bg_square(x_icon + 0.025, y_s_info, 0.06, 0.1, dark_gray)
         # draw background of healing level and icon:
         self.draw_bg_square(x_icon + 0.025, y_h_info, 0.06, 0.1, dark_gray)
+        # draw background of collected wood
+        self.draw_bg_square(x_coll, y_s_info, 0.06, 0.06, dark_gray)
+        # draw background of collected stone
+        self.draw_bg_square(x_coll, y_h_info, 0.06, 0.06, dark_gray)
+        # draw background of first weapon button
+        self.draw_bg_square(x_upg_c_w_1 + 0.025, y_w_1, 0.085, 0.2, light_gray)
+        self.draw_bg_weapon(x_w_buttons, y_w_1, weapon_1_color)
 
         # display timer
         self.displayText(
