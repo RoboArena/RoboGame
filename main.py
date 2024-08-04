@@ -166,9 +166,32 @@ class Game:
         # return pygame.Color(215, 0, 0)
         return pygame.Color(29, 160, 0)
 
+    def draw_cost(self, wood_cost, stone_cost, rel_pos):
+        image_scale = (35, 35)
+        text_size = 25
+        y_pos = self.window_height * rel_pos[1]
+        x_wood = self.window_width * (rel_pos[0] - 0.045)
+        x_wood_im = self.window_width * (rel_pos[0] - 0.015)
+        x_stone = self.window_width * (rel_pos[0] + 0.015)
+        x_stone_im = self.window_width * (rel_pos[0] + 0.045)
+        self.displayText(
+            text_size, str(wood_cost), (x_wood, y_pos), 'topleft')
+        self.displaySprite(
+            image_scale, 'wood.png', (x_wood_im, y_pos))
+        self.displayText(
+            text_size, str(stone_cost),
+            (x_stone, y_pos))
+        self.displaySprite(
+            image_scale, 'stone.png',
+            (x_stone_im, y_pos))
+
+
     def draw_info(self):
         # positions
         y_speed_info = self.window_height * 0.889
+        y_s_info = 0.889
+        upg_c_abi = 0.145
+        y_h_info = 0.95
         y_healing_info = self.window_height * 0.95
         x_icons = self.window_width * 0.25
         x_levels = self.window_width * 0.22
@@ -178,11 +201,24 @@ class Game:
         x_stone_cost_im = self.window_width * 0.19
         x_collected = self.window_width * 0.87
         x_collected_im = self.window_width * 0.9
+        x_w_cost_w_1 = self.window_width * 0.32
+        x_w_cost_w_1_im = self.window_width * 0.35
+        x_s_cost_w_1 = self.window_width * 0.38
+        x_s_cost_w_1_im = self.window_width * 0.41
+
+        x_w_cost_w_2 = self.window_width * 0.42
+        x_w_cost_w_2_im = self.window_width * 0.45
+        x_s_cost_w_2 = self.window_width * 0.48
+        x_s_cost_w_2_im = self.window_width * 0.51
         # button positions
         x_speed_button = self.upgradeButtons()[0].x_pos
         x_healing_button = self.upgradeButtons()[1].x_pos
         x_weapon_button_1 = self.weaponButtons()[0].x_pos
         y_weapon_button_1 = self.weaponButtons()[0].y_pos
+        y_w_1 = self.weaponButtons()[0].y_pos / self.window_height
+        y_w_2 = self.weaponButtons()[1].y_pos / self.window_height
+        x_upg_c_w_1 = 0.365
+        x_upg_c_w_2 = 0.465
         x_weapon_button_2 = self.weaponButtons()[1].x_pos
         y_weapon_button_2 = self.weaponButtons()[1].y_pos
         # scales
@@ -204,6 +240,13 @@ class Game:
             0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
         healing_bg_light = pygame.Rect(
             0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
+        # or by calculationg:
+        # position of weapon button
+        # - position of start of upgrade cost + buffer
+        w_1_bg_light = pygame.Rect(
+            0, 0, x_weapon_button_1 - x_w_cost_w_1 + 70, 70)
+        w_2_bg_light = pygame.Rect(
+            0, 0, x_weapon_button_2 - x_w_cost_w_2 + 70, 70)
         # or by calculating:
         # position of ressource image - position of ressource counter + buffer
         wood_bg = pygame.Rect(0, 0, x_collected_im - x_collected + 50, 50)
@@ -225,6 +268,12 @@ class Game:
             (x_stone_cost_im - x_wood_cost)/2), y_speed_info
         healing_bg_light.center = x_wood_cost + (
             (x_stone_cost_im - x_wood_cost)/2), y_healing_info
+        # or by calculationg:
+        # middle of start of cost and end of upgrade costs
+        w_1_bg_light.center = x_w_cost_w_1 + (
+            (x_weapon_button_1 - x_w_cost_w_1)/2), y_weapon_button_1
+        w_2_bg_light.center = x_w_cost_w_2 + (
+            (x_weapon_button_2 - x_w_cost_w_2)/2), y_weapon_button_2
         # or by calculating:
         # middle of ressource image and ressource counter
         # - fourth of image size
@@ -244,6 +293,8 @@ class Game:
         pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
         pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
         pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
+        pygame.draw.rect(self.canvas, light_gray, w_1_bg_light)
+        pygame.draw.rect(self.canvas, light_gray, w_2_bg_light)
         pygame.draw.rect(self.canvas, dark_gray, wood_bg)
         pygame.draw.rect(self.canvas, dark_gray, stone_bg)
         pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
@@ -268,19 +319,11 @@ class Game:
         self.displayImage(
             image_scale, 'assets/speedometer.png',
             (x_icons, y_speed_info))
+        
         # display upgrade costs for speed
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("speed", "wood")),
-            (x_wood_cost, y_speed_info), 'topleft')
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_wood_cost_im, y_speed_info))
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("speed", "stone")),
-            (x_stone_cost, y_speed_info))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_stone_cost_im, y_speed_info))
+        w_c_speed = self.get_upgrade_cost("speed", "wood")
+        s_c_speed = self.get_upgrade_cost("speed", "stone")
+        self.draw_cost(w_c_speed, s_c_speed, (upg_c_abi, y_s_info))
         # display healing ability
         self.displayText(
             text_size, str(self.player.healing),
@@ -289,18 +332,9 @@ class Game:
             image_scale, 'assets/wrench.png',
             (x_icons, y_healing_info))
         # display upgrade costs for healing ability
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("healing", "wood")),
-            (x_wood_cost, y_healing_info))
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_wood_cost_im, y_healing_info))
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("healing", "stone")),
-            (x_stone_cost, y_healing_info))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_stone_cost_im, y_healing_info))
+        w_c_healing = self.get_upgrade_cost("healing", "wood")
+        s_c_healing = self.get_upgrade_cost("healing", "stone")
+        self.draw_cost(w_c_healing, s_c_healing, (upg_c_abi, y_h_info))
         # display collected wood
         self.displayText(
             text_size, str(self.player.wood),
@@ -315,6 +349,26 @@ class Game:
         self.displaySprite(
             image_scale, 'stone.png',
             (x_collected_im, y_healing_info))
+        # display costs for weapon 1
+        w_c_w_1 = self.getNextWeapons()[0].wood_cost
+        s_c_w_1 = self.getNextWeapons()[0].stone_cost
+        self.draw_cost(w_c_w_1, s_c_w_1, (x_upg_c_w_1, y_w_1))
+        # display costs for weapon 2
+        """ self.displayText(
+            text_size, str((self.getNextWeapons()[1].wood_cost)),
+            (x_w_cost_w_2, y_weapon_button_2))
+        self.displaySprite(
+            image_scale, 'wood.png',
+            (x_w_cost_w_2_im, y_weapon_button_2))
+        self.displayText(
+            text_size, str(self.getNextWeapons()[1].stone_cost),
+            (x_s_cost_w_2, y_weapon_button_2))
+        self.displaySprite(
+            image_scale, 'stone.png',
+            (x_s_cost_w_2_im, y_weapon_button_2)) """
+        w_c_w_2 = self.getNextWeapons()[1].wood_cost
+        s_c_w_2 = self.getNextWeapons()[1].stone_cost
+        self.draw_cost(w_c_w_2, s_c_w_2, (x_upg_c_w_2, y_w_2))
 
     def play(self):
         running = True
@@ -414,7 +468,7 @@ class Game:
         W1_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[0].image, (40, 40)),
                         pos=(self.window_width * 0.45,
-                             self.window_height * 0.9),
+                             self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
                         base_color="#d7fcd4",
@@ -422,7 +476,7 @@ class Game:
         W2_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[1].image, (40, 40)),
                         pos=(self.window_width * 0.55,
-                             self.window_height * 0.9),
+                             self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
                         base_color="#d7fcd4",
