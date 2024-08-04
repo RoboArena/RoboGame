@@ -232,9 +232,10 @@ class Game:
         # button positions
         y_w_1 = self.weaponButtons()[0].y_pos / self.window_height
         y_w_2 = self.weaponButtons()[1].y_pos / self.window_height
-        x_w_buttons = self.weaponButtons()[0].x_pos / self.window_width
-        x_upg_c_w_1 = 0.365
-        x_upg_c_w_2 = 0.465
+        x_w_1_button = self.weaponButtons()[0].x_pos / self.window_width
+        x_w_2_button = self.weaponButtons()[1].x_pos / self.window_width
+        x_upg_c_w_1 = 0.395
+        x_upg_c_w_2 = 0.565
         # collection position
         x_coll = 0.885
         # scales
@@ -260,11 +261,11 @@ class Game:
         # draw background of collected stone
         self.draw_bg_square(x_coll, y_h_info, 0.06, 0.06, dark_gray)
         # draw background of first weapon button
-        self.draw_bg_square(x_upg_c_w_1 + 0.025, y_w_1, 0.085, 0.2, light_gray)
-        self.draw_bg_weapon(x_w_buttons, y_w_1, weapon_1_color)
+        self.draw_bg_square(x_upg_c_w_1 + 0.025, y_w_1, 0.085, 0.165, light_gray)
+        self.draw_bg_weapon(x_w_1_button, y_w_1, weapon_1_color)
         # draw background of second weapon button
-        self.draw_bg_square(x_upg_c_w_2 + 0.025, y_w_2, 0.085, 0.2, light_gray)
-        self.draw_bg_weapon(x_w_buttons, y_w_2, weapon_2_color)
+        self.draw_bg_square(x_upg_c_w_2 + 0.025, y_w_2, 0.085, 0.165, light_gray)
+        self.draw_bg_weapon(x_w_2_button, y_w_2, weapon_2_color)
 
         # display timer
         self.displayText(
@@ -400,7 +401,7 @@ class Game:
         # weapon buttons
         W1_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[0].image, (40, 40)),
-                        pos=(self.window_width * 0.45,
+                        pos=(self.window_width * 0.48,
                              self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
@@ -408,7 +409,7 @@ class Game:
                         hovering_color="White")
         W2_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[1].image, (40, 40)),
-                        pos=(self.window_width * 0.55,
+                        pos=(self.window_width * 0.65,
                              self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
