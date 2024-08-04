@@ -238,9 +238,6 @@ class Game:
         x_upg_c_w_2 = 0.565
         # collection position
         x_coll = 0.885
-        # scales
-        image_scale = (35, 35)
-        text_size = 25
 
         # draw background
         light_gray = pygame.Color(133, 133, 133)
@@ -261,10 +258,12 @@ class Game:
         # draw background of collected stone
         self.draw_bg_square(x_coll, y_h_info, 0.06, 0.06, dark_gray)
         # draw background of first weapon button
-        self.draw_bg_square(x_upg_c_w_1 + 0.025, y_w_1, 0.085, 0.165, light_gray)
+        self.draw_bg_square(x_upg_c_w_1 + 0.025,
+                            y_w_1, 0.085, 0.165, light_gray)
         self.draw_bg_weapon(x_w_1_button, y_w_1, weapon_1_color)
         # draw background of second weapon button
-        self.draw_bg_square(x_upg_c_w_2 + 0.025, y_w_2, 0.085, 0.165, light_gray)
+        self.draw_bg_square(x_upg_c_w_2 + 0.025,
+                            y_w_2, 0.085, 0.165, light_gray)
         self.draw_bg_weapon(x_w_2_button, y_w_2, weapon_2_color)
 
         # display timer
