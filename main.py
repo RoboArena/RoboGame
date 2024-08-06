@@ -163,8 +163,10 @@ class Game:
         return costs[abi][res][level - 1]
 
     def get_weapon_color(self, weapon):
-        # return pygame.Color(215, 0, 0)
-        return pygame.Color(29, 160, 0)
+        if weapon.wood_cost <= self.player.wood and weapon.stone_cost <= self.player.stone:
+            return pygame.Color(29, 160, 0)
+        else:
+            return pygame.Color(215, 0, 0)
 
     def draw_cost(self, wood_cost, stone_cost, rel_pos):
         image_scale = (35, 35)
