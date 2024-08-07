@@ -112,6 +112,8 @@ class Bow(Firearm):
     pass
     image = Weapon.adjustImage('assets/bow.png', (30, 30))
     kind = "Bow"
+    wood_cost = 3
+    stone_cost = 7
 
     def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
         Firearm.add_bullet(
@@ -123,6 +125,8 @@ class Gun(Firearm):
     pass
     image = Weapon.adjustImage('assets/gun.png', (30, 30))
     kind = "Gun"
+    wood_cost = 9
+    stone_cost = 6
 
     def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
         Firearm.add_bullet(
@@ -134,6 +138,8 @@ class Rifle(Firearm):
     pass
     image = Weapon.adjustImage('assets/rifle2.png', (50, 50))
     kind = "Rifle"
+    wood_cost = 5
+    stone_cost = 10
 
     def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
         Firearm.add_bullet(
@@ -173,18 +179,24 @@ class Sword(Cutting_Weapon):
     pass
     kind = "Sword"
     image = Weapon.adjustImage('assets/sword.png', (30, 30))
+    wood_cost = 6
+    stone_cost = 4
 
 
 class Longsword(Cutting_Weapon):
     pass
     kind = "Longsword"
     image = Weapon.adjustImage('assets/Longsword2.png', (128, 128))
+    wood_cost = 7
+    stone_cost = 8
 
 
 class Lasersword(Cutting_Weapon):
     pass
     kind = "Lasersword"
     image = Weapon.adjustImage('assets/laserSword.png', (40, 40))
+    wood_cost = 11
+    stone_cost = 4
 
 
 class DefaultWeapon(Cutting_Weapon):
