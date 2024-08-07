@@ -163,7 +163,8 @@ class Game:
         return costs[abi][res][level - 1]
 
     def get_weapon_color(self, weapon):
-        if weapon.wood_cost <= self.player.wood and weapon.stone_cost <= self.player.stone:
+        if ((weapon.wood_cost <= self.player.wood) and (
+             weapon.stone_cost <= self.player.stone)):
             return pygame.Color(29, 160, 0)
         else:
             return pygame.Color(215, 0, 0)
@@ -312,6 +313,8 @@ class Game:
         clock = pygame.time.Clock()
         while running:
 
+            mouse_pos = pygame.mouse.get_pos()
+
             self.delta_time = self.clock.tick(60) / 1000
 
             # Fills the entire screen with dark grey
@@ -328,12 +331,12 @@ class Game:
 
             WEAPON_BTNS = self.weaponButtons()
             for button in [WEAPON_BTNS[0], WEAPON_BTNS[1]]:
-                button.changeColor(pygame.mouse.get_pos())
+                button.changeColor(mouse_pos)
                 button.update(self.canvas)
 
             UPGRADE_BTNS = self.upgradeButtons()
             for up_button in [UPGRADE_BTNS[0], UPGRADE_BTNS[1]]:
-                up_button.changeColor(pygame.mouse.get_pos())
+                up_button.changeColor(mouse_pos)
                 up_button.update(self.canvas)
 
             for event in pygame.event.get():
@@ -347,17 +350,16 @@ class Game:
                     if self.timer == 0:
                         pygame.time.set_timer(timer_event, 0)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if WEAPON_BTNS[0].checkForInput(
-                        pygame.mouse.get_pos()) and self.weapon_is_affordable(self.getNextWeapons()[0]):
-                        self.player.wood -= self.getNextWeapons()[0].wood_cost
-                        self.player.stone -= self.getNextWeapons()[0].stone_cost
-                        self.player.weapon = self.getNextWeapons()[0]
-                    if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()) and self.weapon_is_affordable(self.getNextWeapons()[1]):
-                        self.player.wood -= self.getNextWeapons()[1].wood_cost
-                        self.player.stone -= self.getNextWeapons()[1].stone_cost
-                        self.player.weapon = self.getNextWeapons()[1]
+                    next_weapons = self.getNextWeapons()
+                    for i in [0, 1]:
+                        if (
+                         (WEAPON_BTNS[i].checkForInput(mouse_pos)) and (
+                             self.weapon_is_affordable(next_weapons[i]))):
+                            self.player.wood -= next_weapons[i].wood_cost
+                            self.player.stone -= next_weapons[i].stone_cost
+                            self.player.weapon = next_weapons[i]
                     if UPGRADE_BTNS[0].checkForInput(
-                        pygame.mouse.get_pos()) and self.is_affordable(
+                        mouse_pos) and self.is_affordable(
                             "speed"):
                         self.player.wood -= self.get_upgrade_cost(
                             "speed", "wood")
@@ -365,7 +367,7 @@ class Game:
                             "speed", "stone")
                         self.player.speed += 1
                     if UPGRADE_BTNS[1].checkForInput(
-                        pygame.mouse.get_pos()) and self.is_affordable(
+                        mouse_pos) and self.is_affordable(
                             "healing"):
                         self.player.wood -= self.get_upgrade_cost(
                             "healing", "wood")
@@ -449,9 +451,11 @@ class Game:
         return self.get_upgrade_cost(
             ability, "wood") <= self.player.wood and self.get_upgrade_cost(
                 ability, "stone") <= self.player.stone
-    
+
     def weapon_is_affordable(self, weapon):
-        return weapon.wood_cost <= self.player.wood and weapon.stone_cost <= self.player.stone
+        return (
+            (weapon.wood_cost <= self.player.wood) and (
+                weapon.stone_cost <= self.player.stone))
 
     def getNextWeapons(self):
         kind = self.player.weapon.kind
