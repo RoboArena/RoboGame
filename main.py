@@ -347,9 +347,14 @@ class Game:
                     if self.timer == 0:
                         pygame.time.set_timer(timer_event, 0)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if WEAPON_BTNS[0].checkForInput(pygame.mouse.get_pos()):
+                    if WEAPON_BTNS[0].checkForInput(
+                        pygame.mouse.get_pos()) and self.weapon_is_affordable(self.getNextWeapons()[0]):
+                        self.player.wood -= self.getNextWeapons()[0].wood_cost
+                        self.player.stone -= self.getNextWeapons()[0].stone_cost
                         self.player.weapon = self.getNextWeapons()[0]
-                    if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()):
+                    if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()) and self.weapon_is_affordable(self.getNextWeapons()[1]):
+                        self.player.wood -= self.getNextWeapons()[1].wood_cost
+                        self.player.stone -= self.getNextWeapons()[1].stone_cost
                         self.player.weapon = self.getNextWeapons()[1]
                     if UPGRADE_BTNS[0].checkForInput(
                         pygame.mouse.get_pos()) and self.is_affordable(
@@ -444,6 +449,9 @@ class Game:
         return self.get_upgrade_cost(
             ability, "wood") <= self.player.wood and self.get_upgrade_cost(
                 ability, "stone") <= self.player.stone
+    
+    def weapon_is_affordable(self, weapon):
+        return weapon.wood_cost <= self.player.wood and weapon.stone_cost <= self.player.stone
 
     def getNextWeapons(self):
         kind = self.player.weapon.kind
