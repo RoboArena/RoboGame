@@ -6,6 +6,7 @@ import weapon
 from spritesheet import Spritesheet
 from tiles import TileMap
 from button import Button
+from weapon import Cutting_Weapon
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -51,10 +52,11 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, 500, 450, 10, 0, 0, 0, 1, 1, 1, 0,
+        self.player = player.Player(self, 500, 450, 10, 0, 0, 0, 1, 100, 1, 0,
                                     weapon.Knife())
-        self.player2 = player.Player(self, 900, 450, 10, 0, 0, 0, 1, 1, 1, 0,
+        self.player2 = player.Player(self, 900, 450, 10, 0, 0, 0, 1, 100, 1, 0,
                                      weapon.Knife())
+        self.enemyDamage = 0
 
     def main_menu(self):
 
@@ -160,6 +162,7 @@ class Game:
         # draw the player
         self.player.update()
         self.player2.draw()
+        self.dealDamage()
 
         # display timer
         self.displayInfoRect(50, str(self.timer),
@@ -219,6 +222,17 @@ class Game:
         pygame.display.update()
 
         clock.tick(30)
+
+    def dealDamage(self):
+        if isinstance(self.player.weapon, Cutting_Weapon):
+            # The current weapon is a Cutting_Weapon
+            if (self.player2.rect.collidepoint(self.player.weapon.swordpoint)
+                    and self.player.weapon.in_use):
+                self.player2.healing -= self.player.weapon.force
+                print(self.player2.healing)
+        else:
+            # The current weapon is not a Cutting_Weapon
+            print("This is not a cutting weapon.")
 
     def displayInfoRect(self, fontSize, text, pos, align='center'):
         info_font = get_font(fontSize)

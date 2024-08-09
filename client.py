@@ -46,7 +46,9 @@ class Client:
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
                 "playerRightMouse": self.PlayerRightMouse,
-                "player2RightMouse": self.Player2RightMouse
+                "player2RightMouse": self.Player2RightMouse,
+                "playerHealth": self.game.player.healing,
+                "player2Health": self.game.player2.healing
             }
         else:
             state = {
@@ -57,7 +59,9 @@ class Client:
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
                 "playerRightMouse": self.Player2RightMouse,
-                "player2RightMouse": self.PlayerRightMouse
+                "player2RightMouse": self.PlayerRightMouse,
+                "playerHealth": self.game.player2.healing,
+                "player2Health": self.game.player.healing
             }
         return state
 
@@ -72,6 +76,8 @@ class Client:
             self.game.player2.weapon.update_weapon()
             self.game.player.weapon.in_use = state["playerRightMouse"]
             self.game.player.weapon.update_weapon()
+            self.game.player.healing = state["playerHealth"]
+            self.game.player2.healing = state["player2Health"]
         else:
             self.game.player.x = state["player2X"] * self.game.window_width
             self.game.player.y = state["player2Y"] * self.game.window_height
@@ -85,6 +91,8 @@ class Client:
             self.game.player2.weapon.update_weapon()
             self.game.player.weapon.in_use = state["player2RightMouse"]
             self.game.player.weapon.update_weapon()
+            self.game.player.healing = state["player2Health"]
+            self.game.player2.healing = state["playerHealth"]
 
         for i, tile_tuple in enumerate(self.game.player.tileTupleList):
             if tile_tuple[1] != state["mapList"][i]:
