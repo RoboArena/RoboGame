@@ -3,8 +3,8 @@ from _thread import start_new_thread
 import pickle
 from main import Game
 
-# server = ""  # Public IP
-server = "192.168.56.1"  # Local IP Matthias
+server = ""  # Public IP
+# server = "192.168.56.1"  # Local IP Matthias
 port = 5555
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
