@@ -34,7 +34,7 @@ class Network:
         data = b""
         while True:
             try:
-                packet = self.client.recv(2048)
+                packet = self.client.recv(4098)
                 if not packet:
                     break
                 data += packet
