@@ -4,16 +4,14 @@ import bullet
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 battery, speed, healing, force, points, weapon):
+                 speed, healing, points, weapon):
         self.x = x
         self.y = y
         self.energy = energy
         self.wood = wood
         self.stone = stone
-        self.battery = battery
         self.speed = speed
         self.healing = healing
-        self.force = force
         self.points = points
         self.dir = (90, 90)
         self.game = game

@@ -3,8 +3,8 @@ from _thread import start_new_thread
 import pickle
 from main import Game
 
-server = ""  # Public IP
-# server = "192.168.56.1"  # Local IP Matthias
+# server = ""  # Public IP
+server = "192.168.56.1"  # Local IP Matthias
 port = 5555
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,18 +17,18 @@ except socket.error as e:
 
 socket.listen(2)
 print("Waiting for a connection, Server Started")
-game = Game()
-players = [game.player, game.player2]
+game = Game(playerpos=(500, 450),
+            enemypos=(900, 450))
+players = [game.player, game.enemy]
 game_state = {
-    "playerX": game.player.x,
-    "playerY": game.player.y,
-    "player2X": game.player2.x,
-    "player2Y": game.player2.y,
+    "player0pos": (game.player.x, game.player.y),
+    "player1pos": (game.enemy.x, game.enemy.y),
     "mapList": [tile_tuple[1] for tile_tuple in game.player.tileTupleList],
-    "playerRightMouse": False,
-    "player2RightMouse": False,
-    "playerHealth": game.player.healing,
-    "player2Health": game.player2.healing
+    "player0RightMouse": False,
+    "player1RightMouse": False,
+    "player0Health": game.player.energy,
+    "player1Health": game.enemy.energy
+    # "playerWeapon": game.player.weapon
 }
 
 
@@ -44,17 +44,16 @@ def threaded_client(conn, player):
                 print("Disconnected")
                 break
             else:
-                game_state["playerRightMouse"] = data["playerRightMouse"]
-                game_state["player2RightMouse"] = data["player2RightMouse"]
                 if player == 0:
                     # Update game state with received data
-                    game_state["playerX"] = data["playerX"]
-                    game_state["playerY"] = data["playerY"]
-                    game_state["player2Health"] = data["player2Health"]
+                    game_state["player0pos"] = data["player0pos"]
+                    game_state["player1Health"] = data["player1Health"]
+                    game_state["player0RightMouse"] = data["player0RightMouse"]
+                    # game_state["playerWeapon"] = data["playerWeapon"]
                 else:
-                    game_state["player2X"] = data["player2X"]
-                    game_state["player2Y"] = data["player2Y"]
-                    game_state["playerHealth"] = data["playerHealth"]
+                    game_state["player1pos"] = data["player1pos"]
+                    game_state["player0Health"] = data["player0Health"]
+                    game_state["player1RightMouse"] = data["player1RightMouse"]
                 reply = game_state
                 # print("Received: ", data)
                 # print("Sending : ", reply)

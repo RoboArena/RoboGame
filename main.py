@@ -15,7 +15,7 @@ def get_font(size):  # Returns Press-Start-2P in the desired size
 
 class Game:
 
-    def __init__(self) -> None:
+    def __init__(self, playerpos, enemypos) -> None:
         pygame.init()
         self.status = 1
 
@@ -52,10 +52,14 @@ class Game:
         self.offset_x = (self.window_width - self.map.map_w) // 2
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
-        self.player = player.Player(self, 500, 450, 100, 0, 0, 0, 0, 1, 1, 0,
-                                    weapon.Knife())
-        self.player2 = player.Player(self, 900, 450, 100, 0, 0, 0, 0, 1, 1, 0,
-                                     weapon.Knife())
+        self.player = player.Player(self, x=playerpos[0], y=playerpos[1],
+                                    energy=100, wood=0, stone=0,
+                                    speed=1, healing=1, points=0,
+                                    weapon=weapon.Knife())
+        self.enemy = player.Player(self, x=enemypos[0], y=enemypos[1],
+                                   energy=100, wood=0, stone=0,
+                                   speed=1, healing=1, points=0,
+                                   weapon=weapon.Knife())
         self.enemyDamage = 0
 
     def main_menu(self):
@@ -167,93 +171,111 @@ class Game:
         return costs[abi][res][level - 1]
 
     def get_weapon_color(self, weapon):
-        # return pygame.Color(215, 0, 0)
-        return pygame.Color(29, 160, 0)
+        if ((weapon.wood_cost <= self.player.wood) and (
+             weapon.stone_cost <= self.player.stone)):
+            return pygame.Color(29, 160, 0)
+        else:
+            return pygame.Color(215, 0, 0)
+
+    def draw_cost(self, wood_cost, stone_cost, rel_pos):
+        image_scale = (35, 35)
+        text_size = 25
+        y_pos = self.window_height * rel_pos[1]
+        x_wood = self.window_width * (rel_pos[0] - 0.045)
+        x_wood_im = self.window_width * (rel_pos[0] - 0.015)
+        x_stone = self.window_width * (rel_pos[0] + 0.015)
+        x_stone_im = self.window_width * (rel_pos[0] + 0.045)
+        self.displayText(
+            text_size, str(wood_cost), (x_wood, y_pos), 'topleft')
+        self.displaySprite(
+            image_scale, 'wood.png', (x_wood_im, y_pos))
+        self.displayText(
+            text_size, str(stone_cost),
+            (x_stone, y_pos))
+        self.displaySprite(
+            image_scale, 'stone.png',
+            (x_stone_im, y_pos))
+
+    def draw_ability(self, level, icon, rel_pos):
+        image_scale = (35, 35)
+        text_size = 25
+        self.displayText(
+            text_size, str(level),
+            (self.window_width * (rel_pos[0] - 0.015),
+             self.window_height * rel_pos[1]))
+        self.displayImage(
+            image_scale, icon,
+            (self.window_width * (rel_pos[0] + 0.015),
+             self.window_height * rel_pos[1]))
+
+    def draw_ressource(self, level, icon, rel_pos):
+        image_scale = (35, 35)
+        text_size = 25
+        self.displayText(
+            text_size, str(level),
+            (self.window_width * (rel_pos[0] - 0.015),
+             self.window_height * rel_pos[1]))
+        self.displaySprite(
+            image_scale, icon,
+            (self.window_width * (rel_pos[0] + 0.015),
+             self.window_height * rel_pos[1]))
+
+    def draw_bg_weapon(self, center_x, center_y, color):
+        square = pygame.Rect(0, 0, 65, 65)
+        square.center = (self.window_width * center_x,
+                         self.window_height * center_y)
+        pygame.draw.rect(self.canvas, color, square)
+        pygame.draw.rect(self.canvas, "black", square, 4)
+
+    def draw_bg_square(self, center_x, center_y, height, width, color):
+        square = pygame.Rect(0, 0, self.window_width * width,
+                             self.window_height * height)
+        square.center = (self.window_width * center_x,
+                         self.window_height * center_y)
+        pygame.draw.rect(self.canvas, color, square)
 
     def draw_info(self):
         # positions
-        y_speed_info = self.window_height * 0.889
-        y_healing_info = self.window_height * 0.95
-        x_icons = self.window_width * 0.25
-        x_levels = self.window_width * 0.22
-        x_wood_cost = self.window_width * 0.1
-        x_wood_cost_im = self.window_width * 0.13
-        x_stone_cost = self.window_width * 0.16
-        x_stone_cost_im = self.window_width * 0.19
-        x_collected = self.window_width * 0.87
-        x_collected_im = self.window_width * 0.9
+        y_s_info = 0.889
+        y_h_info = 0.95
+        upg_c_abi = 0.145
+        x_icon = 0.235
         # button positions
-        x_speed_button = self.upgradeButtons()[0].x_pos
-        x_healing_button = self.upgradeButtons()[1].x_pos
-        x_weapon_button_1 = self.weaponButtons()[0].x_pos
-        y_weapon_button_1 = self.weaponButtons()[0].y_pos
-        x_weapon_button_2 = self.weaponButtons()[1].x_pos
-        y_weapon_button_2 = self.weaponButtons()[1].y_pos
-        # scales
-        image_scale = (35, 35)
-        text_size = 25
+        y_w_1 = self.weaponButtons()[0].y_pos / self.window_height
+        y_w_2 = self.weaponButtons()[1].y_pos / self.window_height
+        x_w_1_button = self.weaponButtons()[0].x_pos / self.window_width
+        x_w_2_button = self.weaponButtons()[1].x_pos / self.window_width
+        x_upg_c_w_1 = 0.395
+        x_upg_c_w_2 = 0.565
+        # collection position
+        x_coll = 0.885
 
         # draw background
-
-        # get widths by calculating:
-        # position of button - position of text that show the level
-        # + buffer to make it look nicer
-        speed_bg_dark = pygame.Rect(0, 0, x_speed_button - x_levels + 40, 50)
-        healing_bg_dark = pygame.Rect(
-            0, 0, x_healing_button - x_levels + 40, 50)
-        # or by calculating:
-        # position of end of upgrade costs
-        # - position of start of upgrade costs + buffer
-        speed_bg_light = pygame.Rect(
-            0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
-        healing_bg_light = pygame.Rect(
-            0, 0, x_stone_cost_im - x_wood_cost + 50, 50)
-        # or by calculating:
-        # position of ressource image - position of ressource counter + buffer
-        wood_bg = pygame.Rect(0, 0, x_collected_im - x_collected + 50, 50)
-        stone_bg = pygame.Rect(0, 0, x_collected_im - x_collected + 50, 50)
-        # for the weapon you can just take a square bigger than the weapons
-        weapon_1_bg = pygame.Rect(0, 0, 65, 65)
-        weapon_2_bg = pygame.Rect(0, 0, 65, 65)
-        # get positions by calculating:
-        # middle of button and start of level display
-        # + fourth of the buttons size
-        speed_bg_dark.center = x_levels + (
-            (x_speed_button - x_levels)/2), y_speed_info
-        healing_bg_dark.center = x_levels + (
-            (x_healing_button - x_levels)/2), y_healing_info
-        # or by calculating:
-        # middle of start of upgrade costs and end of upgrade costs
-        # + fourth of image size
-        speed_bg_light.center = x_wood_cost + (
-            (x_stone_cost_im - x_wood_cost)/2), y_speed_info
-        healing_bg_light.center = x_wood_cost + (
-            (x_stone_cost_im - x_wood_cost)/2), y_healing_info
-        # or by calculating:
-        # middle of ressource image and ressource counter
-        # - fourth of image size
-        wood_bg.center = x_collected + (
-            (x_collected_im - x_collected)/2), y_speed_info
-        stone_bg.center = x_collected + (
-            (x_collected_im - x_collected)/2), y_healing_info
-        # for the weapons you can just use the buttons position
-        weapon_1_bg.center = x_weapon_button_1, y_weapon_button_1
-        weapon_2_bg.center = x_weapon_button_2, y_weapon_button_2
-        # draw rectangles:
         light_gray = pygame.Color(133, 133, 133)
         dark_gray = pygame.Color(110, 110, 110)
         weapon_1_color = self.get_weapon_color(self.getNextWeapons()[0])
         weapon_2_color = self.get_weapon_color(self.getNextWeapons()[1])
-        pygame.draw.rect(self.canvas, dark_gray, speed_bg_dark)
-        pygame.draw.rect(self.canvas, dark_gray, healing_bg_dark)
-        pygame.draw.rect(self.canvas, light_gray, speed_bg_light)
-        pygame.draw.rect(self.canvas, light_gray, healing_bg_light)
-        pygame.draw.rect(self.canvas, dark_gray, wood_bg)
-        pygame.draw.rect(self.canvas, dark_gray, stone_bg)
-        pygame.draw.rect(self.canvas, weapon_1_color, weapon_1_bg)
-        pygame.draw.rect(self.canvas, weapon_2_color, weapon_2_bg)
-        pygame.draw.rect(self.canvas, "black", weapon_1_bg, 4)
-        pygame.draw.rect(self.canvas, "black", weapon_2_bg, 3)
+
+        # draw background of speed upgrade costs:
+        self.draw_bg_square(upg_c_abi, y_s_info, 0.06, 0.12, light_gray)
+        # draw background of healing upgrade costs:
+        self.draw_bg_square(upg_c_abi, y_h_info, 0.06, 0.12, light_gray)
+        # draw background of speed level and icon:
+        self.draw_bg_square(x_icon + 0.025, y_s_info, 0.06, 0.1, dark_gray)
+        # draw background of healing level and icon:
+        self.draw_bg_square(x_icon + 0.025, y_h_info, 0.06, 0.1, dark_gray)
+        # draw background of collected wood
+        self.draw_bg_square(x_coll, y_s_info, 0.06, 0.06, dark_gray)
+        # draw background of collected stone
+        self.draw_bg_square(x_coll, y_h_info, 0.06, 0.06, dark_gray)
+        # draw background of first weapon button
+        self.draw_bg_square(x_upg_c_w_1 + 0.025,
+                            y_w_1, 0.085, 0.165, light_gray)
+        self.draw_bg_weapon(x_w_1_button, y_w_1, weapon_1_color)
+        # draw background of second weapon button
+        self.draw_bg_square(x_upg_c_w_2 + 0.025,
+                            y_w_2, 0.085, 0.165, light_gray)
+        self.draw_bg_weapon(x_w_2_button, y_w_2, weapon_2_color)
 
         # display timer
         self.displayText(
@@ -266,64 +288,38 @@ class Game:
                          (self.window_width * 0.14,
                           self.window_height * 0.1))
         # display speed
-        self.displayText(
-            text_size, str(self.player.speed),
-            (x_levels, y_speed_info))
-        self.displayImage(
-            image_scale, 'assets/speedometer.png',
-            (x_icons, y_speed_info))
+        self.draw_ability(self.player.speed,
+                          'assets/speedometer.png', (x_icon, y_s_info))
         # display upgrade costs for speed
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("speed", "wood")),
-            (x_wood_cost, y_speed_info), 'topleft')
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_wood_cost_im, y_speed_info))
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("speed", "stone")),
-            (x_stone_cost, y_speed_info))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_stone_cost_im, y_speed_info))
+        w_c_speed = self.get_upgrade_cost("speed", "wood")
+        s_c_speed = self.get_upgrade_cost("speed", "stone")
+        self.draw_cost(w_c_speed, s_c_speed, (upg_c_abi, y_s_info))
         # display healing ability
-        self.displayText(
-            text_size, str(self.player.healing),
-            (x_levels, y_healing_info))
-        self.displayImage(
-            image_scale, 'assets/wrench.png',
-            (x_icons, y_healing_info))
+        self.draw_ability(self.player.healing,
+                          'assets/wrench.png', (x_icon, y_h_info))
         # display upgrade costs for healing ability
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("healing", "wood")),
-            (x_wood_cost, y_healing_info))
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_wood_cost_im, y_healing_info))
-        self.displayText(
-            text_size, str(self.get_upgrade_cost("healing", "stone")),
-            (x_stone_cost, y_healing_info))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_stone_cost_im, y_healing_info))
+        w_c_healing = self.get_upgrade_cost("healing", "wood")
+        s_c_healing = self.get_upgrade_cost("healing", "stone")
+        self.draw_cost(w_c_healing, s_c_healing, (upg_c_abi, y_h_info))
         # display collected wood
-        self.displayText(
-            text_size, str(self.player.wood),
-            (x_collected, y_speed_info))
-        self.displaySprite(
-            image_scale, 'wood.png',
-            (x_collected_im, y_speed_info))
+        self.draw_ressource(self.player.wood, 'wood.png', (x_coll, y_s_info))
         # display collected stone
-        self.displayText(
-            text_size, str(self.player.stone),
-            (x_collected, y_healing_info))
-        self.displaySprite(
-            image_scale, 'stone.png',
-            (x_collected_im, y_healing_info))
+        self.draw_ressource(self.player.stone, 'stone.png', (x_coll, y_h_info))
+        # display costs for weapon 1
+        w_c_w_1 = self.getNextWeapons()[0].wood_cost
+        s_c_w_1 = self.getNextWeapons()[0].stone_cost
+        self.draw_cost(w_c_w_1, s_c_w_1, (x_upg_c_w_1, y_w_1))
+        # display costs for weapon 2
+        w_c_w_2 = self.getNextWeapons()[1].wood_cost
+        s_c_w_2 = self.getNextWeapons()[1].stone_cost
+        self.draw_cost(w_c_w_2, s_c_w_2, (x_upg_c_w_2, y_w_2))
 
     def play(self):
         timer_event = pygame.USEREVENT+1
         pygame.time.set_timer(timer_event, 1000)
         clock = pygame.time.Clock()
+        mouse_pos = pygame.mouse.get_pos()
+
         self.delta_time = self.clock.tick(60) / 1000
 
         # Fills the entire screen with dark grey
@@ -334,18 +330,18 @@ class Game:
 
         # draw the player
         self.player.update()
-        self.player2.draw()
+        self.enemy.draw()
         self.dealDamage()
         self.draw_info()
 
         WEAPON_BTNS = self.weaponButtons()
         for button in [WEAPON_BTNS[0], WEAPON_BTNS[1]]:
-            button.changeColor(pygame.mouse.get_pos())
+            button.changeColor(mouse_pos)
             button.update(self.canvas)
 
         UPGRADE_BTNS = self.upgradeButtons()
         for up_button in [UPGRADE_BTNS[0], UPGRADE_BTNS[1]]:
-            up_button.changeColor(pygame.mouse.get_pos())
+            up_button.changeColor(mouse_pos)
             up_button.update(self.canvas)
 
         for event in pygame.event.get():
@@ -360,12 +356,16 @@ class Game:
                 if self.timer == 0:
                     pygame.time.set_timer(timer_event, 0)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if WEAPON_BTNS[0].checkForInput(pygame.mouse.get_pos()):
-                    self.player.weapon = self.getNextWeapons()[0]
-                if WEAPON_BTNS[1].checkForInput(pygame.mouse.get_pos()):
-                    self.player.weapon = self.getNextWeapons()[1]
+                next_weapons = self.getNextWeapons()
+                for i in [0, 1]:
+                    if (
+                        (WEAPON_BTNS[i].checkForInput(mouse_pos)) and (
+                            self.weapon_is_affordable(next_weapons[i]))):
+                        self.player.wood -= next_weapons[i].wood_cost
+                        self.player.stone -= next_weapons[i].stone_cost
+                        self.player.weapon = next_weapons[i]
                 if UPGRADE_BTNS[0].checkForInput(
-                    pygame.mouse.get_pos()) and self.is_affordable(
+                    mouse_pos) and self.is_affordable(
                         "speed"):
                     self.player.wood -= self.get_upgrade_cost(
                         "speed", "wood")
@@ -373,7 +373,7 @@ class Game:
                         "speed", "stone")
                     self.player.speed += 1
                 if UPGRADE_BTNS[1].checkForInput(
-                    pygame.mouse.get_pos()) and self.is_affordable(
+                    mouse_pos) and self.is_affordable(
                         "healing"):
                     self.player.wood -= self.get_upgrade_cost(
                         "healing", "wood")
@@ -392,10 +392,10 @@ class Game:
     def dealDamage(self):
         if isinstance(self.player.weapon, Cutting_Weapon):
             # The current weapon is a Cutting_Weapon
-            if (self.player2.rect.collidepoint(self.player.weapon.swordpoint)
+            if (self.enemy.rect.collidepoint(self.player.weapon.swordpoint)
                     and self.player.weapon.in_use):
-                self.player2.energy -= self.player.weapon.force
-                print(self.player2.energy)
+                self.enemy.energy -= self.player.weapon.force
+                print(self.enemy.energy)
         else:
             # The current weapon is not a Cutting_Weapon
             print("This is not a cutting weapon.")
@@ -426,16 +426,16 @@ class Game:
         # weapon buttons
         W1_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[0].image, (40, 40)),
-                        pos=(self.window_width * 0.45,
-                             self.window_height * 0.9),
+                        pos=(self.window_width * 0.48,
+                             self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
                         base_color="#d7fcd4",
                         hovering_color="White")
         W2_BUTTON = Button(
                         pygame.transform.scale(nextWeapons[1].image, (40, 40)),
-                        pos=(self.window_width * 0.55,
-                             self.window_height * 0.9),
+                        pos=(self.window_width * 0.65,
+                             self.window_height * 0.9195),
                         text_input="",
                         font=get_font(75),
                         base_color="#d7fcd4",
@@ -468,6 +468,11 @@ class Game:
         return self.get_upgrade_cost(
             ability, "wood") <= self.player.wood and self.get_upgrade_cost(
                 ability, "stone") <= self.player.stone
+
+    def weapon_is_affordable(self, weapon):
+        return (
+            (weapon.wood_cost <= self.player.wood) and (
+                weapon.stone_cost <= self.player.stone))
 
     def getNextWeapons(self):
         kind = self.player.weapon.kind

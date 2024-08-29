@@ -13,14 +13,13 @@ class Client:
         network = Network()
         self.p = network.get_p()
         self.PlayerRightMouse = False
-        self.Player2RightMouse = False
-        if self.p == 0:
-            self.game = main.Game()  # Create the game object
+        self.enemyRightMouse = False
+        if self.p == 0:  # Position depends on player
+            self.game = main.Game(playerpos=(500, 450),
+                                  enemypos=(900, 450))
         else:
-            self.game = main.Game()
-            changePlayer = self.game.player
-            self.game.player = self.game.player2
-            self.game.player2 = changePlayer
+            self.game = main.Game(playerpos=(900, 450),
+                                  enemypos=(500, 450))
 
         while running:
             if self.game.status == 0:
@@ -36,64 +35,58 @@ class Client:
                 self.game.options()
 
     def get_game_state(self):
-        # Create and return a representation of the game state
-        if self.p == 0:
+        # Get the local game state to send it to the server
+        if self.p == 0:  # in this case the enemy is player 1
             state = {
-                "playerX": self.game.player.x/self.game.window_width,
-                "playerY": self.game.player.y/self.game.window_height,
-                "player2X": self.game.player2.x / self.game.window_width,
-                "player2Y": self.game.player2.y / self.game.window_height,
+                "player0pos": (self.game.player.x / self.game.window_width,
+                               self.game.player.y / self.game.window_height),
+                "player1pos": (self.game.enemy.x / self.game.window_width,
+                               self.game.enemy.y / self.game.window_height),
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
-                "playerRightMouse": self.PlayerRightMouse,
-                "player2RightMouse": self.Player2RightMouse,
-                "playerHealth": self.game.player.healing,
-                "player2Health": self.game.player2.healing
+                "player0RightMouse": self.PlayerRightMouse,
+                "player1RightMouse": self.enemyRightMouse,
+                "player0Health": self.game.player.energy,
+                "player1Health": self.game.enemy.energy
             }
-        else:
+        else:  # in this case the enemy is player 0
             state = {
-                "playerX": self.game.player2.x / self.game.window_width,
-                "playerY": self.game.player2.y / self.game.window_height,
-                "player2X": self.game.player.x / self.game.window_width,
-                "player2Y": self.game.player.y / self.game.window_height,
+                "player0pos": (self.game.enemy.x / self.game.window_width,
+                               self.game.enemy.y / self.game.window_height),
+                "player1pos": (self.game.player.x / self.game.window_width,
+                               self.game.player.y / self.game.window_height),
                 "mapList": [tile_tuple[1] for tile_tuple in
                             self.game.player.tileTupleList],
-                "playerRightMouse": self.Player2RightMouse,
-                "player2RightMouse": self.PlayerRightMouse,
-                "playerHealth": self.game.player2.healing,
-                "player2Health": self.game.player.healing
+                "player0RightMouse": self.enemyRightMouse,
+                "player1RightMouse": self.PlayerRightMouse,
+                "player0Health": self.game.enemy.healing,
+                "player1Health": self.game.player.healing
             }
         return state
 
     def update_game_state(self, state):
         # Update your local game state with the received state
-        if self.p == 0:
-            self.game.player2.x = state["player2X"] * self.game.window_width
-            self.game.player2.y = state["player2Y"] * self.game.window_height
-            self.game.player2.rect.center = (self.game.player2.x,
-                                             self.game.player2.y)
-            self.game.player2.weapon.in_use = state["player2RightMouse"]
-            self.game.player2.weapon.update_weapon()
-            self.game.player.weapon.in_use = state["playerRightMouse"]
-            self.game.player.weapon.update_weapon()
-            self.game.player.healing = state["playerHealth"]
-            self.game.player2.healing = state["player2Health"]
+        if self.p == 0:  # in this case the enemy is player 1
+            self.game.enemy.x = state["player1pos"][0] * self.game.window_width
+            self.game.enemy.y = (state["player1pos"][1] *
+                                 self.game.window_height)
+            self.game.enemy.rect.center = (self.game.enemy.x,
+                                           self.game.enemy.y)
+            self.game.enemy.weapon.in_use = state["player1RightMouse"]
+            self.game.enemy.weapon.update_weapon()
+            self.game.player.energy = state["player0Health"]
         else:
-            self.game.player.x = state["player2X"] * self.game.window_width
-            self.game.player.y = state["player2Y"] * self.game.window_height
-            self.game.player.rect.center = (self.game.player.x,
-                                            self.game.player.y)
-            self.game.player2.x = state["playerX"] * self.game.window_width
-            self.game.player2.y = state["playerY"] * self.game.window_height
-            self.game.player2.rect.center = (self.game.player2.x,
-                                             self.game.player2.y)
-            self.game.player2.weapon.in_use = state["playerRightMouse"]
-            self.game.player2.weapon.update_weapon()
-            self.game.player.weapon.in_use = state["player2RightMouse"]
-            self.game.player.weapon.update_weapon()
-            self.game.player.healing = state["player2Health"]
-            self.game.player2.healing = state["playerHealth"]
+            self.game.enemy.x = state["player0pos"][0] * self.game.window_width
+            self.game.enemy.y = (state["player0pos"][1] *
+                                 self.game.window_height)
+            self.game.enemy.rect.center = (self.game.enemy.x,
+                                           self.game.enemy.y)
+            self.game.enemy.weapon.in_use = state["player0RightMouse"]
+            self.game.enemy.weapon.update_weapon()
+            self.game.player.energy = state["player1Health"]
+            self.game.enemy.energy = state["player0Health"]
 
+        # This part updates the map
         for i, tile_tuple in enumerate(self.game.player.tileTupleList):
             if tile_tuple[1] != state["mapList"][i]:
                 new_tile_name = state["mapList"][i]

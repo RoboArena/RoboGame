@@ -5,96 +5,59 @@ import math
 
 class Weapon:
     kind = "weapon"
+    pickaxe_image = pygame.image.load('assets/pickaxe.png')
+    start = (0, 0)
 
     def __init__(self):
         self.force = 1
         self.distance = 1000
 
+    def adjustImage(image, scale):
+        im = pygame.image.load(image)
+        im = pygame.transform.scale(im, (scale))
+        return im
 
-class Firearm(Weapon):
-    pass
-    bullets = []
-    kind = "weapon"
-    image = pygame.image.load('assets/robot.png')
+    def normalizeDir(dir):
+        new_dir = []
+        dir_len = math.sqrt((dir[0] ** 2) + (dir[1] ** 2))
+        new_dir.append(dir[0] / dir_len)
+        new_dir.append(dir[1] / dir_len)
+        return new_dir
 
-    def update_weapon(self):
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].updateBullet()
-            if not self.bullets[x-1].valid:
-                self.bullets.pop(x-1)
-                break
+    def set_start(self, player_x, player_y, dir_x, dir_y):
+        new_dir = Weapon.normalizeDir((dir_x, dir_y))
+        self.start = ((player_x - (new_dir[0] * 50)),
+                      (player_y - (new_dir[1] * 50)))
 
-    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
-        self.bullets.append(bullet.Arrow(
-            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
-
-    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
-        bullet_destination = (player_x - dir_x, player_y - dir_y)
-        self.angle = 360 - math.atan2(dir_y, dir_x)
-        for x in range(len(self.bullets)):
-            self.bullets[x-1].drawBullet(surface, self.angle)
-
-        if pygame.mouse.get_pressed()[0]:
-            bullet_x = player_x
-            bullet_y = player_y
-            self.add_bullet(
-                bullet_x, bullet_y, dir_x, dir_y, bullet_destination)
-
-        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
-        n_dir_x = dir_x / dir_len
-        n_dir_y = dir_y / dir_len
-
-        self.start = ((player_x - (n_dir_x * 50)),
-                      (player_y - (n_dir_y * 50)))
-
-        image = self.image.copy()
+    def show_image(self, image, angle, surface):
         image = pygame.transform.rotozoom(
-                image, 180 + math.degrees(self.angle + 2.8),
-                1).convert_alpha()
+            image, 180 + math.degrees(self.angle + angle),
+            1).convert_alpha()
         surface.blit(image, (self.start[0] - image.get_width() // 2,
                              self.start[1] - image.get_height() // 2))
 
+    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
 
-class Bow(Firearm):
-    pass
-    image = pygame.image.load('assets/bow.png')
-    image = pygame.transform.scale(image, (30, 30))
-    kind = "Bow"
+        if not self.in_use:
 
+            Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
+            self.angle = 360 - math.atan2(dir_y, dir_x)
 
-class Gun(Firearm):
-    pass
-    image = pygame.image.load('assets/gun.png')
-    kind = "Gun"
+        if pygame.mouse.get_pressed()[0]:
 
-    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
-        self.bullets.append(bullet.Gunbullet(
-            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+            self.use_weapon(player_x, player_y, dir_x, dir_y, surface)
+            self.swordpoint = (player_x - dir_x*self.length,
+                               player_y - dir_y*self.length)
+            pygame.draw.circle(surface, "black",
+                               self.swordpoint, 4)
 
+        elif pygame.mouse.get_pressed()[2]:
+            self.in_use = True
+            image = self.pickaxe_image.copy()
+            Weapon.show_image(self, image, math.degrees(5), surface)
 
-class Rifle(Firearm):
-    pass
-    # this is mostly the same as above. Maybe fixable?
-    image = pygame.image.load('assets/rifle2.png')
-    kind = "Rifle"
-
-    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
-        self.bullets.append(bullet.Rifflebullet(
-            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
-
-
-class Cutting_Weapon(Weapon):
-    def __init__(self):
-        super().__init__()
-        self.distance = 10
-        self.in_use = False
-        self.start = (0, 0)
-        self.angle = 45
-        self.hitting_angle = math.radians(0)
-        self.image = pygame.image.load('assets/robot.png')
-        self.length = 0
-        self.swordpoint = (0, 0)
-        self.force = 1  # Default force, can be overridden by subclasses
+        else:
+            self.not_use_weapon(player_x, player_y, dir_x, dir_y, surface)
 
     def update_weapon(self):
         if self.in_use:
@@ -103,71 +66,150 @@ class Cutting_Weapon(Weapon):
             if self.hitting_angle >= math.radians(45):
                 self.in_use = False
                 self.hitting_angle = 0
+        else:
+            self.update_bullets()
 
-    def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
-        # normalize direction
-        dir_len = math.sqrt((dir_x ** 2) + (dir_y ** 2))
-        n_dir_x = dir_x / dir_len
-        n_dir_y = dir_y / dir_len
 
-        if not self.in_use:
-            self.start = ((player_x - (n_dir_x * 50)),
-                          (player_y - (n_dir_y * 50)))
+class Firearm(Weapon):
+    pass
+    bullets = []
+    kind = "weapon"
+    image = pygame.image.load('assets/robot.png')
+    in_use = True
+    angle = 45
+    hitting_angle = math.radians(0)
 
-            self.angle = 360 - math.atan2(dir_y, dir_x)
+    def update_bullets(self):
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].updateBullet()
+            if not self.bullets[x-1].valid:
+                self.bullets.pop(x-1)
+                break
 
-        if pygame.mouse.get_pressed()[0]:
-            self.in_use = True
+    def add_bullet(self, bulletclass,
+                   bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        self.bullets.append(bulletclass(
+            bullet_x, bullet_y, (dir_x, dir_y), bullet_destination))
+
+    def use_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        self.in_use = False
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].drawBullet(surface, self.angle)
+        bullet_destination = (player_x - dir_x, player_y - dir_y)
+        bullet_x = player_x
+        bullet_y = player_y
+        self.add_bullet(
+            bullet_x, bullet_y, dir_x, dir_y, bullet_destination)
         image = self.image.copy()
-        image = pygame.transform.rotozoom(
-            image, 180 + math.degrees(self.angle + math.degrees(5)),
-            1).convert_alpha()
-        self.swordpoint = (player_x - n_dir_x*self.length,
-                           player_y - n_dir_y*self.length)
-        pygame.draw.circle(surface, "black",
-                           self.swordpoint, 4)
-        surface.blit(image, (self.start[0] - image.get_width() // 2,
-                             self.start[1] - image.get_height() // 2))
+
+        Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
+        Weapon.show_image(self, image, 2.8, surface)
+
+    def not_use_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        for x in range(len(self.bullets)):
+            self.bullets[x-1].drawBullet(surface, self.angle)
+        image = self.image.copy()
+        Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
+        Weapon.show_image(self, image, 2.8, surface)
+
+
+class Bow(Firearm):
+    pass
+    image = Weapon.adjustImage('assets/bow.png', (30, 30))
+    kind = "Bow"
+    wood_cost = 3
+    stone_cost = 7
+
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        Firearm.add_bullet(
+            self, bullet.Arrow, bullet_x, bullet_y,
+            dir_x, dir_y, bullet_destination)
+
+
+class Gun(Firearm):
+    pass
+    image = Weapon.adjustImage('assets/gun.png', (30, 30))
+    kind = "Gun"
+    wood_cost = 9
+    stone_cost = 6
+
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        Firearm.add_bullet(
+            self, bullet.Gunbullet, bullet_x, bullet_y,
+            dir_x, dir_y, bullet_destination)
+
+
+class Rifle(Firearm):
+    pass
+    image = Weapon.adjustImage('assets/rifle2.png', (50, 50))
+    kind = "Rifle"
+    wood_cost = 5
+    stone_cost = 10
+
+    def add_bullet(self, bullet_x, bullet_y, dir_x, dir_y, bullet_destination):
+        Firearm.add_bullet(
+            self, bullet.Rifflebullet, bullet_x, bullet_y,
+            dir_x, dir_y, bullet_destination)
+
+
+class Cutting_Weapon(Weapon):
+    pass
+    distance = 10
+    in_use = False
+    angle = 45
+    hitting_angle = math.radians(0)
+    image = pygame.image.load('assets/robot.png')
+    length = 0
+    swordpoint = (0, 0)
+    force = 1
+
+    def update_bullets(self):
+        return
+
+    def use_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        self.in_use = True
+        image = self.image.copy()
+        Weapon.show_image(self, image, math.degrees(5), surface)
+
+    def not_use_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        image = self.image.copy()
+        Weapon.show_image(self, image, math.degrees(5), surface)
 
 
 class Knife(Cutting_Weapon):
-    def __init__(self):
-        super().__init__()  # Call the base class constructor
-        self.kind = "Knife"
-        self.image = pygame.image.load('assets/knife.png')
-        self.image = pygame.transform.scale(self.image, (20, 20))
-        self.length = 40
-        self.force = 1
+    pass
+    kind = "Knife"
+    image = Weapon.adjustImage('assets/knife.png', (20, 20))
+    length = 40
+    force = 1
 
 
 class Sword(Cutting_Weapon):
-    def __init__(self):
-        super().__init__()  # Call the base class constructor
-        self.kind = "Sword"
-        self.image = pygame.image.load('assets/sword.png')
-        self.image = pygame.transform.scale(self.image, (64, 64))
-        self.length = 64
-        self.force = 5  # Set specific force for Sword
+    pass
+    kind = "Sword"
+    image = Weapon.adjustImage('assets/sword.png', (30, 30))
+    wood_cost = 6
+    stone_cost = 4
+    length = 64
+    force = 5  # Set specific force for Sword
 
 
 class Longsword(Cutting_Weapon):
-    def __init__(self):
-        super().__init__()  # Call the base class constructor
-        self.kind = "Longsword"
-        self.image = pygame.image.load('assets/Longsword2.png')
-        self.image = pygame.transform.scale(self.image, (128, 128))
-        self.length = 128
-        self.force = 8  # Set specific force for Longsword
+    pass
+    kind = "Longsword"
+    image = Weapon.adjustImage('assets/Longsword2.png', (128, 128))
+    wood_cost = 7
+    stone_cost = 8
 
 
 class Lasersword(Cutting_Weapon):
-    def __init__(self):
-        super().__init__()  # Call the base class constructor
-        self.kind = "Lasersword"
-        self.image = pygame.image.load('assets/laserSword.png')
-        self.image = pygame.transform.scale(self.image, (40, 40))
-        self.length = 60
-        self.force = 10  # Set specific force for Lasersword
+    pass
+    kind = "Lasersword"
+    image = Weapon.adjustImage('assets/laserSword.png', (40, 40))
+    wood_cost = 11
+    stone_cost = 4
+    length = 128
+    force = 10
 
 
 class DefaultWeapon(Cutting_Weapon):
