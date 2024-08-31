@@ -90,9 +90,6 @@ class Client:
         for j, tile_change in state["mapChange"]:
             if tile_change != self.game.player.tileTupleList[j][1]:
                 new_tile_name = tile_change
-                print("tile_change: " + str(tile_change))
-                print("new_tile_name: " + new_tile_name)
-                print(tile_change[1] + self.game.player.tileTupleList[j][1])
                 tile_rect = self.game.player.tileTupleList[j][0]
 
                 self.game.map.update_tile(
@@ -102,16 +99,14 @@ class Client:
                 )
                 self.game.player.tileTupleList[j] = (tile_rect,
                                                      new_tile_name)
-        # self.game.enemy.tileTupleList = self.game.player.tileTupleList
+                self.game.enemy.tileTupleList = self.game.player.tileTupleList
 
     def getMapChange(self):
         # Get the tiles that have changed
         mapChange = []
         for i, tile in enumerate(self.game.player.tileTupleList):
             if self.game.enemy.tileTupleList[i][1] != tile[1]:
-                print("something")
                 mapChange.append((i, tile[1]))
-                print("mapChange: " + str(mapChange))
         return mapChange
 
 
