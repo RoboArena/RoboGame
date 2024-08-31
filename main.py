@@ -140,7 +140,7 @@ class Game:
                     if OPT_BACK.checkForInput(OPT_MOUSE_POS):
                         self.main_menu()
 
-            self.canvas.blit(self.canvas, (0, 0))
+            self.window.blit(self.canvas, (0, 0))
             pygame.display.update()
 
     def get_upgrade_cost(self, ability, ressource):
