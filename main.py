@@ -121,6 +121,14 @@ class Game:
                                                  self.window_height * 0.25))
             self.canvas.blit(OPT_TEXT, OPT_RECT)
 
+            OPT_CHANGE_ROBOT = Button(image=None,
+                                     pos=(self.window_width * 0.5,
+                                     self.window_height * 0.35),
+                                     text_input="CHANGE ROBOT",
+                                     font=get_font(75),
+                                     base_color="Black",
+                                     hovering_color="Green")
+            
             OPT_BACK = Button(image=None,
                               pos=(self.window_width * 0.5,
                                    self.window_height * 0.45),
@@ -129,6 +137,36 @@ class Game:
                               base_color="Black",
                               hovering_color="Green")
 
+            OPT_CHANGE_ROBOT.changeColor(OPT_MOUSE_POS)
+            OPT_CHANGE_ROBOT.update(self.canvas)
+            OPT_BACK.changeColor(OPT_MOUSE_POS)
+            OPT_BACK.update(self.canvas)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if OPT_BACK.checkForInput(OPT_MOUSE_POS):
+                        self.main_menu()
+                    if OPT_CHANGE_ROBOT.checkForInput(OPT_MOUSE_POS):
+                        self.change_robot_screen()
+
+            self.window.blit(self.canvas, (0, 0))
+            pygame.display.update()
+    
+    def change_robot_screen(self):
+        while True:
+            self.canvas.fill("green")
+            OPT_MOUSE_POS = pygame.mouse.get_pos()
+
+            OPT_BACK = Button(image=None,
+                              pos=(self.window_width * 0.5,
+                                   self.window_height * 0.45),
+                              text_input="BACK",
+                              font=get_font(75),
+                              base_color="Black",
+                              hovering_color="White")
             OPT_BACK.changeColor(OPT_MOUSE_POS)
             OPT_BACK.update(self.canvas)
 
