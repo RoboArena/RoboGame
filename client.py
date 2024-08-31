@@ -20,6 +20,7 @@ class Client:
         else:
             self.game = main.Game(playerpos=(900, 450),
                                   enemypos=(500, 450))
+        print("You are player", self.p)
 
         while running:
             if self.game.status == 0:
@@ -42,8 +43,7 @@ class Client:
                                self.game.player.y / self.game.window_height),
                 "player1pos": (self.game.enemy.x / self.game.window_width,
                                self.game.enemy.y / self.game.window_height),
-                "mapList": [tile_tuple[1] for tile_tuple in
-                            self.game.player.tileTupleList],
+                "mapChange": self.getMapChange(),
                 "player0RightMouse": self.PlayerRightMouse,
                 "player1RightMouse": self.enemyRightMouse,
                 "player0Health": self.game.player.energy,
@@ -55,8 +55,7 @@ class Client:
                                self.game.enemy.y / self.game.window_height),
                 "player1pos": (self.game.player.x / self.game.window_width,
                                self.game.player.y / self.game.window_height),
-                "mapList": [tile_tuple[1] for tile_tuple in
-                            self.game.player.tileTupleList],
+                "mapChange": self.getMapChange(),
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
                 "player0Health": self.game.enemy.healing,
@@ -87,35 +86,33 @@ class Client:
             self.game.enemy.energy = state["player0Health"]
 
         # This part updates the map
-        for i, tile_tuple in enumerate(self.game.player.tileTupleList):
-            if tile_tuple[1] != state["mapList"][i]:
-                new_tile_name = state["mapList"][i]
-                tile_rect = tile_tuple[0]
+        # print("from server: " + str(state["mapChange"]))
+        for j, tile_change in state["mapChange"]:
+            if tile_change != self.game.player.tileTupleList[j][1]:
+                new_tile_name = tile_change
+                print("tile_change: " + str(tile_change))
+                print("new_tile_name: " + new_tile_name)
+                print(tile_change[1] + self.game.player.tileTupleList[j][1])
+                tile_rect = self.game.player.tileTupleList[j][0]
 
-                if new_tile_name == "stone.png":
-                    self.game.map.update_tile(
-                        tile_rect.x - self.game.offset_x,
-                        tile_rect.y - self.game.offset_y,
-                        'stone_wall.png'
-                    )
-                    self.game.player.tileTupleList[i] = (tile_rect,
-                                                         "stone_wall.png")
-                elif new_tile_name == "wood.png":
-                    self.game.map.update_tile(
-                        tile_rect.x - self.game.offset_x,
-                        tile_rect.y - self.game.offset_y,
-                        'wood_wall.png'
-                    )
-                    self.game.player.tileTupleList[i] = (tile_rect,
-                                                         "wood_wall.png")
-                else:
-                    self.game.map.update_tile(
-                        tile_rect.x - self.game.offset_x,
-                        tile_rect.y - self.game.offset_y,
-                        'background.png'
-                    )
-                    self.game.player.tileTupleList[i] = (tile_rect,
-                                                         "background.png")
+                self.game.map.update_tile(
+                    tile_rect.x - self.game.offset_x,
+                    tile_rect.y - self.game.offset_y,
+                    new_tile_name
+                )
+                self.game.player.tileTupleList[j] = (tile_rect,
+                                                     new_tile_name)
+        # self.game.enemy.tileTupleList = self.game.player.tileTupleList
+
+    def getMapChange(self):
+        # Get the tiles that have changed
+        mapChange = []
+        for i, tile in enumerate(self.game.player.tileTupleList):
+            if self.game.enemy.tileTupleList[i][1] != tile[1]:
+                print("something")
+                mapChange.append((i, tile[1]))
+                print("mapChange: " + str(mapChange))
+        return mapChange
 
 
 client = Client()

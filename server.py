@@ -23,7 +23,7 @@ players = [game.player, game.enemy]
 game_state = {
     "player0pos": (game.player.x, game.player.y),
     "player1pos": (game.enemy.x, game.enemy.y),
-    "mapList": [tile_tuple[1] for tile_tuple in game.player.tileTupleList],
+    "mapChange": [],
     "player0RightMouse": False,
     "player1RightMouse": False,
     "player0Health": game.player.energy,
@@ -37,7 +37,7 @@ def threaded_client(conn, player):
     reply = ""
     while True:
         try:
-            data = pickle.loads(conn.recv(4096))
+            data = pickle.loads(conn.recv(2048))
             players[player] = data
 
             if not data:
@@ -55,11 +55,9 @@ def threaded_client(conn, player):
                     game_state["player0Health"] = data["player0Health"]
                     game_state["player1RightMouse"] = data["player1RightMouse"]
                 reply = game_state
-                # print("Received: ", data)
-                # print("Sending : ", reply)
-
+            game_state["mapChange"].extend(data["mapChange"])
             conn.sendall(pickle.dumps(reply))
-            game_state["mapList"] = data["mapList"]
+
         except Exception as e:
             print("Error:", e)
             break
