@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 1, 1, 0, weapon.Knife())
+            self, 500, 450, 10, 0, 0, 1, 1, 0, weapon.Knife(),"wasd")
         self.main_menu()
 
     def main_menu(self):
@@ -123,15 +123,22 @@ class Game:
 
             OPT_CHANGE_ROBOT = Button(image=None,
                                      pos=(self.window_width * 0.5,
-                                     self.window_height * 0.35),
+                                     self.window_height * 0.45),
                                      text_input="CHANGE ROBOT",
+                                     font=get_font(75),
+                                     base_color="Black",
+                                     hovering_color="Green")
+            OPT_KEY_ASSIGNMENT = Button(image=None,
+                                     pos=(self.window_width * 0.5,
+                                     self.window_height * 0.35),
+                                     text_input="CHANGE KEY ASSIGNMENT",
                                      font=get_font(75),
                                      base_color="Black",
                                      hovering_color="Green")
             
             OPT_BACK = Button(image=None,
                               pos=(self.window_width * 0.5,
-                                   self.window_height * 0.45),
+                                   self.window_height * 0.55),
                               text_input="BACK",
                               font=get_font(75),
                               base_color="Black",
@@ -139,6 +146,8 @@ class Game:
 
             OPT_CHANGE_ROBOT.changeColor(OPT_MOUSE_POS)
             OPT_CHANGE_ROBOT.update(self.canvas)
+            OPT_KEY_ASSIGNMENT.changeColor(OPT_MOUSE_POS)
+            OPT_KEY_ASSIGNMENT.update(self.canvas)
             OPT_BACK.changeColor(OPT_MOUSE_POS)
             OPT_BACK.update(self.canvas)
 
@@ -151,6 +160,8 @@ class Game:
                         self.main_menu()
                     if OPT_CHANGE_ROBOT.checkForInput(OPT_MOUSE_POS):
                         self.change_robot_screen()
+                    if OPT_KEY_ASSIGNMENT.checkForInput(OPT_MOUSE_POS):
+                        self.key_assignment()
 
             self.window.blit(self.canvas, (0, 0))
             pygame.display.update()
@@ -158,7 +169,7 @@ class Game:
     def change_robot_screen(self):
         while True:
             self.canvas.fill("green")
-            OPT_MOUSE_POS = pygame.mouse.get_pos()
+            MOUSE_POS = pygame.mouse.get_pos()
 
             OPT_BACK = Button(image=None,
                               pos=(self.window_width * 0.5,
@@ -167,7 +178,7 @@ class Game:
                               font=get_font(75),
                               base_color="Black",
                               hovering_color="White")
-            OPT_BACK.changeColor(OPT_MOUSE_POS)
+            OPT_BACK.changeColor(MOUSE_POS)
             OPT_BACK.update(self.canvas)
 
             for event in pygame.event.get():
@@ -175,7 +186,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if OPT_BACK.checkForInput(OPT_MOUSE_POS):
+                    if OPT_BACK.checkForInput(MOUSE_POS):
                         self.main_menu()
 
             self.window.blit(self.canvas, (0, 0))
