@@ -16,7 +16,6 @@ class Menu:
 
             TITLE_TEXT = get_font(100).render(title, True, title_color)
             TITLE_RECT = TITLE_TEXT.get_rect(center=title_pos)
-            # canvas.blit(TITLE_TEXT, TITLE_RECT)
 
             for b in buttons:
                 b.changeColor(MOUSE_POS)

@@ -20,7 +20,7 @@ class Game:
 
         # clock variables:
         self.clock = pygame.time.Clock()
-        self.timer = 120
+        self.timer = 20
 
         # Get the current display information
         display_info = pygame.display.Info()
@@ -53,7 +53,7 @@ class Game:
 
         self.player = player.Player(
             self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
-            points=0, weapon=weapon.Knife(), keymode="wasd"
+            points=0, weapon=weapon.Knife(), keymode="arrows"
         )
         self.main_menu()
 
@@ -177,6 +177,33 @@ class Game:
 
         Menu(self.window, self.canvas, "", (0, 0),
              buttons, functions, "Black", "White")
+
+    def reset(self):
+        self.player = player.Player(
+            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
+            points=0, weapon=weapon.Knife(), keymode="arrows")
+        self.timer = 120
+        self.main_menu()
+
+
+
+    def game_over(self):
+        RESTART = Button(image=None,
+                            pos=(self.window_width * 0.5,
+                                 self.window_height * 0.55),
+                            text_input="RESTART",
+                            font=get_font(75),
+                            base_color="Black",
+                            hovering_color="White")
+
+        buttons = [RESTART]
+
+        functions = [self.reset]
+
+        Menu(self.window, self.canvas, "GAME OVER", (self.window_width * 0.5, self.window_height * 0.15),
+                 buttons, functions, "#b68f40", "#252525")
+        
+        
 
     def get_upgrade_cost(self, ability, ressource):
         if ability == "speed":
@@ -347,6 +374,9 @@ class Game:
         pygame.time.set_timer(timer_event, 1000)
         clock = pygame.time.Clock()
         while running:
+
+            if self.timer <= 0:
+                self.game_over()
 
             mouse_pos = pygame.mouse.get_pos()
 
