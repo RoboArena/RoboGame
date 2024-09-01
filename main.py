@@ -51,7 +51,7 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 1, 1, 0, weapon.Knife(),"wasd")
+            self, x = 500, y = 450, energy = 10, wood = 0, stone = 0, speed = 1, healing = 1, points = 0, weapon = weapon.Knife(),keymode = "wasd")
         self.main_menu()
 
     def main_menu(self):
@@ -185,6 +185,60 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if OPT_BACK.checkForInput(MOUSE_POS):
+                        self.main_menu()
+
+            self.window.blit(self.canvas, (0, 0))
+            pygame.display.update()
+
+    def key_assignment(self):
+        while True:
+            self.canvas.fill("grey")
+            MOUSE_POS = pygame.mouse.get_pos()
+
+            KEY_A_WASD = Button(image=None,
+                              pos=(self.window_width * 0.3,
+                                   self.window_height * 0.45),
+                              text_input="WASD",
+                              font=get_font(75),
+                              base_color="Black",
+                              hovering_color="Green")
+            
+            KEY_A_ARROWS = Button(image=None,
+                              pos=(self.window_width * 0.7,
+                                   self.window_height * 0.45),
+                              text_input="ARROWS",
+                              font=get_font(75),
+                              base_color="Black",
+                              hovering_color="Green")
+
+            OPT_BACK = Button(image=None,
+                              pos=(self.window_width * 0.5,
+                                   self.window_height * 0.55),
+                              text_input="BACK",
+                              font=get_font(75),
+                              base_color="Black",
+                              hovering_color="White")
+            KEY_A_WASD.changeColor(MOUSE_POS)
+            KEY_A_WASD.update(self.canvas)
+            KEY_A_ARROWS.changeColor(MOUSE_POS)
+            KEY_A_ARROWS.update(self.canvas)
+            OPT_BACK.changeColor(MOUSE_POS)
+            OPT_BACK.update(self.canvas)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if KEY_A_WASD.checkForInput(MOUSE_POS):
+                        self.player.keymode = "wasd"
+                        self.main_menu()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if KEY_A_ARROWS.checkForInput(MOUSE_POS):
+                        self.player.keymode = "arrows"
+                        self.main_menu()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if OPT_BACK.checkForInput(MOUSE_POS):
                         self.main_menu()
