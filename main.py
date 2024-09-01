@@ -52,12 +52,8 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, x = 500, y = 450, energy = 10, wood = 0, stone = 0, speed = 1, healing = 1, points = 0, weapon = weapon.Knife(),keymode = "wasd")
+            self, x = 500, y = 450, energy = 10, wood = 0, stone = 0, speed = 1, healing = 1, points = 0, weapon = weapon.Knife(), keymode = "wasd")
         self.main_menu()
-
-    def quit(self):
-        pygame.quit()
-        sys.exit()
     
     def main_menu(self):
         PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
@@ -89,9 +85,10 @@ class Game:
         functions = [
             self.play, #play button
             self.options, #options buttons
-            self.quit #quit button
+            lambda: (pygame.quit(), sys.exit())[1] #quit button
         ]
-        Menu(self.window, "MAIN MENU", (self.window_width * 0.5, self.window_height * 0.15), buttons, functions, "#b68f40", "#252525")
+        while True:
+            Menu(self.window, self.canvas, "MAIN MENU", (self.window_width * 0.5, self.window_height * 0.15), buttons, functions, "#b68f40", "#252525")
 
     def options(self):
         OPT_CHANGE_ROBOT = Button(image=None,
@@ -121,9 +118,9 @@ class Game:
 
         functions = [self.change_robot_screen,
                       self.key_assignment,
-                      self.key_assignment]
+                      self.main_menu]
         
-        Menu(self.window, "OPTIONS screen", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "Grey")
+        Menu(self.window, self.canvas, "OPTIONS screen", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "Grey")
     
     def change_robot_screen(self):
         C_R_BACK = Button(image=None,
@@ -137,7 +134,7 @@ class Game:
         buttons = [C_R_BACK]
 
         functions = [self.main_menu]
-        Menu(self.window, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
+        Menu(self.window, self.canvas, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
 
     def key_assignment(self):
         KEY_A_WASD = Button(image=None,
@@ -168,7 +165,7 @@ class Game:
 
         functions = [lambda: (setattr(self.player, 'keymode', 'wasd'), self.main_menu())[1], lambda: (setattr(self.player, 'keymode', 'arrows'), self.main_menu())[1], self.main_menu]
 
-        Menu(self.window, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
+        Menu(self.window, self.canvas, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
 
     def get_upgrade_cost(self, ability, ressource):
         if ability == "speed":
