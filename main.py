@@ -52,99 +52,103 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, x = 500, y = 450, energy = 10, wood = 0, stone = 0, speed = 1, healing = 1, points = 0, weapon = weapon.Knife(), keymode = "wasd")
+            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
+            points=0, weapon=weapon.Knife(), keymode="wasd"
+        )
         self.main_menu()
-    
+
     def main_menu(self):
         PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.35),
-                              text_input="PLAY",
-                              font=get_font(75),
-                              base_color="#d7fcd4",
-                              hovering_color="White")
-        OPT_BTN = Button(image=pygame.image.load(
-                            "assets/Options Rect.png"),
-                             pos=(self.window_width * 0.5,
-                                  self.window_height * 0.5),
-                             text_input="OPTIONS",
-                             font=get_font(75),
-                             base_color="#d7fcd4",
-                             hovering_color="White")
-        QUIT_BTN = Button(image=pygame.image.load(
-                            "assets/Quit Rect.png"),
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.65),
-                              text_input="QUIT",
-                              font=get_font(75),
-                              base_color="#d7fcd4",
-                              hovering_color="White")
+                          pos=(self.window_width * 0.5,
+                          self.window_height * 0.35),
+                          text_input="PLAY",
+                          font=get_font(75),
+                          base_color="#d7fcd4",
+                          hovering_color="White")
+        OPT_BTN = Button(image=pygame.image.load("assets/Options Rect.png"),
+                         pos=(self.window_width * 0.5,
+                              self.window_height * 0.5),
+                         text_input="OPTIONS",
+                         font=get_font(75),
+                         base_color="#d7fcd4",
+                         hovering_color="White")
+        QUIT_BTN = Button(image=pygame.image.load("assets/Quit Rect.png"),
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.65),
+                          text_input="QUIT",
+                          font=get_font(75),
+                          base_color="#d7fcd4",
+                          hovering_color="White")
 
         buttons = [PLAY_BTN, OPT_BTN, QUIT_BTN]
 
         functions = [
-            self.play, #play button
-            self.options, #options buttons
-            lambda: (pygame.quit(), sys.exit())[1] #quit button
+            self.play,  # play button
+            self.options,  # options buttons
+            lambda: (pygame.quit(), sys.exit())[1]  # quit button
         ]
         while True:
-            Menu(self.window, self.canvas, "MAIN MENU", (self.window_width * 0.5, self.window_height * 0.15), buttons, functions, "#b68f40", "#252525")
+            Menu(self.window, self.canvas, "MAIN MENU",
+                 (self.window_width * 0.5, self.window_height * 0.15),
+                 buttons, functions, "#b68f40", "#252525")
 
     def options(self):
         OPT_CHANGE_ROBOT = Button(image=None,
-                                     pos=(self.window_width * 0.5,
-                                     self.window_height * 0.45),
-                                     text_input="CHANGE ROBOT",
-                                     font=get_font(75),
-                                     base_color="Black",
-                                     hovering_color="Green")
+                                  pos=(self.window_width * 0.5,
+                                       self.window_height * 0.45),
+                                  text_input="CHANGE ROBOT",
+                                  font=get_font(75),
+                                  base_color="Black",
+                                  hovering_color="Green")
         OPT_KEY_ASSIGNMENT = Button(image=None,
-                                     pos=(self.window_width * 0.5,
-                                     self.window_height * 0.35),
-                                     text_input="CHANGE KEY ASSIGNMENT",
-                                     font=get_font(75),
-                                     base_color="Black",
-                                     hovering_color="Green")
-            
+                                    pos=(self.window_width * 0.5,
+                                         self.window_height * 0.35),
+                                    text_input="CHANGE KEY ASSIGNMENT",
+                                    font=get_font(75),
+                                    base_color="Black",
+                                    hovering_color="Green")
+
         OPT_BACK = Button(image=None,
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.55),
-                              text_input="BACK",
-                              font=get_font(75),
-                              base_color="Black",
-                              hovering_color="Green")
-        
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.55),
+                          text_input="BACK",
+                          font=get_font(75),
+                          base_color="Black",
+                          hovering_color="Green")
+
         buttons = [OPT_CHANGE_ROBOT, OPT_KEY_ASSIGNMENT, OPT_BACK]
 
         functions = [self.change_robot_screen,
-                      self.key_assignment,
-                      self.main_menu]
-        
-        Menu(self.window, self.canvas, "OPTIONS screen", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "Grey")
-    
+                     self.key_assignment, self.main_menu]
+
+        Menu(self.window, self.canvas, "OPTIONS screen",
+             (self.window_width * 0.5, self.window_height * 0.25),
+             buttons, functions, "Black", "Grey")
+
     def change_robot_screen(self):
         C_R_BACK = Button(image=None,
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.45),
-                              text_input="BACK",
-                              font=get_font(75),
-                              base_color="Black",
-                              hovering_color="White")
-        
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.45),
+                          text_input="BACK",
+                          font=get_font(75),
+                          base_color="Black",
+                          hovering_color="White")
+
         buttons = [C_R_BACK]
 
         functions = [self.main_menu]
-        Menu(self.window, self.canvas, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
+        Menu(self.window, self.canvas, "", (0, 0),
+             buttons, functions, "Black", "White")
 
     def key_assignment(self):
         KEY_A_WASD = Button(image=None,
-                              pos=(self.window_width * 0.3,
-                                   self.window_height * 0.45),
-                              text_input="WASD",
-                              font=get_font(75),
-                              base_color="Black",
-                              hovering_color="Green")
-            
+                            pos=(self.window_width * 0.3,
+                                 self.window_height * 0.45),
+                            text_input="WASD",
+                            font=get_font(75),
+                            base_color="Black",
+                            hovering_color="Green")
+
         KEY_A_ARROWS = Button(image=None,
                               pos=(self.window_width * 0.7,
                                    self.window_height * 0.45),
@@ -154,18 +158,25 @@ class Game:
                               hovering_color="Green")
 
         KEY_A_BACK = Button(image=None,
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.55),
-                              text_input="BACK",
-                              font=get_font(75),
-                              base_color="Black",
-                              hovering_color="White")
-        
+                            pos=(self.window_width * 0.5,
+                                 self.window_height * 0.55),
+                            text_input="BACK",
+                            font=get_font(75),
+                            base_color="Black",
+                            hovering_color="White")
+
         buttons = [KEY_A_WASD, KEY_A_ARROWS, KEY_A_BACK]
 
-        functions = [lambda: (setattr(self.player, 'keymode', 'wasd'), self.main_menu())[1], lambda: (setattr(self.player, 'keymode', 'arrows'), self.main_menu())[1], self.main_menu]
+        functions = [lambda:
+                     (setattr(self.player, 'keymode', 'wasd'),
+                      self.main_menu())[1],
+                     lambda:
+                     (setattr(self.player, 'keymode', 'arrows'),
+                      self.main_menu())[1],
+                     self.main_menu]
 
-        Menu(self.window, self.canvas, "", (self.window_width * 0.5, self.window_height * 0.25), buttons, functions, "Black", "White")
+        Menu(self.window, self.canvas, "", (0, 0),
+             buttons, functions, "Black", "White")
 
     def get_upgrade_cost(self, ability, ressource):
         if ability == "speed":

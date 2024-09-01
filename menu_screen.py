@@ -1,12 +1,14 @@
 import pygame
 import sys
-from button import Button # needed?
+
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/font.ttf", size)
 
+
 class Menu:
-    def __init__(self, window, canvas, title, title_pos, buttons, functions, title_color, bg_color):
+    def __init__(self, window, canvas, title,
+                 title_pos, buttons, functions, title_color, bg_color):
         while True:
             canvas.fill(bg_color)
 
@@ -19,7 +21,7 @@ class Menu:
             for b in buttons:
                 b.changeColor(MOUSE_POS)
                 b.update(canvas)
-            
+
             canvas.blit(TITLE_TEXT, TITLE_RECT)
 
             for event in pygame.event.get():
