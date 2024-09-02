@@ -1,4 +1,3 @@
-
 import pygame
 import csv
 import os
@@ -124,6 +123,45 @@ class TileMap():
                 elif tile == '8':
                     tiles.append(Tile('wood_wall.png', x * self.tile_size,
                                       y * self.tile_size, self.spritesheet))
+                elif tile == '9':
+                    tiles.append(Tile('toxic_puddle_1.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '10':
+                    tiles.append(Tile('toxic_puddle_2.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '11':
+                    tiles.append(Tile('toxic_puddle_3.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '12':
+                    tiles.append(Tile('toxic_puddle_4.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '13':
+                    tiles.append(Tile('toxic_puddle_5.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '14':
+                    tiles.append(Tile('toxic_puddle_6.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '15':
+                    tiles.append(Tile('toxic_puddle_7.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '16':
+                    tiles.append(Tile('toxic_puddle_8.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '17':
+                    tiles.append(Tile('toxic_puddle_9.png', x * self.tile_size,
+                                      y * self.tile_size, self.spritesheet))
+                elif tile == '18':
+                    tiles.append(Tile(
+                        'toxic_puddle_10.png', x * self.tile_size,
+                        y * self.tile_size, self.spritesheet))
+                elif tile == '19':
+                    tiles.append(Tile(
+                        'toxic_puddle_11.png', x * self.tile_size,
+                        y * self.tile_size, self.spritesheet))
+                elif tile == '20':
+                    tiles.append(Tile(
+                        'toxic_puddle_12.png', x * self.tile_size,
+                        y * self.tile_size, self.spritesheet))
                 x += 1
             y += 1
         self.map_w, self.map_h = x * self.tile_size, y * self.tile_size
