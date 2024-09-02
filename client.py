@@ -31,9 +31,13 @@ class Client:
                     self.PlayerRightMouse = True
                 else:
                     self.PlayerRightMouse = False
-                self.update_game_state(network.send(self.get_game_state()))
             elif self.game.status == 2:
                 self.game.options()
+            elif self.game.status == 3:
+                self.game.lost_screen()
+            elif self.game.status == 4:
+                self.game.win_screen()
+            self.update_game_state(network.send(self.get_game_state()))
 
     def get_game_state(self):
         # Get the local game state to send it to the server
@@ -43,7 +47,8 @@ class Client:
                                self.game.player.y / self.game.window_height),
                 "player1pos": (self.game.enemy.x / self.game.window_width,
                                self.game.enemy.y / self.game.window_height),
-                "mapChange": self.getMapChange(),
+                "mapChange0": self.getMapChange(),
+                "mapChange1": (),
                 "player0RightMouse": self.PlayerRightMouse,
                 "player1RightMouse": self.enemyRightMouse,
                 "player0Health": self.game.player.energy,
@@ -55,11 +60,12 @@ class Client:
                                self.game.enemy.y / self.game.window_height),
                 "player1pos": (self.game.player.x / self.game.window_width,
                                self.game.player.y / self.game.window_height),
-                "mapChange": self.getMapChange(),
+                "mapChange0": (),
+                "mapChange1": self.getMapChange(),
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
-                "player0Health": self.game.enemy.healing,
-                "player1Health": self.game.player.healing
+                "player0Health": self.game.enemy.energy,
+                "player1Health": self.game.player.energy
             }
         return state
 
@@ -74,6 +80,11 @@ class Client:
             self.game.enemy.weapon.in_use = state["player1RightMouse"]
             self.game.enemy.weapon.update_weapon()
             self.game.player.energy = state["player0Health"]
+            self.updateLocalMap(state["mapChange1"])
+            if (state["player0Health"] <= 0):
+                self.game.status = 3
+            if (state["player1Health"] <= 0):
+                self.game.status = 4
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
             self.game.enemy.y = (state["player0pos"][1] *
@@ -84,10 +95,15 @@ class Client:
             self.game.enemy.weapon.update_weapon()
             self.game.player.energy = state["player1Health"]
             self.game.enemy.energy = state["player0Health"]
+            self.updateLocalMap(state["mapChange0"])
+            if (state["player0Health"] <= 0):
+                self.game.status = 4
+            if (state["player1Health"] <= 0):
+                self.game.status = 3
 
+    def updateLocalMap(self, mapChange):
         # This part updates the map
-        # print("from server: " + str(state["mapChange"]))
-        for j, tile_change in state["mapChange"]:
+        for j, tile_change in mapChange:
             if tile_change != self.game.player.tileTupleList[j][1]:
                 new_tile_name = tile_change
                 tile_rect = self.game.player.tileTupleList[j][0]
@@ -99,7 +115,6 @@ class Client:
                 )
                 self.game.player.tileTupleList[j] = (tile_rect,
                                                      new_tile_name)
-                self.game.enemy.tileTupleList = self.game.player.tileTupleList
 
     def getMapChange(self):
         # Get the tiles that have changed

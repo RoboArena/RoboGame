@@ -37,7 +37,7 @@ class Weapon:
                              self.start[1] - image.get_height() // 2))
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
-
+        new_dir = Weapon.normalizeDir((dir_x, dir_y))
         if not self.in_use:
 
             Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
@@ -46,8 +46,8 @@ class Weapon:
         if pygame.mouse.get_pressed()[0]:
 
             self.use_weapon(player_x, player_y, dir_x, dir_y, surface)
-            self.swordpoint = (player_x - dir_x*self.length,
-                               player_y - dir_y*self.length)
+            self.swordpoint = (player_x - new_dir[0]*self.length,
+                               player_y - new_dir[1]*self.length)
             pygame.draw.circle(surface, "black",
                                self.swordpoint, 4)
 

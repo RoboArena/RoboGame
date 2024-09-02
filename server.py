@@ -23,7 +23,8 @@ players = [game.player, game.enemy]
 game_state = {
     "player0pos": (game.player.x, game.player.y),
     "player1pos": (game.enemy.x, game.enemy.y),
-    "mapChange": [],
+    "mapChange0": [],
+    "mapChange1": [],
     "player0RightMouse": False,
     "player1RightMouse": False,
     "player0Health": game.player.energy,
@@ -49,13 +50,17 @@ def threaded_client(conn, player):
                     game_state["player0pos"] = data["player0pos"]
                     game_state["player1Health"] = data["player1Health"]
                     game_state["player0RightMouse"] = data["player0RightMouse"]
+                    game_state["mapChange0"] = data["mapChange0"]
                     # game_state["playerWeapon"] = data["playerWeapon"]
                 else:
                     game_state["player1pos"] = data["player1pos"]
                     game_state["player0Health"] = data["player0Health"]
                     game_state["player1RightMouse"] = data["player1RightMouse"]
+                    game_state["mapChange1"] = data["mapChange1"]
+
                 reply = game_state
-            game_state["mapChange"].extend(data["mapChange"])
+
+            # game_state["mapChange"].extend(data["mapChange"])
             conn.sendall(pickle.dumps(reply))
 
         except Exception as e:

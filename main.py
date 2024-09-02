@@ -109,9 +109,9 @@ class Game:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BTN.checkForInput(MENU_MOUSE_POS):
-                    self.play()
+                    self.status = 1
                 if OPT_BTN.checkForInput(MENU_MOUSE_POS):
-                    self.options()
+                    self.status = 2
                 if QUIT_BTN.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -148,7 +148,7 @@ class Game:
                 if OPT_BACK.checkForInput(OPT_MOUSE_POS):
                     self.status = 0
 
-        self.canvas.blit(self.canvas, (0, 0))
+        self.window.blit(self.canvas, (0, 0))
         pygame.display.update()
 
     def get_upgrade_cost(self, ability, ressource):
@@ -388,6 +388,32 @@ class Game:
         pygame.display.update()
 
         clock.tick(30)
+
+    def lost_screen(self):
+        # Fills the entire screen with dark grey
+        self.canvas.fill((25, 25, 25))
+        print("You have lost!")
+        MENU_TEXT = get_font(100).render("You have Lost!", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width * 0.5,
+                                               self.window_height * 0.15))
+
+        self.canvas.blit(MENU_TEXT, MENU_RECT)
+        self.window.blit(self.canvas, (0, 0))
+        pygame.display.update()
+
+    def win_screen(self):
+        # Fills the entire screen with dark grey
+        self.canvas.fill((25, 25, 25))
+        print("You have won!")
+        MENU_TEXT = get_font(100).render("You have won!", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width * 0.5,
+                                               self.window_height * 0.15))
+
+        self.canvas.blit(MENU_TEXT, MENU_RECT)
+        self.window.blit(self.canvas, (0, 0))
+        pygame.display.update()
+
+        self.win_screen()
 
     def dealDamage(self):
         if isinstance(self.player.weapon, Cutting_Weapon):
