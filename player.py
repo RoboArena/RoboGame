@@ -45,10 +45,18 @@ class Player:
         self.rmb_pressed = False
         self.rmb_press_start_time = 0
 
+        # is the player currently in a puddle? used for get_puddle_collisions
+        self.in_puddle = False
+
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
-        self.movement(500)
+
+        if (self.in_puddle):
+            self.movement(100)
+        else:
+            self.movement(250)
+
         self.weapon.update_weapon()
         self.draw()
         # update the currently mineable tiles
@@ -110,6 +118,8 @@ class Player:
             if dy != 0:
                 self.y += dy
                 self.checkCollisionsy(keys)
+            self.in_puddle = False
+            self.get_puddle_collisions()
 
     def get_collisions(self):
         hits = []
@@ -324,10 +334,53 @@ class Player:
             self.rmb_press_start_time = 0
         return False
 
-    # display the health bar depending on the health (healing) of the player
+    # display the health bar depending on the health (energy) of the player
     def draw_health_bar(self, player_x, player_y, surface):
 
-        if self.healing > 0:
+        if self.energy > 80:
             image = pygame.image.load('assets/health_bar.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
+        elif self.energy > 60:
+            image = pygame.image.load('assets/health_bar_80.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 40:
+            image = pygame.image.load('assets/health_bar_60.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 20:
+            image = pygame.image.load('assets/health_bar_40.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 0:
+            image = pygame.image.load('assets/health_bar_20.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy == 0:
+            image = pygame.image.load('assets/health_bar_0.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy < 0:
+            image = pygame.image.load('assets/health_bar_0.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+
+    # get collisions with puddle tiles and return True if the player is
+    # colliding with a puddle tile and also reduce energy
+    def get_puddle_collisions(self):
+        hits = []
+        for tile_rect, tile_name in self.tileTupleList:
+            # This is a simple optimization to only check for nearby tiles
+            if (abs(self.x - tile_rect.x) > 300 or
+                    abs(self.y - tile_rect.y) > 300):
+                continue
+            if self.rect.colliderect(tile_rect):
+                if tile_name in ["toxic_puddle_1.png",
+                                 "toxic_puddle_2.png",
+                                 "toxic_puddle_3.png",
+                                 "toxic_puddle_4.png",]:
+                    self.in_puddle = True
+                    # self.energy = self.energy - 2 # for testing damage
+
+        return hits
