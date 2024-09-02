@@ -87,10 +87,10 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
-        l = False
-        r = False
-        u = False
-        d = False
+        l_pressed = False
+        r_pressed = False
+        u_pressed = False
+        d_pressed = False
         if self.keymode == "wasd":
             left = pygame.K_a
             right = pygame.K_d
@@ -103,16 +103,16 @@ class Player:
             down = pygame.K_DOWN
         if keys[left]:
             dx -= speed * self.game.delta_time
-            l = True
+            l_pressed = True
         if keys[right]:
             dx += speed * self.game.delta_time
-            r = True
+            r_pressed = True
         if keys[up]:
             dy -= speed * self.game.delta_time
-            u = True
+            u_pressed = True
         if keys[down]:
             dy += speed * self.game.delta_time
-            d = True
+            d_pressed = True
 
         # Aufteilen der Bewegung in kleinere Schritte
         steps = max(abs(dx), abs(dy))
@@ -125,10 +125,10 @@ class Player:
         for _ in range(int(steps)):
             if dx != 0:
                 self.x += dx
-                self.checkCollisionsx(l, r)
+                self.checkCollisionsx(l_pressed, r_pressed)
             if dy != 0:
                 self.y += dy
-                self.checkCollisionsy(u, d)
+                self.checkCollisionsy(u_pressed, d_pressed)
 
     def get_collisions(self):
         hits = []
@@ -157,25 +157,25 @@ class Player:
                     hits.append(tile_rect)
         return hits
 
-    def checkCollisionsx(self, l, r):
+    def checkCollisionsx(self, l_pressed, r_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if l:
+            if l_pressed:
                 self.x = tile_rect.right + self.rect.width // 2
-            if r:
+            if r_pressed:
                 self.x = tile_rect.left - self.rect.width // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
-    def checkCollisionsy(self, u, d):
+    def checkCollisionsy(self, u_pressed, d_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
         self.rect.top -= 1
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if u:
+            if u_pressed:
                 self.y = tile_rect.bottom + self.rect.height // 2
-            if d:
+            if d_pressed:
                 self.y = tile_rect.top - self.rect.height // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
