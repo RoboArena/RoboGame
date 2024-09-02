@@ -1,5 +1,6 @@
 import pygame
 import bullet
+import sound_effects
 
 
 class Player:
@@ -203,6 +204,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "stone_wall.png")
+
+                                sound_effects.pickaxe_break.play()
                             else:
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -211,6 +214,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "background.png")
+
+                                sound_effects.pickaxe_break.play()
 
                             self.stone += 1
 
@@ -227,6 +232,9 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "wood_wall.png")
+
+                                sound_effects.pickaxe_break.play()
+
                             elif (self.handle_tile_above(tile_rect) == "wall"):
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -235,6 +243,9 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "edge_wall.png")
+
+                                sound_effects.pickaxe_break.play()
+
                             else:
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -243,6 +254,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "background.png")
+
+                                sound_effects.pickaxe_break.play()
 
                             # update the wood in player inventory
                             self.wood += 1

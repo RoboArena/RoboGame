@@ -3,6 +3,7 @@ import sys
 import os
 import player
 import weapon
+import sound_effects
 from spritesheet import Spritesheet
 from tiles import TileMap
 from button import Button
@@ -109,10 +110,13 @@ class Game:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BTN.checkForInput(MENU_MOUSE_POS):
+                    sound_effects.button_main.play()
                     self.play()
                 if OPT_BTN.checkForInput(MENU_MOUSE_POS):
+                    sound_effects.button_main.play()
                     self.options()
                 if QUIT_BTN.checkForInput(MENU_MOUSE_POS):
+                    sound_effects.button_main.play()
                     pygame.quit()
                     sys.exit()
         self.window.blit(self.canvas, (0, 0))
@@ -146,6 +150,7 @@ class Game:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPT_BACK.checkForInput(OPT_MOUSE_POS):
+                    sound_effects.options_menu_button.play()
                     self.status = 0
 
         self.canvas.blit(self.canvas, (0, 0))
@@ -364,6 +369,17 @@ class Game:
                         self.player.wood -= next_weapons[i].wood_cost
                         self.player.stone -= next_weapons[i].stone_cost
                         self.player.weapon = next_weapons[i]
+                        print(next_weapons[i])
+                        kind = self.player.weapon.kind
+                        if (kind == "Knife"):
+                            sound_effects.sword_equip.play()
+                        if (kind == "Bow"):
+                            # this could be bow_equip sound, but I havent
+                            # found a good way to distinguise between rifle
+                            # and bow as both are kind = bow
+                            sound_effects.sword_equip.play()
+                        if (kind == "Sword"):
+                            sound_effects.sword_equip.play()
                 if UPGRADE_BTNS[0].checkForInput(
                     mouse_pos) and self.is_affordable(
                         "speed"):
@@ -372,6 +388,7 @@ class Game:
                     self.player.stone -= self.get_upgrade_cost(
                         "speed", "stone")
                     self.player.speed += 1
+                    sound_effects.upgrade_healing_speed.play()
                 if UPGRADE_BTNS[1].checkForInput(
                     mouse_pos) and self.is_affordable(
                         "healing"):
@@ -380,6 +397,7 @@ class Game:
                     self.player.stone -= self.get_upgrade_cost(
                         "healing", "stone")
                     self.player.healing += 1
+                    sound_effects.upgrade_healing_speed.play()
 
         # display the canvas on the window
         self.window.blit(self.canvas, (0, 0))
@@ -396,6 +414,9 @@ class Game:
                     and self.player.weapon.in_use):
                 self.enemy.energy -= self.player.weapon.force
                 print(self.enemy.energy)
+
+                # uncomment this to have a sound for taking damage
+                # sound_effects.take_damage.play()
         else:
             # The current weapon is not a Cutting_Weapon
             print("This is not a cutting weapon.")
