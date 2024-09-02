@@ -4,7 +4,7 @@ import bullet
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 speed, healing, points, weapon):
+                 speed, healing, points, weapon, keymode):
         self.x = x
         self.y = y
         self.energy = energy
@@ -19,6 +19,7 @@ class Player:
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
         self.weapon = weapon
+        self.keymode = keymode
 
         self.tileTupleList = []
         for tile in self.game.map.tiles:
@@ -86,14 +87,32 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
-        if keys[pygame.K_LEFT]:
+        l_pressed = False
+        r_pressed = False
+        u_pressed = False
+        d_pressed = False
+        if self.keymode == "wasd":
+            left = pygame.K_a
+            right = pygame.K_d
+            up = pygame.K_w
+            down = pygame.K_s
+        else:
+            left = pygame.K_LEFT
+            right = pygame.K_RIGHT
+            up = pygame.K_UP
+            down = pygame.K_DOWN
+        if keys[left]:
             dx -= speed * self.game.delta_time
-        if keys[pygame.K_RIGHT]:
+            l_pressed = True
+        if keys[right]:
             dx += speed * self.game.delta_time
-        if keys[pygame.K_UP]:
+            r_pressed = True
+        if keys[up]:
             dy -= speed * self.game.delta_time
-        if keys[pygame.K_DOWN]:
+            u_pressed = True
+        if keys[down]:
             dy += speed * self.game.delta_time
+            d_pressed = True
 
         # Aufteilen der Bewegung in kleinere Schritte
         steps = max(abs(dx), abs(dy))
@@ -106,10 +125,10 @@ class Player:
         for _ in range(int(steps)):
             if dx != 0:
                 self.x += dx
-                self.checkCollisionsx(keys)
+                self.checkCollisionsx(l_pressed, r_pressed)
             if dy != 0:
                 self.y += dy
-                self.checkCollisionsy(keys)
+                self.checkCollisionsy(u_pressed, d_pressed)
 
     def get_collisions(self):
         hits = []
@@ -138,25 +157,25 @@ class Player:
                     hits.append(tile_rect)
         return hits
 
-    def checkCollisionsx(self, keys):
+    def checkCollisionsx(self, l_pressed, r_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if keys[pygame.K_LEFT]:
+            if l_pressed:
                 self.x = tile_rect.right + self.rect.width // 2
-            if keys[pygame.K_RIGHT]:
+            if r_pressed:
                 self.x = tile_rect.left - self.rect.width // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
-    def checkCollisionsy(self, keys):
+    def checkCollisionsy(self, u_pressed, d_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
         self.rect.top -= 1
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if keys[pygame.K_UP]:
+            if u_pressed:
                 self.y = tile_rect.bottom + self.rect.height // 2
-            if keys[pygame.K_DOWN]:
+            if d_pressed:
                 self.y = tile_rect.top - self.rect.height // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
