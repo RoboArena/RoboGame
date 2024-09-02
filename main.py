@@ -20,7 +20,7 @@ class Game:
 
         # clock variables:
         self.clock = pygame.time.Clock()
-        self.timer = 1
+        self.timer = 120
 
         # Get the current display information
         display_info = pygame.display.Info()
