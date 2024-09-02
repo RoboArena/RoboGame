@@ -20,7 +20,7 @@ class Game:
 
         # clock variables:
         self.clock = pygame.time.Clock()
-        self.timer = 20
+        self.timer = 1
 
         # Get the current display information
         display_info = pygame.display.Info()
@@ -185,25 +185,60 @@ class Game:
         self.timer = 120
         self.main_menu()
 
-
+    def determine_winner(self, player1, player2):
+        if (player1.points > player2.points):
+            return "PLAYER 1, YOU'RE THE WINNER!!!"
+        if (player2.points > player1.points):
+            return "PLAYER 2, YOU'RE THE WINNER!!!"
+        else:
+            return "OH NO IT'S A TIE...YOU BEST PLAY AGAIN!"
 
     def game_over(self):
+        player2 = player.Player(  # change for multiplayer implementation
+            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
+            points=0, weapon=weapon.Knife(), keymode="arrows")
+        WINNER = Button(image=None,
+                        pos=(self.window_width * 0.5,
+                             self.window_height * 0.4),
+                        text_input=self.determine_winner(self.player, player2),
+                        font=get_font(40),
+                        base_color="Black",
+                        hovering_color="Black")
+
+        POINTS_P1 = Button(image=None,
+                           pos=(self.window_width * 0.3,
+                                self.window_height * 0.6),
+                           text_input="Player 1: " + str(self.player.points),
+                           font=get_font(50),
+                           base_color="Black",
+                           hovering_color="Black")
+
+        POINTS_P2 = Button(image=None,
+                           pos=(self.window_width * 0.7,
+                                self.window_height * 0.6),
+                           text_input="Player 2: " + str(player2.points),
+                           font=get_font(50),
+                           base_color="Black",
+                           hovering_color="Black")
+
         RESTART = Button(image=None,
-                            pos=(self.window_width * 0.5,
-                                 self.window_height * 0.55),
-                            text_input="RESTART",
-                            font=get_font(75),
-                            base_color="Black",
-                            hovering_color="White")
+                         pos=(self.window_width * 0.5,
+                              self.window_height * 0.8),
+                         text_input="RESTART",
+                         font=get_font(75),
+                         base_color="Black",
+                         hovering_color="White")
 
-        buttons = [RESTART]
+        buttons = [WINNER, POINTS_P1, POINTS_P2, RESTART]
 
-        functions = [self.reset]
+        functions = [lambda: (),  # the winner and
+                     lambda: (),  # the player points do not
+                     lambda: (),  # need a function, they are just a display
+                     self.reset]
 
-        Menu(self.window, self.canvas, "GAME OVER", (self.window_width * 0.5, self.window_height * 0.15),
-                 buttons, functions, "#b68f40", "#252525")
-        
-        
+        Menu(self.window, self.canvas, "GAME OVER",
+             (self.window_width * 0.5, self.window_height * 0.2),
+             buttons, functions, "#b68f40", "#252525")
 
     def get_upgrade_cost(self, ability, ressource):
         if ability == "speed":
