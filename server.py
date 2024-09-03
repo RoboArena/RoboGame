@@ -3,9 +3,9 @@ from _thread import start_new_thread
 import pickle
 from main import Game
 
-# server = "192.168.178.118"  # Local IP Jonathan
-server = "192.168.56.1"  # Local IP Matthias
-# server = "192.168.178.118" # Local IP Jonathan
+server = "192.168.178.118"  # Local IP Jonathan
+# server = "192.168.56.1"  # Local IP Matthias
+
 port = 5555
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
