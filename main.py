@@ -56,11 +56,11 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(self, x=playerpos[0], y=playerpos[1],
-                                    energy=100, wood=0, stone=0,
+                                    energy=60, wood=0, stone=0,
                                     speed=1, healing=1,
                                     weapon=weapon.Knife(), keymode="arrows")
         self.enemy = player.Player(self, x=enemypos[0], y=enemypos[1],
-                                   energy=100, wood=0, stone=0,
+                                   energy=60, wood=0, stone=0,
                                    speed=1, healing=1,
                                    weapon=weapon.Knife(), keymode="arrows")
         self.enemyDamage = 0
@@ -529,8 +529,9 @@ class Game:
             # The current weapon is a Cutting_Weapon
             if (self.enemy.rect.collidepoint(self.player.weapon.swordpoint)
                     and self.player.weapon.in_use):
-                self.enemy.energy -= self.player.weapon.force
-                print(self.enemy.energy)
+                self.enemy.damage += self.player.weapon.force
+                print("enemy Damage: " + str(self.enemy.damage))
+                print("enemy Health: " + str(self.enemy.health))
 
                 # uncomment this to have a sound for taking damage
                 # sound_effects.take_damage.play()

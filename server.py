@@ -4,8 +4,8 @@ import pickle
 from main import Game
 
 # server = "192.168.178.118"  # Local IP Jonathan
-# server = "192.168.56.1"  # Local IP Matthias
-server = "192.168.22.26"
+server = "192.168.56.1"  # Local IP Matthias
+# server = "192.168.22.26"
 
 port = 5555
 
@@ -28,8 +28,10 @@ game_state = {
     "mapChange": [],
     "player0RightMouse": False,
     "player1RightMouse": False,
-    "player0Health": game.player.energy,
-    "player1Health": game.enemy.energy
+    "player0Damage": game.player.damage,
+    "player1Damage": game.enemy.damage,
+    "player0Energy": game.player.energy,
+    "player1Energy": game.enemy.energy
     # "playerWeapon": game.player.weapon
 }
 
@@ -49,13 +51,15 @@ def threaded_client(conn, player):
                 if player == 0:
                     # Update game state with received data
                     game_state["player0pos"] = data["player0pos"]
-                    game_state["player1Health"] = data["player1Health"]
+                    game_state["player1Damage"] = data["player1Damage"]
                     game_state["player0RightMouse"] = data["player0RightMouse"]
+                    game_state["player0Energy"] = data["player0Energy"]
                     # game_state["playerWeapon"] = data["playerWeapon"]
                 else:
                     game_state["player1pos"] = data["player1pos"]
-                    game_state["player0Health"] = data["player0Health"]
+                    game_state["player0Damage"] = data["player0Damage"]
                     game_state["player1RightMouse"] = data["player1RightMouse"]
+                    game_state["player1Energy"] = data["player1Energy"]
                 reply = game_state
             game_state["mapChange"].extend(data["mapChange"])
             conn.sendall(pickle.dumps(reply))
