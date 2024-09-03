@@ -95,7 +95,7 @@ class Game:
 
         functions = [
             lambda: (self.change_status(1)),  # play button
-            lambda: (self.change_status(3)),  # options buttons
+            lambda: (self.change_status(2)),  # options buttons
             lambda: (pygame.quit(), sys.exit())[1]  # quit button
         ]
 
