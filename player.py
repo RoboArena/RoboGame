@@ -514,10 +514,8 @@ class Player:
             # if (abs(self.x - tile_rect.x) > 300 or
             #        abs(self.y - tile_rect.y) > 300):
             #   continue
-            print("calculating all tiles")
             if battery.colliderect(tile_rect):
                 if tile_name not in ["background.png"]:
-                    print("in a wall")
                     return True
                 else:
                     return False
@@ -540,9 +538,6 @@ class Player:
             self.last_called_time = current_time
             return True
 
-        print(self.last_called_time)
-        print(current_time)
-        print(current_time - self.last_called_time)
         # Check if 200 seconds have passed since the last call
         if current_time - self.last_called_time >= 200:
             self.last_called_time = current_time
