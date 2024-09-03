@@ -492,7 +492,7 @@ class Player:
             return True
         else:
             return False
-    
+
     # generate coordinates for the battery
     def generate_random_location_on_map(self, surface):
 
