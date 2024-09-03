@@ -3,6 +3,7 @@ import sys
 import os
 import player
 import weapon
+from menu_screen import Menu
 from spritesheet import Spritesheet
 from tiles import TileMap
 from button import Button
@@ -51,97 +52,131 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(
-            self, 500, 450, 10, 0, 0, 1, 1, 0, weapon.Knife())
+            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
+            points=0, weapon=weapon.Knife(), keymode="wasd"
+        )
         self.main_menu()
 
     def main_menu(self):
+        PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
+                          pos=(self.window_width * 0.5,
+                          self.window_height * 0.35),
+                          text_input="PLAY",
+                          font=get_font(75),
+                          base_color="#d7fcd4",
+                          hovering_color="White")
+        OPT_BTN = Button(image=pygame.image.load("assets/Options Rect.png"),
+                         pos=(self.window_width * 0.5,
+                              self.window_height * 0.5),
+                         text_input="OPTIONS",
+                         font=get_font(75),
+                         base_color="#d7fcd4",
+                         hovering_color="White")
+        QUIT_BTN = Button(image=pygame.image.load("assets/Quit Rect.png"),
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.65),
+                          text_input="QUIT",
+                          font=get_font(75),
+                          base_color="#d7fcd4",
+                          hovering_color="White")
+
+        buttons = [PLAY_BTN, OPT_BTN, QUIT_BTN]
+
+        functions = [
+            self.play,  # play button
+            self.options,  # options buttons
+            lambda: (pygame.quit(), sys.exit())[1]  # quit button
+        ]
         while True:
-            # Fills the entire screen with dark grey
-            self.canvas.fill((25, 25, 25))
-
-            MENU_MOUSE_POS = pygame.mouse.get_pos()
-
-            MENU_TEXT = get_font(100).render("MAIN MENU", True, "#b68f40")
-            MENU_RECT = MENU_TEXT.get_rect(center=(self.window_width * 0.5,
-                                                   self.window_height * 0.15))
-
-            PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.35),
-                              text_input="PLAY",
-                              font=get_font(75),
-                              base_color="#d7fcd4",
-                              hovering_color="White")
-            OPT_BTN = Button(image=pygame.image.load(
-                            "assets/Options Rect.png"),
-                             pos=(self.window_width * 0.5,
-                                  self.window_height * 0.5),
-                             text_input="OPTIONS",
-                             font=get_font(75),
-                             base_color="#d7fcd4",
-                             hovering_color="White")
-            QUIT_BTN = Button(image=pygame.image.load(
-                            "assets/Quit Rect.png"),
-                              pos=(self.window_width * 0.5,
-                                   self.window_height * 0.65),
-                              text_input="QUIT",
-                              font=get_font(75),
-                              base_color="#d7fcd4",
-                              hovering_color="White")
-
-            self.canvas.blit(MENU_TEXT, MENU_RECT)
-
-            for button in [PLAY_BTN, OPT_BTN, QUIT_BTN]:
-                button.changeColor(MENU_MOUSE_POS)
-                button.update(self.canvas)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if PLAY_BTN.checkForInput(MENU_MOUSE_POS):
-                        self.play()
-                    if OPT_BTN.checkForInput(MENU_MOUSE_POS):
-                        self.options()
-                    if QUIT_BTN.checkForInput(MENU_MOUSE_POS):
-                        pygame.quit()
-                        sys.exit()
-            self.window.blit(self.canvas, (0, 0))
-            pygame.display.update()
+            Menu(self.window, self.canvas, "MAIN MENU",
+                 (self.window_width * 0.5, self.window_height * 0.15),
+                 buttons, functions, "#b68f40", "#252525")
 
     def options(self):
-        while True:
-            OPT_MOUSE_POS = pygame.mouse.get_pos()
+        OPT_CHANGE_ROBOT = Button(image=None,
+                                  pos=(self.window_width * 0.5,
+                                       self.window_height * 0.45),
+                                  text_input="CHANGE ROBOT",
+                                  font=get_font(75),
+                                  base_color="Black",
+                                  hovering_color="Green")
+        OPT_KEY_ASSIGNMENT = Button(image=None,
+                                    pos=(self.window_width * 0.5,
+                                         self.window_height * 0.35),
+                                    text_input="CHANGE KEY ASSIGNMENT",
+                                    font=get_font(75),
+                                    base_color="Black",
+                                    hovering_color="Green")
 
-            self.canvas.fill("white")
+        OPT_BACK = Button(image=None,
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.55),
+                          text_input="BACK",
+                          font=get_font(75),
+                          base_color="Black",
+                          hovering_color="Green")
 
-            OPT_TEXT = get_font(45).render("OPTIONS screen.", True, "Black")
-            OPT_RECT = OPT_TEXT.get_rect(center=(self.window_width * 0.5,
-                                                 self.window_height * 0.25))
-            self.canvas.blit(OPT_TEXT, OPT_RECT)
+        buttons = [OPT_CHANGE_ROBOT, OPT_KEY_ASSIGNMENT, OPT_BACK]
 
-            OPT_BACK = Button(image=None,
-                              pos=(self.window_width * 0.5,
+        functions = [self.change_robot_screen,
+                     self.key_assignment, self.main_menu]
+
+        Menu(self.window, self.canvas, "OPTIONS screen",
+             (self.window_width * 0.5, self.window_height * 0.25),
+             buttons, functions, "Black", "Grey")
+
+    def change_robot_screen(self):
+        C_R_BACK = Button(image=None,
+                          pos=(self.window_width * 0.5,
+                               self.window_height * 0.45),
+                          text_input="BACK",
+                          font=get_font(75),
+                          base_color="Black",
+                          hovering_color="White")
+
+        buttons = [C_R_BACK]
+
+        functions = [self.main_menu]
+        Menu(self.window, self.canvas, "", (0, 0),
+             buttons, functions, "Black", "White")
+
+    def key_assignment(self):
+        KEY_A_WASD = Button(image=None,
+                            pos=(self.window_width * 0.3,
+                                 self.window_height * 0.45),
+                            text_input="WASD",
+                            font=get_font(75),
+                            base_color="Black",
+                            hovering_color="Green")
+
+        KEY_A_ARROWS = Button(image=None,
+                              pos=(self.window_width * 0.7,
                                    self.window_height * 0.45),
-                              text_input="BACK",
+                              text_input="ARROWS",
                               font=get_font(75),
                               base_color="Black",
                               hovering_color="Green")
 
-            OPT_BACK.changeColor(OPT_MOUSE_POS)
-            OPT_BACK.update(self.canvas)
+        KEY_A_BACK = Button(image=None,
+                            pos=(self.window_width * 0.5,
+                                 self.window_height * 0.55),
+                            text_input="BACK",
+                            font=get_font(75),
+                            base_color="Black",
+                            hovering_color="White")
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if OPT_BACK.checkForInput(OPT_MOUSE_POS):
-                        self.main_menu()
+        buttons = [KEY_A_WASD, KEY_A_ARROWS, KEY_A_BACK]
 
-            self.canvas.blit(self.canvas, (0, 0))
-            pygame.display.update()
+        functions = [lambda:
+                     (setattr(self.player, 'keymode', 'wasd'),
+                      self.main_menu())[1],
+                     lambda:
+                     (setattr(self.player, 'keymode', 'arrows'),
+                      self.main_menu())[1],
+                     self.main_menu]
+
+        Menu(self.window, self.canvas, "", (0, 0),
+             buttons, functions, "Black", "White")
 
     def get_upgrade_cost(self, ability, ressource):
         if ability == "speed":
