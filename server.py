@@ -33,7 +33,9 @@ game_state = {
     "player0Energy": game.player.energy,
     "player1Energy": game.enemy.energy,
     "player0Weapon": game.player.weapon,
-    "player1Weapon": game.enemy.weapon
+    "player1Weapon": game.enemy.weapon,
+    "player0Mousepos": (0, 0),
+    "player1Mousepos": (0, 0)
 }
 
 
@@ -56,12 +58,14 @@ def threaded_client(conn, player):
                     game_state["player0RightMouse"] = data["player0RightMouse"]
                     game_state["player0Energy"] = data["player0Energy"]
                     game_state["player0Weapon"] = data["player0Weapon"]
+                    game_state["player0Mousepos"] = data["player0Mousepos"]
                 else:
                     game_state["player1pos"] = data["player1pos"]
                     game_state["player0Damage"] = data["player0Damage"]
                     game_state["player1RightMouse"] = data["player1RightMouse"]
                     game_state["player1Energy"] = data["player1Energy"]
                     game_state["player1Weapon"] = data["player1Weapon"]
+                    game_state["player1Mousepos"] = data["player1Mousepos"]
                 reply = game_state
             game_state["mapChange"].extend(data["mapChange"])
             conn.sendall(pickle.dumps(reply))

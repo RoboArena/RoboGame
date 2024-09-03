@@ -22,6 +22,7 @@ class Player:
         self.surface = game.canvas
         self.damage = 0
         self.health = self.energy
+        self.mousepos = pygame.mouse.get_pos()
         # image is the right looking robot, image2 looks left
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
@@ -87,8 +88,7 @@ class Player:
         self.battery_hitbox = pygame.Rect(0, 0, 40, 40)
 
     def update(self):
-        mouse_pos = pygame.mouse.get_pos()
-        self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
+        self.dir = (self.x - self.mousepos[0], self.y - self.mousepos[1])
 
         if (self.in_puddle):
             self.movement(100)
@@ -485,7 +485,7 @@ class Player:
 
     # is the player looking left or right?
     def robot_looking_right(self):
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = self.mousepos
         # if the x axis value of the mouse cursor is bigger than the players
         # x-coordinate then the player is looking to the right - return True
         # otherwise return False

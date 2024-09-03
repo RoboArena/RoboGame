@@ -527,24 +527,26 @@ class Game:
     def dealDamage(self):
         if isinstance(self.player.weapon, Cutting_Weapon):
             # The current weapon is a Cutting_Weapon
-            if (self.enemy.rect.collidepoint(self.player.weapon.swordpoint)
-                    and self.player.weapon.in_use):
+            cuts = False
+            for swordpoint in self.player.weapon.swordpoints:
+                if (self.enemy.rect.collidepoint(swordpoint)
+                        and self.player.weapon.in_use):
+                    cuts = True
+                    break
+            if (cuts and self.player.weapon.in_use):
                 if (self.player.weapon.kind == "Knife"):
                     self.enemy.damage += 1
                 if (self.player.weapon.kind == "Sword"):
-                    self.enemy.damage += 5
+                    self.enemy.damage += 3
                 if (self.player.weapon.kind == "Longsword"):
-                    self.enemy.damage += 5
+                    self.enemy.damage += 3
                 if (self.player.weapon.kind == "Lasersword"):
-                    self.enemy.damage += 10
-                    # uncomment this to have a sound for taking damage
-                    # sound_effects.take_damage.play()
+                    self.enemy.damage += 6
+                sound_effects.take_damage.play()
 
                 print("enemy Damage: " + str(self.enemy.damage))
                 print("enemy Health: " + str(self.enemy.health))
 
-                # uncomment this to have a sound for taking damage
-                # sound_effects.take_damage.play()
         else:
             # The current weapon is not a Cutting_Weapon
             print("This is not a cutting weapon.")

@@ -57,7 +57,11 @@ class Client:
                 "player1RightMouse": self.enemyRightMouse,
                 "player1Damage": self.game.enemy.damage,
                 "player0Energy": self.game.player.energy,
-                "player0Weapon": self.game.player.weapon
+                "player0Weapon": self.game.player.weapon,
+                "player0Mousepos": (pygame.mouse.get_pos()[0] /
+                                    self.game.window_width,
+                                    pygame.mouse.get_pos()[1] /
+                                    self.game.window_height)
             }
         else:  # in this case the enemy is player 0
             state = {
@@ -70,7 +74,11 @@ class Client:
                 "player1RightMouse": self.PlayerRightMouse,
                 "player0Damage": self.game.enemy.damage,
                 "player1Energy": self.game.player.energy,
-                "player1Weapon": self.game.player.weapon
+                "player1Weapon": self.game.player.weapon,
+                "player1Mousepos": (pygame.mouse.get_pos()[0] /
+                                    self.game.window_width,
+                                    pygame.mouse.get_pos()[1] /
+                                    self.game.window_height)
             }
         return state
 
@@ -88,7 +96,10 @@ class Client:
             self.game.player.damage = state["player0Damage"]
             self.game.enemy.energy = state["player1Energy"]
             self.game.enemy.weapon = state["player1Weapon"]
-
+            self.game.enemy.mousepos = (state["player1Mousepos"][0] *
+                                        self.game.window_width,
+                                        state["player1Mousepos"][1] *
+                                        self.game.window_height)
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
             self.game.enemy.y = (state["player0pos"][1] *
@@ -101,7 +112,11 @@ class Client:
             self.game.player.damage = state["player1Damage"]
             self.game.enemy.energy = state["player0Energy"]
             self.game.enemy.weapon = state["player0Weapon"]
-
+            self.game.enemy.mousepos = (state["player0Mousepos"][0] *
+                                        self.game.window_width,
+                                        state["player0Mousepos"][1] *
+                                        self.game.window_height)
+        self.game.player.mousepos = pygame.mouse.get_pos()
         self.game.enemy.health = (self.game.enemy.energy -
                                   self.game.enemy.damage)
         self.game.player.health = (self.game.player.energy -

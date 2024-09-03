@@ -46,14 +46,20 @@ class Weapon:
         if pygame.mouse.get_pressed()[0]:
 
             self.use_weapon(player_x, player_y, dir_x, dir_y, surface)
-            self.swordpoint = (player_x - new_dir[0]*self.length,
-                               player_y - new_dir[1]*self.length)
-            pygame.draw.circle(surface, "black",
-                               self.swordpoint, 4)
+            self.swordpoints = (
+                (player_x - new_dir[0]*self.length,
+                 player_y - new_dir[1]*self.length),
+                (player_x - new_dir[0]*self.length*2/3,
+                 player_y - new_dir[1]*self.length*2/3),
+                (player_x - new_dir[0]*self.length*1/3,
+                 player_y - new_dir[1]*self.length*1/3))
+
+            for point in self.swordpoints:
+                pygame.draw.circle(surface, "black", point, 4)
 
         elif pygame.mouse.get_pressed()[2]:
             self.in_use = True
-            self.swordpoint = (9999, 9999)
+            self.swordpoints = ((0, 0), (0, 0), (0, 0))
             image = self.pickaxe_image.copy()
             Weapon.show_image(self, image, math.degrees(5), surface)
 
@@ -162,7 +168,7 @@ class Cutting_Weapon(Weapon):
     hitting_angle = math.radians(0)
     image = pygame.image.load('assets/robot.png')
     length = 0
-    swordpoint = (0, 0)
+    swordpoints = (0, 0)
     force = 1
 
     def update_bullets(self):
@@ -182,7 +188,7 @@ class Knife(Cutting_Weapon):
     pass
     kind = "Knife"
     image = Weapon.adjustImage('assets/knife.png', (20, 20))
-    length = 40
+    length = 60
     force = 1
 
 
@@ -203,6 +209,7 @@ class Longsword(Cutting_Weapon):
     wood_cost = 7
     stone_cost = 8
     force = 5
+    length = 128
 
 
 class Lasersword(Cutting_Weapon):
@@ -211,10 +218,12 @@ class Lasersword(Cutting_Weapon):
     image = Weapon.adjustImage('assets/laserSword.png', (40, 40))
     wood_cost = 11
     stone_cost = 4
-    length = 128
+    length = 70
     force = 10
 
 
 class DefaultWeapon(Cutting_Weapon):
     pass
+    wood_cost = 99
+    stone_cost = 99
     kind = "DefaultWeapon"
