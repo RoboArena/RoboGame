@@ -107,6 +107,7 @@ class Player:
         if (self.timer_function() or self.rect.colliderect(
                                                          self.battery_hitbox)):
             self.energy += 40
+            sound_effects.upgrade_healing_speed.play()
             # generating hitbox for battery
             battery_xy = self.generate_random_location_on_map(self.surface)
             self.battery_hitbox = pygame.Rect(battery_xy[0],

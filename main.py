@@ -95,9 +95,12 @@ class Game:
         buttons = [PLAY_BTN, OPT_BTN, QUIT_BTN]
 
         functions = [
-            lambda: (self.change_status(1)),  # play button
-            lambda: (self.change_status(2)),  # options buttons
-            lambda: (pygame.quit(), sys.exit())[1]  # quit button
+            lambda: (sound_effects.button_main.play(),
+                     self.change_status(1))[1],  # play button
+            lambda: (sound_effects.button_main.play(),
+                     self.change_status(2))[1],  # options buttons
+            lambda: (sound_effects.button_main.play(),
+                     pygame.quit(), sys.exit())[1]  # quit button
         ]
 
         Menu(self.window, self.canvas, "MAIN MENU", 100,
@@ -129,14 +132,20 @@ class Game:
 
         buttons = [OPT_CHANGE_ROBOT, OPT_KEY_ASSIGNMENT, OPT_BACK]
 
-        functions = [self.change_robot_screen,
-                     self.key_assignment, self.main_menu]
+        functions = [
+                lambda: (sound_effects.options_menu_button.play(),
+                         self.change_robot_screen())[1],
+                lambda: (sound_effects.options_menu_button.play(),
+                         self.key_assignment())[1],
+                lambda: (sound_effects.options_menu_button.play(),
+                         self.main_menu())[1]]
 
         Menu(self.window, self.canvas, "OPTIONS screen", 100,
              (self.window_width * 0.5, self.window_height * 0.2),
              buttons, functions, "#b68f40", "#252525")
 
     def change_robot_screen(self):
+
         C_R_BACK = Button(image=None,
                           pos=(self.window_width * 0.5,
                                self.window_height * 0.85),
@@ -147,7 +156,7 @@ class Game:
         ROBOT_A = Button(image=None,
                          pos=(self.window_width * 0.8,
                               self.window_height * 0.55),
-                         text_input="Classic",
+                         text_input="Kill-Bot",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
@@ -161,33 +170,33 @@ class Game:
         ROBOT_C = Button(image=None,
                          pos=(self.window_width * 0.2,
                               self.window_height * 0.55),
-                         text_input="Kill-Bot",
+                         text_input="Larry",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
 
-        buttons = [C_R_BACK, ROBOT_A, ROBOT_B, ROBOT_C]
+        buttons = [ROBOT_C, ROBOT_A, ROBOT_B, C_R_BACK,]
 
         functions = [lambda:
-                     (setattr(self.player, 'image',
-                              pygame.image.load(
-                                               'assets/robot.png'
-                                               ).convert_alpha()),
-                      setattr(self.player, 'image2',
-                              pygame.image.load(
-                                   'assets/robot_flip.png').convert_alpha()),
+                     (setattr(self.player, 'image', pygame.image.load(
+                        'assets/robot.png').convert_alpha()),
+                      setattr(self.player, 'image2', pygame.image.load(
+                        'assets/robot_flip.png').convert_alpha()),
+                         sound_effects.options_menu_button.play(),
                       self.main_menu())[1],
                      lambda:
                      (setattr(self.player, 'image', pygame.image.load(
                          'assets/robot_evil-bot.png').convert_alpha()),
                       setattr(self.player, 'image2', pygame.image.load(
-                          'assets/robot_evil-bot_flip.png').convert_alpha()),
+                         'assets/robot_evil-bot_flip.png').convert_alpha()),
+                         sound_effects.options_menu_button.play(),
                       self.main_menu())[1],
                      lambda:
                      (setattr(self.player, 'image', pygame.image.load(
                          'assets/robot_bluey.png').convert_alpha()),
                       setattr(self.player, 'image2', pygame.image.load(
                           'assets/robot_bluey_flip.png').convert_alpha()),
+                          sound_effects.options_menu_button.play(),
                       self.main_menu())[1],
                      self.main_menu]
         Menu(self.window, self.canvas, "CHOOSE YOUR CHARACTER",
@@ -221,13 +230,22 @@ class Game:
 
         buttons = [KEY_A_WASD, KEY_A_ARROWS, KEY_A_BACK]
 
-        functions = [lambda:
-                     (setattr(self.player, 'keymode', 'wasd'),
-                      self.main_menu())[1],
-                     lambda:
-                     (setattr(self.player, 'keymode', 'arrows'),
-                      self.main_menu())[1],
-                     self.main_menu]
+        functions = [
+            lambda: (
+                    setattr(self.player, 'keymode', 'wasd'),
+                    sound_effects.options_menu_button.play(),
+                    self.main_menu()
+                    )[-1],
+            lambda: (
+                    setattr(self.player, 'keymode', 'arrows'),
+                    sound_effects.options_menu_button.play(),
+                    self.main_menu()
+                    )[-1],
+            lambda: (
+                    sound_effects.options_menu_button.play(),
+                    self.main_menu()
+                    )[-1]
+                    ]
 
         Menu(self.window, self.canvas, "WHICH KEYS DO YOU WANT TO USE?", 50,
              (self.window_width * 0.5, self.window_height * 0.3),
@@ -492,13 +510,21 @@ class Game:
                         kind = self.player.weapon.kind
                         if (kind == "Knife"):
                             sound_effects.sword_equip.play()
-                        if (kind == "Bow"):
+                        elif (kind == "Bow"):
                             # this could be bow_equip sound, but I havent
                             # found a good way to distinguise between rifle
                             # and bow as both are kind = bow
+                            sound_effects.bow_equip.play()
+                        elif (kind == "Sword"):
                             sound_effects.sword_equip.play()
-                        if (kind == "Sword"):
-                            sound_effects.sword_equip.play()
+                        elif (kind == "Gun"):
+                            sound_effects.handgun_equip.play()
+                        elif (kind == "Rifle"):
+                            sound_effects.rifle_equip.play()
+                        elif (kind == "laserSword"):
+                            sound_effects.lasersword_equip.play()
+                        elif (kind == "Longsword"):
+                            sound_effects.long_sword_equip.play()
                 if UPGRADE_BTNS[0].checkForInput(
                     mouse_pos) and self.is_affordable(
                         "speed"):
