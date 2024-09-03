@@ -20,10 +20,11 @@ class Game:
     def __init__(self, playerpos, enemypos) -> None:
         pygame.init()
         self.status = 0
+        self.playerpos = playerpos
+        self.enemypos = enemypos
 
-        # clock variables:
+        # define clock
         self.clock = pygame.time.Clock()
-        self.timer = 120
 
         # Get the current display information
         display_info = pygame.display.Info()
@@ -56,11 +57,11 @@ class Game:
 
         self.player = player.Player(self, x=playerpos[0], y=playerpos[1],
                                     energy=100, wood=0, stone=0,
-                                    speed=1, healing=1, points=0,
+                                    speed=1, healing=1,
                                     weapon=weapon.Knife(), keymode="arrows")
         self.enemy = player.Player(self, x=enemypos[0], y=enemypos[1],
                                    energy=100, wood=0, stone=0,
-                                   speed=1, healing=1, points=0,
+                                   speed=1, healing=1,
                                    weapon=weapon.Knife(), keymode="arrows")
         self.enemyDamage = 0
         # self.main_menu() (Aminas Version)
@@ -233,10 +234,18 @@ class Game:
              buttons, functions, "#b68f40", "#252525")
 
     def reset(self):
-        self.player = player.Player(
-            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
-            points=0, weapon=weapon.Knife(), keymode="arrows")
-        self.timer = 120
+        self.player = player.Player(self, x=self.playerpos[0],
+                                    y=self.playerpos[1],
+                                    energy=100, wood=0, stone=0,
+                                    speed=1, healing=1,
+                                    weapon=weapon.Knife(),
+                                    keymode=self.player.keymode)
+        self.enemy = player.Player(self, x=self.enemypos[0],
+                                   y=self.enemypos[1],
+                                   energy=100, wood=0, stone=0,
+                                   speed=1, healing=1,
+                                   weapon=weapon.Knife(),
+                                   keymode=self.enemy.keymode)
         self.main_menu()
 
     '''
@@ -253,7 +262,7 @@ class Game:
         if (winner):
             text = "YOU'RE THE WINNER!!!"
         else:
-            text = "Oh no you have lost!"
+            text = "Oh no, you have lost!"
         WINNER = Button(image=None,
                         pos=(self.window_width * 0.5,
                              self.window_height * 0.4),
@@ -261,22 +270,6 @@ class Game:
                         font=get_font(40),
                         base_color="Black",
                         hovering_color="Black")
-
-        POINTS_P1 = Button(image=None,
-                           pos=(self.window_width * 0.3,
-                                self.window_height * 0.6),
-                           text_input="Player 1: " + str(self.player.points),
-                           font=get_font(50),
-                           base_color="Black",
-                           hovering_color="Black")
-
-        POINTS_P2 = Button(image=None,
-                           pos=(self.window_width * 0.7,
-                                self.window_height * 0.6),
-                           text_input="Player 2: " + str(self.enemy.points),
-                           font=get_font(50),
-                           base_color="Black",
-                           hovering_color="Black")
 
         RESTART = Button(image=None,
                          pos=(self.window_width * 0.5,
@@ -286,11 +279,12 @@ class Game:
                          base_color="Black",
                          hovering_color="White")
 
-        buttons = [WINNER, POINTS_P1, POINTS_P2, RESTART]
+        buttons = [WINNER, RESTART]
 
-        functions = [lambda: (),  # the winner and
-                     lambda: (),  # the player points do not
-                     lambda: (),  # need a function, they are just a display
+        functions = [
+                     # the winner does not need
+                     # a function, it's just a display
+                     lambda: (),
                      self.reset]
 
         Menu(self.window, self.canvas, "GAME OVER", 100,
@@ -423,16 +417,6 @@ class Game:
                             y_w_2, 0.085, 0.165, light_gray)
         self.draw_bg_weapon(x_w_2_button, y_w_2, weapon_2_color)
 
-        # display timer
-        self.displayText(
-            50, str(self.timer),
-            (self.window_width * 0.9, self.window_height * 0.1),
-            'topright')
-        # display points
-        self.displayText(35,
-                         "Points: " + str(self.player.points),
-                         (self.window_width * 0.14,
-                          self.window_height * 0.1))
         # display speed
         self.draw_ability(self.player.speed,
                           'assets/speedometer.png', (x_icon, y_s_info))
@@ -461,12 +445,6 @@ class Game:
         self.draw_cost(w_c_w_2, s_c_w_2, (x_upg_c_w_2, y_w_2))
 
     def play(self):
-        timer_event = pygame.USEREVENT+1
-        pygame.time.set_timer(timer_event, 1000)
-        clock = pygame.time.Clock()
-
-        if self.timer <= 0:
-            self.game_over()
 
         mouse_pos = pygame.mouse.get_pos()
 
@@ -501,10 +479,6 @@ class Game:
             if (event.type == pygame.KEYDOWN and
                     event.key == pygame.K_ESCAPE):
                 self.status = 0
-            if event.type == timer_event:
-                self.timer -= 1
-                if self.timer == 0:
-                    pygame.time.set_timer(timer_event, 0)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 next_weapons = self.getNextWeapons()
                 for i in [0, 1]:
@@ -549,8 +523,6 @@ class Game:
         pygame.display.flip()
 
         pygame.display.update()
-
-        clock.tick(30)
 
     def dealDamage(self):
         if isinstance(self.player.weapon, Cutting_Weapon):

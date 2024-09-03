@@ -24,7 +24,8 @@ class Client:
 
         while running:
             if self.game.status == 0:
-                self.game.main_menu()
+                self.game.reset()
+                # self.game.main_menu()
             elif self.game.status == 1:
                 self.game.play()
                 if pygame.mouse.get_pressed()[0]:
@@ -34,8 +35,12 @@ class Client:
             elif self.game.status == 2:
                 self.game.options()
             elif self.game.status == 3:
+                self.game.status = 0
+                # self.game.reset()
                 self.game.game_over(winner=False)
             elif self.game.status == 4:
+                # self.game.reset()
+                self.game.status = 0
                 self.game.game_over(winner=True)
             self.update_game_state(network.send(self.get_game_state()))
 
@@ -51,7 +56,7 @@ class Client:
                 "player0RightMouse": self.PlayerRightMouse,
                 "player1RightMouse": self.enemyRightMouse,
                 "player0Health": self.game.player.energy,
-                "player1Health": self.game.enemy.energy
+                "player1Health": self.game.enemy.energy,
             }
         else:  # in this case the enemy is player 0
             state = {
@@ -63,7 +68,7 @@ class Client:
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
                 "player0Health": self.game.enemy.energy,
-                "player1Health": self.game.player.energy
+                "player1Health": self.game.player.energy,
             }
         return state
 
@@ -82,6 +87,7 @@ class Client:
                 self.game.status = 3
             if (state["player1Health"] <= 0):
                 self.game.status = 4
+
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
             self.game.enemy.y = (state["player0pos"][1] *

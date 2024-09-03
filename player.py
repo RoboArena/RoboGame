@@ -9,7 +9,7 @@ import sound_effects
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 speed, healing, points, weapon, keymode):
+                 speed, healing, weapon, keymode):
         self.x = x
         self.y = y
         self.energy = energy
@@ -17,7 +17,6 @@ class Player:
         self.stone = stone
         self.speed = speed
         self.healing = healing
-        self.points = points
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
