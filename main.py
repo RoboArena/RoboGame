@@ -529,7 +529,17 @@ class Game:
             # The current weapon is a Cutting_Weapon
             if (self.enemy.rect.collidepoint(self.player.weapon.swordpoint)
                     and self.player.weapon.in_use):
-                self.enemy.damage += self.player.weapon.force
+                if (self.player.weapon.kind == "Knife"):
+                    self.enemy.damage += 1
+                if (self.player.weapon.kind == "Sword"):
+                    self.enemy.damage += 5
+                if (self.player.weapon.kind == "Longsword"):
+                    self.enemy.damage += 5
+                if (self.player.weapon.kind == "Lasersword"):
+                    self.enemy.damage += 10
+                    # uncomment this to have a sound for taking damage
+                    # sound_effects.take_damage.play()
+
                 print("enemy Damage: " + str(self.enemy.damage))
                 print("enemy Health: " + str(self.enemy.health))
 

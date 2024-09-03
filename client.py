@@ -56,7 +56,8 @@ class Client:
                 "player0RightMouse": self.PlayerRightMouse,
                 "player1RightMouse": self.enemyRightMouse,
                 "player1Damage": self.game.enemy.damage,
-                "player0Energy": self.game.player.energy
+                "player0Energy": self.game.player.energy,
+                "player0Weapon": self.game.player.weapon
             }
         else:  # in this case the enemy is player 0
             state = {
@@ -68,7 +69,8 @@ class Client:
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
                 "player0Damage": self.game.enemy.damage,
-                "player1Energy": self.game.player.energy
+                "player1Energy": self.game.player.energy,
+                "player1Weapon": self.game.player.weapon
             }
         return state
 
@@ -85,6 +87,7 @@ class Client:
             self.game.enemy.damage = state["player1Damage"]
             self.game.player.damage = state["player0Damage"]
             self.game.enemy.energy = state["player1Energy"]
+            self.game.enemy.weapon = state["player1Weapon"]
 
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
@@ -97,6 +100,7 @@ class Client:
             self.game.enemy.damage = state["player0Damage"]
             self.game.player.damage = state["player1Damage"]
             self.game.enemy.energy = state["player0Energy"]
+            self.game.enemy.weapon = state["player0Weapon"]
 
         self.game.enemy.health = (self.game.enemy.energy -
                                   self.game.enemy.damage)

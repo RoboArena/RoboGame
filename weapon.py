@@ -53,6 +53,7 @@ class Weapon:
 
         elif pygame.mouse.get_pressed()[2]:
             self.in_use = True
+            self.swordpoint = (9999, 9999)
             image = self.pickaxe_image.copy()
             Weapon.show_image(self, image, math.degrees(5), surface)
 
@@ -72,6 +73,7 @@ class Weapon:
 
 class Firearm(Weapon):
     pass
+    length = 0
     bullets = []
     kind = "weapon"
     image = pygame.image.load('assets/robot.png')
@@ -200,6 +202,7 @@ class Longsword(Cutting_Weapon):
     image = Weapon.adjustImage('assets/Longsword2.png', (128, 128))
     wood_cost = 7
     stone_cost = 8
+    force = 5
 
 
 class Lasersword(Cutting_Weapon):
