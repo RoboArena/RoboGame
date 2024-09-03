@@ -24,8 +24,7 @@ class Client:
 
         while running:
             if self.game.status == 0:
-                self.game.reset()
-                # self.game.main_menu()
+                self.game.main_menu()
             elif self.game.status == 1:
                 self.game.play()
                 if pygame.mouse.get_pressed()[0]:
@@ -35,14 +34,15 @@ class Client:
             elif self.game.status == 2:
                 self.game.options()
             elif self.game.status == 3:
-                self.game.status = 0
-                # self.game.reset()
                 self.game.game_over(winner=False)
             elif self.game.status == 4:
-                # self.game.reset()
-                self.game.status = 0
                 self.game.game_over(winner=True)
             self.update_game_state(network.send(self.get_game_state()))
+
+            if (self.game.player.health <= 0):
+                self.game.status = 3
+            if (self.game.enemy.health <= 0):
+                self.game.status = 4
 
     def get_game_state(self):
         # Get the local game state to send it to the server
@@ -55,8 +55,13 @@ class Client:
                 "mapChange": self.getMapChange(),
                 "player0RightMouse": self.PlayerRightMouse,
                 "player1RightMouse": self.enemyRightMouse,
-                "player0Health": self.game.player.energy,
-                "player1Health": self.game.enemy.energy,
+                "player1Damage": self.game.enemy.damage,
+                "player0Energy": self.game.player.energy,
+                "player0Weapon": self.game.player.weapon,
+                "player0Mousepos": (pygame.mouse.get_pos()[0] /
+                                    self.game.window_width,
+                                    pygame.mouse.get_pos()[1] /
+                                    self.game.window_height)
             }
         else:  # in this case the enemy is player 0
             state = {
@@ -67,8 +72,13 @@ class Client:
                 "mapChange": self.getMapChange(),
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
-                "player0Health": self.game.enemy.energy,
-                "player1Health": self.game.player.energy,
+                "player0Damage": self.game.enemy.damage,
+                "player1Energy": self.game.player.energy,
+                "player1Weapon": self.game.player.weapon,
+                "player1Mousepos": (pygame.mouse.get_pos()[0] /
+                                    self.game.window_width,
+                                    pygame.mouse.get_pos()[1] /
+                                    self.game.window_height)
             }
         return state
 
@@ -82,12 +92,14 @@ class Client:
                                            self.game.enemy.y)
             self.game.enemy.weapon.in_use = state["player1RightMouse"]
             self.game.enemy.weapon.update_weapon()
-            self.game.enemy.energy = state["player1Health"]
-            if (state["player0Health"] <= 0):
-                self.game.status = 3
-            if (state["player1Health"] <= 0):
-                self.game.status = 4
-
+            self.game.enemy.damage = state["player1Damage"]
+            self.game.player.damage = state["player0Damage"]
+            self.game.enemy.energy = state["player1Energy"]
+            self.game.enemy.weapon = state["player1Weapon"]
+            self.game.enemy.mousepos = (state["player1Mousepos"][0] *
+                                        self.game.window_width,
+                                        state["player1Mousepos"][1] *
+                                        self.game.window_height)
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
             self.game.enemy.y = (state["player0pos"][1] *
@@ -96,12 +108,19 @@ class Client:
                                            self.game.enemy.y)
             self.game.enemy.weapon.in_use = state["player0RightMouse"]
             self.game.enemy.weapon.update_weapon()
-            self.game.enemy.energy = state["player0Health"]
-            if (state["player1Health"] <= 0):
-                self.game.status = 3
-            if (state["player0Health"] <= 0):
-                self.game.status = 4
-
+            self.game.enemy.damage = state["player0Damage"]
+            self.game.player.damage = state["player1Damage"]
+            self.game.enemy.energy = state["player0Energy"]
+            self.game.enemy.weapon = state["player0Weapon"]
+            self.game.enemy.mousepos = (state["player0Mousepos"][0] *
+                                        self.game.window_width,
+                                        state["player0Mousepos"][1] *
+                                        self.game.window_height)
+        self.game.player.mousepos = pygame.mouse.get_pos()
+        self.game.enemy.health = (self.game.enemy.energy -
+                                  self.game.enemy.damage)
+        self.game.player.health = (self.game.player.energy -
+                                   self.game.player.damage)
         # This part updates the map
         # print("from server: " + str(state["mapChange"]))
         for j, tile_change in state["mapChange"]:

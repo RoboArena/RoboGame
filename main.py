@@ -56,11 +56,11 @@ class Game:
         self.offset_y = (self.window_height - self.map.map_h) // 2
 
         self.player = player.Player(self, x=playerpos[0], y=playerpos[1],
-                                    energy=100, wood=0, stone=0,
+                                    energy=60, wood=0, stone=0,
                                     speed=1, healing=1,
                                     weapon=weapon.Knife(), keymode="arrows")
         self.enemy = player.Player(self, x=enemypos[0], y=enemypos[1],
-                                   energy=100, wood=0, stone=0,
+                                   energy=60, wood=0, stone=0,
                                    speed=1, healing=1,
                                    weapon=weapon.Knife(), keymode="arrows")
         self.enemyDamage = 0
@@ -556,13 +556,26 @@ class Game:
     def dealDamage(self):
         if isinstance(self.player.weapon, Cutting_Weapon):
             # The current weapon is a Cutting_Weapon
-            if (self.enemy.rect.collidepoint(self.player.weapon.swordpoint)
-                    and self.player.weapon.in_use):
-                self.enemy.energy -= self.player.weapon.force
-                print(self.enemy.energy)
+            cuts = False
+            for swordpoint in self.player.weapon.swordpoints:
+                if (self.enemy.rect.collidepoint(swordpoint)
+                        and self.player.weapon.in_use):
+                    cuts = True
+                    break
+            if (cuts and self.player.weapon.in_use):
+                if (self.player.weapon.kind == "Knife"):
+                    self.enemy.damage += 1
+                if (self.player.weapon.kind == "Sword"):
+                    self.enemy.damage += 3
+                if (self.player.weapon.kind == "Longsword"):
+                    self.enemy.damage += 3
+                if (self.player.weapon.kind == "Lasersword"):
+                    self.enemy.damage += 6
+                sound_effects.take_damage.play()
 
-                # uncomment this to have a sound for taking damage
-                # sound_effects.take_damage.play()
+                print("enemy Damage: " + str(self.enemy.damage))
+                print("enemy Health: " + str(self.enemy.health))
+
         else:
             # The current weapon is not a Cutting_Weapon
             print("This is not a cutting weapon.")

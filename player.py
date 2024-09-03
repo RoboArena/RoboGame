@@ -20,6 +20,9 @@ class Player:
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
+        self.damage = 0
+        self.health = self.energy
+        self.mousepos = pygame.mouse.get_pos()
         # image is the right looking robot, image2 looks left
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
@@ -85,8 +88,7 @@ class Player:
         self.battery_hitbox = pygame.Rect(0, 0, 40, 40)
 
     def update(self):
-        mouse_pos = pygame.mouse.get_pos()
-        self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
+        self.dir = (self.x - self.mousepos[0], self.y - self.mousepos[1])
 
         if (self.in_puddle):
             self.movement(100)
@@ -127,9 +129,9 @@ class Player:
 
     def draw(self):
         # make Hitbox visible
-        pygame.draw.rect(self.surface, "black", self.rect)
+        # pygame.draw.rect(self.surface, "black", self.rect)
         # draw mining hitbox (for debugging)
-        pygame.draw.rect(self.surface, "red", self.mining_hitbox, 2)
+        # pygame.draw.rect(self.surface, "red", self.mining_hitbox, 2)
         # (1) The player is a blue circle
         # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
         # (2) The player is a robot
@@ -408,7 +410,7 @@ class Player:
         is_new_click = current_mouse_state and not self.previous_mouse_state
         return is_new_click
 
-    # Check if Right mouse button has been held for 1 second,
+    # Check if Right mouse button has been held for 1 second
     # if so, return true (rmb = right mouse button)
     def mining_timer(self):
 
@@ -434,31 +436,31 @@ class Player:
     # display the health bar depending on the health (energy) of the player
     def draw_health_bar(self, player_x, player_y, surface):
 
-        if self.energy > 80:
+        if self.health > 80:
             image = pygame.image.load('assets/health_bar.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy > 60:
+        elif self.health > 60:
             image = pygame.image.load('assets/health_bar_80.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy > 40:
+        elif self.health > 40:
             image = pygame.image.load('assets/health_bar_60.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy > 20:
+        elif self.health > 20:
             image = pygame.image.load('assets/health_bar_40.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy > 0:
+        elif self.health > 0:
             image = pygame.image.load('assets/health_bar_20.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy == 0:
+        elif self.health == 0:
             image = pygame.image.load('assets/health_bar_0.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
-        elif self.energy < 0:
+        elif self.health < 0:
             image = pygame.image.load('assets/health_bar_0.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
@@ -484,7 +486,7 @@ class Player:
 
     # is the player looking left or right?
     def robot_looking_right(self):
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos = self.mousepos
         # if the x axis value of the mouse cursor is bigger than the players
         # x-coordinate then the player is looking to the right - return True
         # otherwise return False
