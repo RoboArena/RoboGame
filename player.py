@@ -1,5 +1,6 @@
 import pygame
 import bullet
+import sound_effects
 
 
 class Player:
@@ -16,8 +17,15 @@ class Player:
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
+        # image is the right looking robot, image2 looks left
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.image.load('assets/robot.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image2 = pygame.image.load(
+                                       'assets/robot_flip.png'
+                                       ).convert_alpha()
+        self.image2 = pygame.transform.scale(self.image2, (40, 40))
         self.weapon = weapon
         self.keymode = keymode
 
@@ -46,10 +54,18 @@ class Player:
         self.rmb_pressed = False
         self.rmb_press_start_time = 0
 
+        # is the player currently in a puddle? used for get_puddle_collisions
+        self.in_puddle = False
+
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
-        self.movement(500)
+
+        if (self.in_puddle):
+            self.movement(100)
+        else:
+            self.movement(250)
+
         self.weapon.update_weapon()
         self.draw()
         # update the currently mineable tiles
@@ -70,10 +86,21 @@ class Player:
         # (1) The player is a blue circle
         # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
         # (2) The player is a robot
-        self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
-                                       self.y - self.image.get_height() // 2))
+
+        # display the robot image, depending on the player looking right
+        # or left
+        if (self.robot_looking_right()):
+            self.surface.blit(self.image,
+                              (self.x - self.image.get_width() // 2,
+                               self.y - self.image.get_height() // 2))
+        else:
+            self.surface.blit(self.image2,
+                              (self.x - self.image2.get_width() // 2,
+                               self.y - self.image2.get_height() // 2))
+        # draw the weapon
         self.weapon.draw_weapon(
             self.x, self.y, self.dir[0], self.dir[1], self.surface)
+        # draw the healthbar
         self.draw_health_bar(self.x, self.y, self.surface)
 
     def shoot(self):
@@ -129,6 +156,8 @@ class Player:
             if dy != 0:
                 self.y += dy
                 self.checkCollisionsy(u_pressed, d_pressed)
+            self.in_puddle = False
+            self.get_puddle_collisions()
 
     def get_collisions(self):
         hits = []
@@ -212,6 +241,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "stone_wall.png")
+
+                                sound_effects.pickaxe_break.play()
                             else:
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -220,6 +251,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "background.png")
+
+                                sound_effects.pickaxe_break.play()
 
                             self.stone += 1
 
@@ -236,6 +269,9 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "wood_wall.png")
+
+                                sound_effects.pickaxe_break.play()
+
                             elif (self.handle_tile_above(tile_rect) == "wall"):
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -244,6 +280,9 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "edge_wall.png")
+
+                                sound_effects.pickaxe_break.play()
+
                             else:
                                 self.game.map.update_tile(
                                     tile_rect.x - self.game.offset_x,
@@ -252,6 +291,8 @@ class Player:
                                 )
                                 self.tileTupleList[i] = (tile_rect,
                                                          "background.png")
+
+                                sound_effects.pickaxe_break.play()
 
                             # update the wood in player inventory
                             self.wood += 1
@@ -343,10 +384,64 @@ class Player:
             self.rmb_press_start_time = 0
         return False
 
-    # display the health bar depending on the health (healing) of the player
+    # display the health bar depending on the health (energy) of the player
     def draw_health_bar(self, player_x, player_y, surface):
 
-        if self.healing > 0:
+        if self.energy > 80:
             image = pygame.image.load('assets/health_bar.png')
             surface.blit(image, (player_x - 2 - image.get_width() // 2,
                                  player_y - 30 - image.get_height() // 2))
+        elif self.energy > 60:
+            image = pygame.image.load('assets/health_bar_80.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 40:
+            image = pygame.image.load('assets/health_bar_60.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 20:
+            image = pygame.image.load('assets/health_bar_40.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy > 0:
+            image = pygame.image.load('assets/health_bar_20.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy == 0:
+            image = pygame.image.load('assets/health_bar_0.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+        elif self.energy < 0:
+            image = pygame.image.load('assets/health_bar_0.png')
+            surface.blit(image, (player_x - 2 - image.get_width() // 2,
+                                 player_y - 30 - image.get_height() // 2))
+
+    # get collisions with puddle tiles and return True if the player is
+    # colliding with a puddle tile and also reduce energy
+    def get_puddle_collisions(self):
+        hits = []
+        for tile_rect, tile_name in self.tileTupleList:
+            # This is a simple optimization to only check for nearby tiles
+            if (abs(self.x - tile_rect.x) > 300 or
+                    abs(self.y - tile_rect.y) > 300):
+                continue
+            if self.rect.colliderect(tile_rect):
+                if tile_name in ["toxic_puddle_1.png",
+                                 "toxic_puddle_2.png",
+                                 "toxic_puddle_3.png",
+                                 "toxic_puddle_4.png",]:
+                    self.in_puddle = True
+                    # self.energy = self.energy - 2 # for testing damage
+
+        return hits
+
+    # is the player looking left or right?
+    def robot_looking_right(self):
+        mouse_pos = pygame.mouse.get_pos()
+        # if the x axis value of the mouse cursor is bigger than the players
+        # x-coordinate then the player is looking to the right - return True
+        # otherwise return False
+        if mouse_pos[0] > self.x:
+            return True
+        else:
+            return False

@@ -6,6 +6,7 @@ import math
 class Weapon:
     kind = "weapon"
     pickaxe_image = pygame.image.load('assets/pickaxe.png')
+    start = (0, 0)
 
     def __init__(self):
         self.force = 1
@@ -36,6 +37,7 @@ class Weapon:
                              self.start[1] - image.get_height() // 2))
 
     def draw_weapon(self, player_x, player_y, dir_x, dir_y, surface):
+        new_dir = Weapon.normalizeDir((dir_x, dir_y))
         if not self.in_use:
 
             Weapon.set_start(self, player_x, player_y, dir_x, dir_y)
@@ -44,6 +46,10 @@ class Weapon:
         if pygame.mouse.get_pressed()[0]:
 
             self.use_weapon(player_x, player_y, dir_x, dir_y, surface)
+            self.swordpoint = (player_x - new_dir[0]*self.length,
+                               player_y - new_dir[1]*self.length)
+            pygame.draw.circle(surface, "black",
+                               self.swordpoint, 4)
 
         elif pygame.mouse.get_pressed()[2]:
             self.in_use = True
@@ -70,7 +76,6 @@ class Firearm(Weapon):
     kind = "weapon"
     image = pygame.image.load('assets/robot.png')
     in_use = True
-    start = 0
     angle = 45
     hitting_angle = math.radians(0)
 
@@ -151,10 +156,12 @@ class Cutting_Weapon(Weapon):
     pass
     distance = 10
     in_use = False
-    start = 0
     angle = 45
     hitting_angle = math.radians(0)
     image = pygame.image.load('assets/robot.png')
+    length = 0
+    swordpoint = (0, 0)
+    force = 1
 
     def update_bullets(self):
         return
@@ -173,6 +180,8 @@ class Knife(Cutting_Weapon):
     pass
     kind = "Knife"
     image = Weapon.adjustImage('assets/knife.png', (20, 20))
+    length = 40
+    force = 1
 
 
 class Sword(Cutting_Weapon):
@@ -181,6 +190,8 @@ class Sword(Cutting_Weapon):
     image = Weapon.adjustImage('assets/sword.png', (30, 30))
     wood_cost = 6
     stone_cost = 4
+    length = 64
+    force = 5  # Set specific force for Sword
 
 
 class Longsword(Cutting_Weapon):
@@ -197,6 +208,8 @@ class Lasersword(Cutting_Weapon):
     image = Weapon.adjustImage('assets/laserSword.png', (40, 40))
     wood_cost = 11
     stone_cost = 4
+    length = 128
+    force = 10
 
 
 class DefaultWeapon(Cutting_Weapon):
