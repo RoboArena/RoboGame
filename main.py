@@ -153,23 +153,26 @@ class Game:
                           font=get_font(75),
                           base_color="white",
                           hovering_color="black")
-        ROBOT_A = Button(image=None,
+        ROBOT_A = Button(image=pygame.image.load(
+                         'assets/robot_evil-bot_option.png').convert_alpha(),
                          pos=(self.window_width * 0.8,
-                              self.window_height * 0.55),
+                              self.window_height * 0.40),
                          text_input="Kill-Bot",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
-        ROBOT_B = Button(image=None,
+        ROBOT_B = Button(image=pygame.image.load(
+                         'assets/robot_bluey_option.png').convert_alpha(),
                          pos=(self.window_width * 0.5,
-                              self.window_height * 0.65),
+                              self.window_height * 0.45),
                          text_input="Bluey",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
-        ROBOT_C = Button(image=None,
+        ROBOT_C = Button(image=pygame.image.load(
+                         'assets/robot_option.png').convert_alpha(),
                          pos=(self.window_width * 0.2,
-                              self.window_height * 0.55),
+                              self.window_height * 0.40),
                          text_input="Larry",
                          font=get_font(75),
                          base_color="white",
