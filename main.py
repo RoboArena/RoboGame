@@ -238,12 +238,14 @@ class Game:
                                     y=self.playerpos[1],
                                     energy=100, wood=0, stone=0,
                                     speed=1, healing=1,
-                                    weapon=weapon.Knife(), keymode="arrows")
+                                    weapon=weapon.Knife(),
+                                    keymode=self.player.keymode)
         self.enemy = player.Player(self, x=self.enemypos[0],
                                    y=self.enemypos[1],
                                    energy=100, wood=0, stone=0,
                                    speed=1, healing=1,
-                                   weapon=weapon.Knife(), keymode="arrows")
+                                   weapon=weapon.Knife(),
+                                   keymode=self.enemy.keymode)
         self.main_menu()
 
     '''
