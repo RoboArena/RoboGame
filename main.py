@@ -136,6 +136,7 @@ class Game:
              buttons, functions, "#b68f40", "#252525")
 
     def change_robot_screen(self):
+
         C_R_BACK = Button(image=None,
                           pos=(self.window_width * 0.5,
                                self.window_height * 0.85),
@@ -146,7 +147,7 @@ class Game:
         ROBOT_A = Button(image=None,
                          pos=(self.window_width * 0.8,
                               self.window_height * 0.55),
-                         text_input="Classic",
+                         text_input="Kill-Bot",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
@@ -160,27 +161,24 @@ class Game:
         ROBOT_C = Button(image=None,
                          pos=(self.window_width * 0.2,
                               self.window_height * 0.55),
-                         text_input="Kill-Bot",
+                         text_input="Larry",
                          font=get_font(75),
                          base_color="white",
                          hovering_color="green")
 
-        buttons = [C_R_BACK, ROBOT_A, ROBOT_B, ROBOT_C]
+        buttons = [ROBOT_C, ROBOT_A, ROBOT_B, C_R_BACK,]
 
         functions = [lambda:
-                     (setattr(self.player, 'image',
-                              pygame.image.load(
-                                               'assets/robot.png'
-                                               ).convert_alpha()),
-                      setattr(self.player, 'image2',
-                              pygame.image.load(
-                                   'assets/robot_flip.png').convert_alpha()),
+                     (setattr(self.player, 'image', pygame.image.load(
+                        'assets/robot.png').convert_alpha()),
+                      setattr(self.player, 'image2', pygame.image.load(
+                        'assets/robot_flip.png').convert_alpha()),
                       self.main_menu())[1],
                      lambda:
                      (setattr(self.player, 'image', pygame.image.load(
                          'assets/robot_evil-bot.png').convert_alpha()),
                       setattr(self.player, 'image2', pygame.image.load(
-                          'assets/robot_evil-bot_flip.png').convert_alpha()),
+                         'assets/robot_evil-bot_flip.png').convert_alpha()),
                       self.main_menu())[1],
                      lambda:
                      (setattr(self.player, 'image', pygame.image.load(
