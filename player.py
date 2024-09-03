@@ -1,5 +1,9 @@
 import pygame
 import bullet
+import random
+import time
+from spritesheet import Spritesheet
+from tiles import TileMap
 import sound_effects
 
 
@@ -26,6 +30,7 @@ class Player:
                                        'assets/robot_flip.png'
                                        ).convert_alpha()
         self.image2 = pygame.transform.scale(self.image2, (40, 40))
+        self.image3 = pygame.image.load('battery.png').convert_alpha()
         self.weapon = weapon
         self.keymode = keymode
 
@@ -57,6 +62,29 @@ class Player:
         # is the player currently in a puddle? used for get_puddle_collisions
         self.in_puddle = False
 
+        # Get the current display information
+        display_info = pygame.display.Info()
+        self.window_width = display_info.current_w
+        self.window_height = display_info.current_h
+
+        # Update the canvas and window to use the display size
+        self.canvas = pygame.Surface((self.window_width, self.window_height))
+        self.window = pygame.display.set_mode((self.window_width,
+                                               self.window_height))
+
+        # Load in the Spritesheet and the Tilemap
+        spritesheet = Spritesheet('assets/Tiles.png')
+        self.map = TileMap('RoboArena.csv', spritesheet)
+
+        # Calculate the offsets to center the map
+        self.offset_x = (self.window_width - self.map.map_w) // 2
+        self.offset_y = (self.window_height - self.map.map_h) // 2
+
+        # Initialize the class attribute last_called_time
+        self.last_called_time = None
+
+        self.battery_hitbox = pygame.Rect(0, 0, 40, 40)
+
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
         self.dir = (self.x - mouse_pos[0], self.y - mouse_pos[1])
@@ -74,6 +102,25 @@ class Player:
         # to mine stone/wood but have to click each time, this is not in
         # effect now to try out another technique for mining
         self.previous_mouse_state = pygame.mouse.get_pressed()[0]
+
+        # display and handle picking up batteries
+        global battery_xy
+        if (self.timer_function() or self.rect.colliderect(
+                                                         self.battery_hitbox)):
+            self.energy += 40
+            # generating hitbox for battery
+            battery_xy = self.generate_random_location_on_map(self.surface)
+            self.battery_hitbox = pygame.Rect(battery_xy[0],
+                                              battery_xy[1], 40, 40)
+            while (self.is_battery_in_wall(self.battery_hitbox)):
+                # generating hitbox for battery
+                battery_xy = self.generate_random_location_on_map(self.surface)
+                self.battery_hitbox = pygame.Rect(battery_xy[0],
+                                                  battery_xy[1], 40, 40)
+        elif battery_xy is not None:
+            # display the battery to the surface
+            self.blit_battery_onto_surface(battery_xy[0],
+                                           battery_xy[1], self.surface)
 
         # update Right mouse button press tracking
         self.mining_timer()
@@ -444,4 +491,62 @@ class Player:
         if mouse_pos[0] > self.x:
             return True
         else:
+            return False
+    
+    # generate coordinates for the battery
+    def generate_random_location_on_map(self, surface):
+
+        random_x = random.randint(0, 928)
+        random_y = random.randint(0, 480)
+        surface.blit(self.image3,
+                     (random_x + self.offset_x + 32,
+                      random_y + self.offset_y + 32))
+        # print(self.offset_x)
+        # print(self.offset_y)
+
+        return (random_x + self.offset_x + 32,
+                random_y + self.offset_y + 32)
+
+    # is the battery not in the background tile? if so return true
+    def is_battery_in_wall(self, battery):
+        for tile_rect, tile_name in self.tileTupleList:
+            # This is a simple optimization to only check for nearby tiles
+            # if (abs(self.x - tile_rect.x) > 300 or
+            #        abs(self.y - tile_rect.y) > 300):
+            #   continue
+            print("calculating all tiles")
+            if battery.colliderect(tile_rect):
+                if tile_name not in ["background.png"]:
+                    print("in a wall")
+                    return True
+                else:
+                    return False
+
+    # blit the battery on to self.surface
+    def blit_battery_onto_surface(self, x, y, surface):
+        surface.blit(self.image3,
+                     (x, y))
+        return
+
+    # 200 second timer, returns True every 200 seconds when called
+    # the duration can be adapted so the battery despawns and spawns randomly
+    # on its own
+    def timer_function(self):
+
+        current_time = time.time()
+
+        if self.last_called_time is None:
+            # First time the function is called, so initialize last_called_time
+            self.last_called_time = current_time
+            return True
+
+        print(self.last_called_time)
+        print(current_time)
+        print(current_time - self.last_called_time)
+        # Check if 200 seconds have passed since the last call
+        if current_time - self.last_called_time >= 200:
+            self.last_called_time = current_time
+            return True
+        else:
+            # print("printed false")
             return False
