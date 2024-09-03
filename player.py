@@ -5,7 +5,7 @@ import sound_effects
 
 class Player:
     def __init__(self, game, x, y, energy, wood, stone,
-                 speed, healing, points, weapon):
+                 speed, healing, points, weapon, keymode):
         self.x = x
         self.y = y
         self.energy = energy
@@ -17,9 +17,17 @@ class Player:
         self.dir = (90, 90)
         self.game = game
         self.surface = game.canvas
+        # image is the right looking robot, image2 looks left
         self.image = pygame.image.load('assets/robot.png').convert_alpha()
         self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image = pygame.image.load('assets/robot.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (40, 40))
+        self.image2 = pygame.image.load(
+                                       'assets/robot_flip.png'
+                                       ).convert_alpha()
+        self.image2 = pygame.transform.scale(self.image2, (40, 40))
         self.weapon = weapon
+        self.keymode = keymode
 
         self.tileTupleList = []
         for tile in self.game.map.tiles:
@@ -78,10 +86,21 @@ class Player:
         # (1) The player is a blue circle
         # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
         # (2) The player is a robot
-        self.surface.blit(self.image, (self.x - self.image.get_width() // 2,
-                                       self.y - self.image.get_height() // 2))
+
+        # display the robot image, depending on the player looking right
+        # or left
+        if (self.robot_looking_right()):
+            self.surface.blit(self.image,
+                              (self.x - self.image.get_width() // 2,
+                               self.y - self.image.get_height() // 2))
+        else:
+            self.surface.blit(self.image2,
+                              (self.x - self.image2.get_width() // 2,
+                               self.y - self.image2.get_height() // 2))
+        # draw the weapon
         self.weapon.draw_weapon(
             self.x, self.y, self.dir[0], self.dir[1], self.surface)
+        # draw the healthbar
         self.draw_health_bar(self.x, self.y, self.surface)
 
     def shoot(self):
@@ -95,14 +114,32 @@ class Player:
     def movement(self, speed):
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
-        if keys[pygame.K_LEFT]:
+        l_pressed = False
+        r_pressed = False
+        u_pressed = False
+        d_pressed = False
+        if self.keymode == "wasd":
+            left = pygame.K_a
+            right = pygame.K_d
+            up = pygame.K_w
+            down = pygame.K_s
+        else:
+            left = pygame.K_LEFT
+            right = pygame.K_RIGHT
+            up = pygame.K_UP
+            down = pygame.K_DOWN
+        if keys[left]:
             dx -= speed * self.game.delta_time
-        if keys[pygame.K_RIGHT]:
+            l_pressed = True
+        if keys[right]:
             dx += speed * self.game.delta_time
-        if keys[pygame.K_UP]:
+            r_pressed = True
+        if keys[up]:
             dy -= speed * self.game.delta_time
-        if keys[pygame.K_DOWN]:
+            u_pressed = True
+        if keys[down]:
             dy += speed * self.game.delta_time
+            d_pressed = True
 
         # Aufteilen der Bewegung in kleinere Schritte
         steps = max(abs(dx), abs(dy))
@@ -115,10 +152,10 @@ class Player:
         for _ in range(int(steps)):
             if dx != 0:
                 self.x += dx
-                self.checkCollisionsx(keys)
+                self.checkCollisionsx(l_pressed, r_pressed)
             if dy != 0:
                 self.y += dy
-                self.checkCollisionsy(keys)
+                self.checkCollisionsy(u_pressed, d_pressed)
             self.in_puddle = False
             self.get_puddle_collisions()
 
@@ -149,25 +186,25 @@ class Player:
                     hits.append(tile_rect)
         return hits
 
-    def checkCollisionsx(self, keys):
+    def checkCollisionsx(self, l_pressed, r_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if keys[pygame.K_LEFT]:
+            if l_pressed:
                 self.x = tile_rect.right + self.rect.width // 2
-            if keys[pygame.K_RIGHT]:
+            if r_pressed:
                 self.x = tile_rect.left - self.rect.width // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
-    def checkCollisionsy(self, keys):
+    def checkCollisionsy(self, u_pressed, d_pressed):
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
         self.rect.bottom += 1
         self.rect.top -= 1
         collisions = self.get_collisions()
         for tile_rect in collisions:
-            if keys[pygame.K_UP]:
+            if u_pressed:
                 self.y = tile_rect.bottom + self.rect.height // 2
-            if keys[pygame.K_DOWN]:
+            if d_pressed:
                 self.y = tile_rect.top - self.rect.height // 2
         self.rect.center = (self.x, self.y)  # Update the Hitbox Position
 
@@ -397,3 +434,14 @@ class Player:
                     # self.energy = self.energy - 2 # for testing damage
 
         return hits
+
+    # is the player looking left or right?
+    def robot_looking_right(self):
+        mouse_pos = pygame.mouse.get_pos()
+        # if the x axis value of the mouse cursor is bigger than the players
+        # x-coordinate then the player is looking to the right - return True
+        # otherwise return False
+        if mouse_pos[0] > self.x:
+            return True
+        else:
+            return False
