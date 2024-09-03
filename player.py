@@ -128,9 +128,9 @@ class Player:
 
     def draw(self):
         # make Hitbox visible
-        pygame.draw.rect(self.surface, "black", self.rect)
+        # pygame.draw.rect(self.surface, "black", self.rect)
         # draw mining hitbox (for debugging)
-        pygame.draw.rect(self.surface, "red", self.mining_hitbox, 2)
+        # pygame.draw.rect(self.surface, "red", self.mining_hitbox, 2)
         # (1) The player is a blue circle
         # pygame.draw.circle(self.surface, "blue", (self.x, self.y), self.r)
         # (2) The player is a robot

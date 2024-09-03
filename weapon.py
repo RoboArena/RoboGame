@@ -53,9 +53,8 @@ class Weapon:
                  player_y - new_dir[1]*self.length*2/3),
                 (player_x - new_dir[0]*self.length*1/3,
                  player_y - new_dir[1]*self.length*1/3))
-
-            for point in self.swordpoints:
-                pygame.draw.circle(surface, "black", point, 4)
+            # for point in self.swordpoints:
+            #     pygame.draw.circle(surface, "black", point, 4)
 
         elif pygame.mouse.get_pressed()[2]:
             self.in_use = True
