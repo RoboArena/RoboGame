@@ -31,9 +31,13 @@ class Client:
                     self.PlayerRightMouse = True
                 else:
                     self.PlayerRightMouse = False
-                self.update_game_state(network.send(self.get_game_state()))
             elif self.game.status == 2:
                 self.game.options()
+            elif self.game.status == 3:
+                self.game.game_over(winner=False)
+            elif self.game.status == 4:
+                self.game.game_over(winner=True)
+            self.update_game_state(network.send(self.get_game_state()))
 
     def get_game_state(self):
         # Get the local game state to send it to the server
@@ -58,8 +62,8 @@ class Client:
                 "mapChange": self.getMapChange(),
                 "player0RightMouse": self.enemyRightMouse,
                 "player1RightMouse": self.PlayerRightMouse,
-                "player0Health": self.game.enemy.healing,
-                "player1Health": self.game.player.healing
+                "player0Health": self.game.enemy.energy,
+                "player1Health": self.game.player.energy
             }
         return state
 
@@ -73,7 +77,11 @@ class Client:
                                            self.game.enemy.y)
             self.game.enemy.weapon.in_use = state["player1RightMouse"]
             self.game.enemy.weapon.update_weapon()
-            self.game.player.energy = state["player0Health"]
+            self.game.enemy.energy = state["player1Health"]
+            if (state["player0Health"] <= 0):
+                self.game.status = 3
+            if (state["player1Health"] <= 0):
+                self.game.status = 4
         else:
             self.game.enemy.x = state["player0pos"][0] * self.game.window_width
             self.game.enemy.y = (state["player0pos"][1] *
@@ -82,8 +90,11 @@ class Client:
                                            self.game.enemy.y)
             self.game.enemy.weapon.in_use = state["player0RightMouse"]
             self.game.enemy.weapon.update_weapon()
-            self.game.player.energy = state["player1Health"]
             self.game.enemy.energy = state["player0Health"]
+            if (state["player1Health"] <= 0):
+                self.game.status = 3
+            if (state["player0Health"] <= 0):
+                self.game.status = 4
 
         # This part updates the map
         # print("from server: " + str(state["mapChange"]))

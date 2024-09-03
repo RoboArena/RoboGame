@@ -19,7 +19,7 @@ class Game:
 
     def __init__(self, playerpos, enemypos) -> None:
         pygame.init()
-        self.status = 1
+        self.status = 0
 
         # clock variables:
         self.clock = pygame.time.Clock()
@@ -65,6 +65,9 @@ class Game:
         self.enemyDamage = 0
         # self.main_menu() (Aminas Version)
 
+    def change_status(self, status):
+        self.status = status
+
     def main_menu(self):
         PLAY_BTN = Button(image=pygame.image.load("assets/Play Rect.png"),
                           pos=(self.window_width * 0.5,
@@ -91,14 +94,14 @@ class Game:
         buttons = [PLAY_BTN, OPT_BTN, QUIT_BTN]
 
         functions = [
-            self.play,  # play button
-            self.options,  # options buttons
+            lambda: (self.change_status(1)),  # play button
+            lambda: (self.change_status(3)),  # options buttons
             lambda: (pygame.quit(), sys.exit())[1]  # quit button
         ]
-        while True:
-            Menu(self.window, self.canvas, "MAIN MENU", 100,
-                 (self.window_width * 0.5, self.window_height * 0.15),
-                 buttons, functions, "#b68f40", "#252525")
+
+        Menu(self.window, self.canvas, "MAIN MENU", 100,
+             (self.window_width * 0.5, self.window_height * 0.15),
+             buttons, functions, "#b68f40", "#252525")
 
     def options(self):
         OPT_CHANGE_ROBOT = Button(image=None,
@@ -236,22 +239,25 @@ class Game:
         self.timer = 120
         self.main_menu()
 
-    def determine_winner(self, player1, player2):
-        if (player1.points > player2.points):
+    '''
+    def determine_winner(self, player, enemy):
+        if (player.points > enemy.points):
             return "PLAYER 1, YOU'RE THE WINNER!!!"
-        if (player2.points > player1.points):
+        if (enemy.points > player.points):
             return "PLAYER 2, YOU'RE THE WINNER!!!"
         else:
             return "OH NO IT'S A TIE...YOU BEST PLAY AGAIN!"
+    '''
 
-    def game_over(self):
-        player2 = player.Player(  # change for multiplayer implementation
-            self, x=500, y=450, energy=10, wood=0, stone=0, speed=1, healing=1,
-            points=0, weapon=weapon.Knife(), keymode="arrows")
+    def game_over(self, winner):
+        if (winner):
+            text = "YOU'RE THE WINNER!!!"
+        else:
+            text = "Oh no you have lost!"
         WINNER = Button(image=None,
                         pos=(self.window_width * 0.5,
                              self.window_height * 0.4),
-                        text_input=self.determine_winner(self.player, player2),
+                        text_input=text,
                         font=get_font(40),
                         base_color="Black",
                         hovering_color="Black")
@@ -267,7 +273,7 @@ class Game:
         POINTS_P2 = Button(image=None,
                            pos=(self.window_width * 0.7,
                                 self.window_height * 0.6),
-                           text_input="Player 2: " + str(player2.points),
+                           text_input="Player 2: " + str(self.enemy.points),
                            font=get_font(50),
                            base_color="Black",
                            hovering_color="Black")
