@@ -5,12 +5,13 @@ import pygame
 
 class Client:
 
-    def __init__(self):
+    def __init__(self, network):
+        self.network = network
         self.main()
 
     def main(self):
         running = True
-        network = Network()
+        network = self.network
         self.p = network.get_p()
         self.PlayerRightMouse = False
         self.enemyRightMouse = False
@@ -146,4 +147,4 @@ class Client:
         return mapChange
 
 
-client = Client()
+# client = Client()

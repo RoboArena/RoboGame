@@ -2,6 +2,7 @@ import pygame
 import sys
 import network
 import server
+import client
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -22,7 +23,7 @@ window = pygame.display.set_mode((window_width, window_height))
 
 # set font
 font = get_font(75)
-user_text = ''
+server_ip = ''
 title_text = get_font(100).render("Set Server Ip:", True, "black")
 
 # create rectangles
@@ -54,15 +55,16 @@ while True:
         if event.type == pygame.KEYDOWN:
             # Check for backspace
             if event.key == pygame.K_RETURN:
-                network.Network(user_text)
-                server.Server(user_text)
+                network = network.Network(server_ip)
+                server.Server(server_ip)
+                client.Client(network)
             if event.key == pygame.K_BACKSPACE:
                 # get text input from 0 to -1 i.e. end.
-                user_text = user_text[:-1]
+                server_ip = server_ip[:-1]
             # Unicode standard is used for string
             # formation
             else:
-                user_text += event.unicode
+                server_ip += event.unicode
 
     # it will set background color of screen
     window.fill("#252525")
@@ -76,7 +78,7 @@ while True:
     # be on screen
     pygame.draw.rect(window, color, input_rect)
 
-    text_surface = font.render(user_text, True, "#b68f40")
+    text_surface = font.render(server_ip, True, "#b68f40")
 
     # render at position stated in arguments
     window.blit(title_text, title_rect)
