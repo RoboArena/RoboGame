@@ -19,7 +19,7 @@ class Game:
 
     def __init__(self, playerpos, enemypos) -> None:
         pygame.init()
-        self.status = 0
+        self.status = 8
         self.playerpos = playerpos
         self.enemypos = enemypos
 
@@ -106,6 +106,114 @@ class Game:
         Menu(self.window, self.canvas, "MAIN MENU", 100,
              (self.window_width * 0.5, self.window_height * 0.15),
              buttons, functions, "#b68f40", "#252525")
+
+    def start_screen(self):
+        OPT_SINGLE_PLAYER = Button(image=None,
+                                   pos=(self.window_width * 0.5,
+                                        self.window_height * 0.55),
+                                   text_input="Single Player",
+                                   font=get_font(75),
+                                   base_color="white",
+                                   hovering_color="green")
+        OPT_HOST_GAME = Button(image=None,
+                               pos=(self.window_width * 0.5,
+                                    self.window_height * 0.4),
+                               text_input="Host Game",
+                               font=get_font(75),
+                               base_color="white",
+                               hovering_color="green")
+        OPT_JOIN_GAME = Button(image=None,
+                               pos=(self.window_width * 0.5,
+                                    self.window_height * 0.7),
+                               text_input="Join Game",
+                               font=get_font(75),
+                               base_color="white",
+                               hovering_color="green")
+
+        buttons = [OPT_SINGLE_PLAYER, OPT_HOST_GAME, OPT_JOIN_GAME]
+
+        functions = [
+                lambda: (sound_effects.button_main.play(),
+                         self.change_status(0))[1],
+                lambda: (sound_effects.button_main.play(),
+                         self.change_status(6))[1],
+                lambda: (sound_effects.button_main.play(),
+                         self.change_status(7))[1]]
+
+        Menu(self.window, self.canvas, "Game Mode", 100,
+             (self.window_width * 0.5, self.window_height * 0.2),
+             buttons, functions, "#b68f40", "#252525")
+
+    def Join_screen(self):
+
+        # set font
+        font = get_font(75)
+        server_ip = ''
+        title_text = get_font(100).render("Set Server Ip:", True, "black")
+
+        # create rectangles
+        title_rect = title_text.get_rect(center=(self.window_width/2,
+                                                 self.window_height * 0.15))
+        input_rect = pygame.Rect(self.window_width * 0.2,
+                                 self.window_height/2,
+                                 self.window_width * 0.6, 70)
+        # color_active stores color which
+        # gets active when input box is clicked by user
+        color_active = pygame.Color('White')
+
+        # color_passive store color which is
+        # color of input box.
+        color_passive = pygame.Color('#d7fcd4')
+        color = color_passive
+
+        active = False
+
+        while True:
+            for event in pygame.event.get():
+                # if user types QUIT then the screen will close
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if input_rect.collidepoint(event.pos):
+                        active = True
+                    else:
+                        active = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        return server_ip
+                    if event.key == pygame.K_BACKSPACE:
+                        # get text input from 0 to -1 i.e. end.
+                        server_ip = server_ip[:-1]
+                    # Unicode standard is used for string
+                    # formation
+                    else:
+                        server_ip += event.unicode
+
+            # it will set background color of screen
+            self.canvas.fill("#252525")
+
+            if active:
+                color = color_active
+            else:
+                color = color_passive
+
+            # draw rectangle and argument passed which should
+            # be on screen
+            pygame.draw.rect(self.canvas, color, input_rect)
+
+            text_surface = font.render(server_ip, True, "#b68f40")
+
+            # render at position stated in arguments
+            self.canvas.blit(title_text, title_rect)
+            self.canvas.blit(text_surface, (input_rect.x+5, input_rect.y+5))
+
+            # set width of textfield so that text cannot get
+            # outside of user's text input
+            input_rect.w = max(100, text_surface.get_width()+10)
+
+            self.window.blit(self.canvas, (0, 0))
+            pygame.display.update()
 
     def options(self):
         OPT_CHANGE_ROBOT = Button(image=None,
@@ -268,16 +376,6 @@ class Game:
                                    weapon=weapon.Knife(),
                                    keymode=self.enemy.keymode)
         self.main_menu()
-
-    '''
-    def determine_winner(self, player, enemy):
-        if (player.points > enemy.points):
-            return "PLAYER 1, YOU'RE THE WINNER!!!"
-        if (enemy.points > player.points):
-            return "PLAYER 2, YOU'RE THE WINNER!!!"
-        else:
-            return "OH NO IT'S A TIE...YOU BEST PLAY AGAIN!"
-    '''
 
     def game_over(self, winner):
         if (winner):
