@@ -1,5 +1,7 @@
 import pygame
 import sys
+import network
+import server
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
@@ -21,9 +23,11 @@ window = pygame.display.set_mode((window_width, window_height))
 # set font
 font = get_font(75)
 user_text = ''
+title_text = get_font(100).render("Set Server Ip:", True, "black")
 
-# create rectangle
-input_rect = pygame.Rect(window_width/2, window_height/2, 140, 70)
+# create rectangles
+title_rect = title_text.get_rect(center=(window_width/2, window_height * 0.15))
+input_rect = pygame.Rect(window_width * 0.2, window_height/2, window_width * 0.6, 70)
 
 # color_active stores color which
 # gets active when input box is clicked by user
@@ -49,8 +53,10 @@ while True:
                 active = False
         if event.type == pygame.KEYDOWN:
             # Check for backspace
+            if event.key == pygame.K_RETURN:
+                network.Network(user_text)
+                server.Server(user_text)
             if event.key == pygame.K_BACKSPACE:
-
                 # get text input from 0 to -1 i.e. end.
                 user_text = user_text[:-1]
             # Unicode standard is used for string
@@ -73,6 +79,7 @@ while True:
     text_surface = font.render(user_text, True, "#b68f40")
 
     # render at position stated in arguments
+    window.blit(title_text, title_rect)
     window.blit(text_surface, (input_rect.x+5, input_rect.y+5))
 
     # set width of textfield so that text cannot get
