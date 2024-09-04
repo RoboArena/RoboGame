@@ -3,9 +3,7 @@ from _thread import start_new_thread
 import pickle
 from main import Game
 
-# server = "192.168.178.118"  # Local IP Jonathan
-server = "192.168.56.1"  # Local IP Matthias
-# server = "192.168.22.26"
+server = "13.60.52.65"
 
 port = 5555
 
