@@ -2,8 +2,59 @@ import socket
 from _thread import start_new_thread
 import pickle
 from main import Game
+import subprocess
+import re
+import sys
 
-server = "13.60.52.65"
+
+def get_local_ip():
+    try:
+        print("Getting local IP address...")
+        if sys.platform == "win32":
+            # Run ipconfig on Windows
+            result = subprocess.run(["ipconfig"], capture_output=True,
+                                    text=True)
+            output = result.stdout
+            # Use regex to find the IPv4 address
+            ip_pattern = re.compile(r"IPv4-Adresse[ .]*:[ ]*([\d.]+)")
+            match = ip_pattern.search(output)
+            if match:
+                return match.group(1)
+
+            ip_pattern = re.compile(r"IPv4 Address(?:[ .]*): ([\d.]+)")
+            match = ip_pattern.search(output)
+            if match:
+                return match.group(1)
+
+        elif sys.platform == "linux" or sys.platform == "darwin":
+            # Run ifconfig on Linux/macOS
+            result = subprocess.run(["ifconfig"], capture_output=True,
+                                    text=True)
+            output = result.stdout
+
+            # Use regex to find the IPv4 address
+            ip_pattern = re.compile(r"inet (\d+\.\d+\.\d+\.\d+)")
+            matches = ip_pattern.findall(output)
+            for ip in matches:
+                # Filter out loopback address and return first match
+                if not ip.startswith("127."):
+                    return ip
+
+    except Exception as e:
+        print(f"Error getting local IP: {e}")
+
+    return None
+
+
+local_ip = get_local_ip()
+print(local_ip)
+if local_ip:
+    print(f"My local IPv4 address is: {local_ip}")
+else:
+    local_ip = "13.60.52.65"  # Insert your local IP address here
+    print("Please Insert your local IP address manually")
+
+server = local_ip
 
 port = 5555
 

@@ -1,25 +1,105 @@
 from network import Network
+import subprocess
 import main
 import pygame
+import re
+import sys
 
 
 class Client:
 
     def __init__(self):
-        self.main()
+        self.start()
 
-    def main(self):
+    def start(self):
+        self.game = main.Game(playerpos=(500, 450),
+                              enemypos=(900, 450))
+        offline = True
+        while offline:
+            if self.game.status == 8:
+                self.game.start_screen()
+            if self.game.status == 6:
+                self.start_server()
+                self.start_multiplayer(self.get_local_ip())
+                offline = False
+            if self.game.status == 7:
+                self.start_multiplayer(self.game.Join_screen())
+                offline = False
+            if self.game.status == 0:
+                self.game.main_menu()
+            elif self.game.status == 1:
+                self.game.play()
+                self.game.player.mousepos = pygame.mouse.get_pos()
+                if pygame.mouse.get_pressed()[0]:
+                    self.PlayerRightMouse = True
+                else:
+                    self.PlayerRightMouse = False
+            elif self.game.status == 2:
+                self.game.options()
+            elif self.game.status == 3:
+                self.game.game_over(winner=False)
+            elif self.game.status == 4:
+                self.game.game_over(winner=True)
+
+    def get_local_ip(self):
+        try:
+            print("Getting local IP address...")
+            if sys.platform == "win32":
+                # Run ipconfig on Windows
+                result = subprocess.run(["ipconfig"], capture_output=True,
+                                        text=True)
+                output = result.stdout
+                # Use regex to find the IPv4 address
+                ip_pattern = re.compile(r"IPv4-Adresse[ .]*:[ ]*([\d.]+)")
+                match = ip_pattern.search(output)
+                if match:
+                    return match.group(1)
+
+                ip_pattern = re.compile(r"IPv4 Address(?:[ .]*): ([\d.]+)")
+                match = ip_pattern.search(output)
+                if match:
+                    return match.group(1)
+
+            elif sys.platform == "linux" or sys.platform == "darwin":
+                # Run ifconfig on Linux/macOS
+                result = subprocess.run(["ifconfig"], capture_output=True,
+                                        text=True)
+                output = result.stdout
+
+                # Use regex to find the IPv4 address
+                ip_pattern = re.compile(r"inet (\d+\.\d+\.\d+\.\d+)")
+                matches = ip_pattern.findall(output)
+                for ip in matches:
+                    # Filter out loopback address and return first match
+                    if not ip.startswith("127."):
+                        return ip
+
+        except Exception as e:
+            print(f"Error getting local IP: {e}")
+
+        return None
+
+    def start_server(self):
+        # Command to run your server script in a separate command line window
+        command = ["python", "server.py"]
+
+        # Open a new terminal window and run the command (this works on Windws)
+        subprocess.Popen(command, creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+    def start_multiplayer(self, ip):
         running = True
-        network = Network()
+        network = Network(ip)
         self.p = network.get_p()
         self.PlayerRightMouse = False
         self.enemyRightMouse = False
         if self.p == 0:  # Position depends on player
             self.game = main.Game(playerpos=(500, 450),
                                   enemypos=(900, 450))
+            self.game.status = 0
         else:
             self.game = main.Game(playerpos=(900, 450),
                                   enemypos=(500, 450))
+            self.game.status = 0
         print("You are player", self.p)
 
         while running:
